@@ -5,6 +5,7 @@ const ParameterStatusIcon = memo(({ type = null, level = 0 }) => {
     Battery: [0, 25, 50, 75, 100],
     Network: [0, 20, 40, 60, 80, 100],
     GPS: [0, 25, 50, 75, 100],
+    
   };
 
   const svgsPath = `src/assets/NavBarSvg/${type}/`;
@@ -18,7 +19,7 @@ const ParameterStatusIcon = memo(({ type = null, level = 0 }) => {
 
     return { svgFile: `${svgsPath}${type}.${svgIndex}.svg` };
   }, [type, level]);
-  console.log(svgFile);
+  // console.log(svgFile);
 
   return (
     <div className="flex items-center space-x-2">

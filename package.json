@@ -12,8 +12,11 @@
     "electron": "electron ."
   },
   "dependencies": {
+    "mapbox-gl": "^3.9.4",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-map-gl": "^7.1.9",
+    "systeminformation": "^5.25.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

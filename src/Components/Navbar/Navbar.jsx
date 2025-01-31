@@ -6,6 +6,7 @@ import BatteryStatus from "./BatteryStatus/BatteryStatus";
 import SatelliteCount from "./SatelliteCount/SattelliteCount";
 import CurrentFlightMode from "./CurrentFlightMode/CurrentFLightMode";
 import useStatusSimulation from "../../useSum";
+import ConnectionStatus from "./ConnectionStatus/ConnectionStatus";
 function Navbar() {
     const { gpsLevel,networkLevel , batteryLevel, satelliteCount, flightMode } = useStatusSimulation();
   return (
@@ -31,13 +32,12 @@ function Navbar() {
 
         </div>
 
-        <div className="LeftSidebar w-56 h-full border-2 border-white"></div>
+        <div className="LeftSidebar w-56 pr-2 flex items-end justify-end h-10 border">
+        <ConnectionStatus />
+        </div>
       </div>
 
-      <div>
-        {/* <ParameterStatusIcon type="Battery" level={50} />
-            <ParameterStatusIcon type="Network" level={80} /> */}
-      </div>
+     
     </>
   );
 }

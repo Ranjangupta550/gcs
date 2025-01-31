@@ -4,7 +4,7 @@ import ToggleBar from "../Components/ToggleBar/ToggleBar";
 import Navbar from "../Components/Navbar/Navbar";
 import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import ControlPanel from "../Components/DroneControlButton/ControlPannel";
-
+import Map from "../Components/Map/Map";
 function MainPage() {
     const [count, setCount] = useState(0)
 
@@ -22,7 +22,8 @@ function MainPage() {
                     <DroneParameter />
                 </div>
                 <div className="w-[70%] overflow-hidden rounded-md border-4 border-ParameterBox border-opacity-100">
-                   <ControlPanel />
+                   {/* <ControlPanel /> */}
+                     <Map/>
                 </div>
             </div>
             <div id="footer" className="w-screen h-[30px] border-2 relative bottom-0"></div>

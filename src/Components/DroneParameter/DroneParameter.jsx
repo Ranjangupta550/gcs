@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import ParaCard from "./ParaCard/ParaCard";
 import useStatusSimulation from "../../useSum";
+import DroneControlButtons from "../DroneControlButton/ControlPannel";
 
 function DroneParameter() {
   const { altitude, yaw, verticalSpeed, groundSpeed, speed, batteryLevel } =
@@ -16,6 +17,7 @@ function DroneParameter() {
         <ParaCard title="Speed" value={speed} unit="km/h" />
         <ParaCard title="Battery Level" value={batteryLevel} unit="%" />
       </div>
+     
     </>
   );
 }
