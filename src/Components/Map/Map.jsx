@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Map, { Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import droneSvg from "../../assets/DroneSvg.svg"; // Ensure the correct path
+import droneSvg from "../../assets/Svg/DroneSvg.svg"; // Ensure the correct path
 
 const getRandomLocation = (baseLongitude, baseLatitude) => {
     const randomOffset = () => (Math.random() - 0.5) * 0.005; // Small random movement

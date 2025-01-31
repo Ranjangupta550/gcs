@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import ParaCard from "./ParaCard/ParaCard";
+import ParaCard from "../Common/ParameterCard";
 import useStatusSimulation from "../../useSum";
-import DroneControlButtons from "../DroneControlButton/ControlPannel";
+import DroneControlButtons from "../FlightControlPannel/FlightControlPannel";
 
 function DroneParameter() {
   const { altitude, yaw, verticalSpeed, groundSpeed, speed, batteryLevel } =

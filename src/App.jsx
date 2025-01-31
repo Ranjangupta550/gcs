@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import MainPage from './Pages/MainPage'
+import MainPage from './Pages/Home'
 
 
 function App() {

@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import ParameterStatusIcon from "../../ParameterStatus/ParameterStatusIcon";
+import ParameterStatusIcon from "../../Common/StatusIconsSwitcher";
 
 function NetworkStatus({ level }) {
     const [networkLevel, setNetworkLevel] = useState(0);

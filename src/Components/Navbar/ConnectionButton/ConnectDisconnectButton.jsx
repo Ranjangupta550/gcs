@@ -1,8 +1,5 @@
 import React from "react";
 import { useState,useEffect } from "react";
-import Connected from "../../../assets/NavBarSvg/ConnectionSvg/Connect.1.svg";
-import Disconnected from "../../../assets/NavBarSvg/ConnectionSvg/Connect.0.svg";
-
 const ConnectionStatus = () => {
     const [connection, setConnection] = useState("Disconnected");
     const [connectionStatus, setConnectionStatus] = useState(false);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SatelliteSvg from "../../../assets/Satellight.svg";
+import SatelliteSvg from "../../../assets/Svg/Satellight.svg";
 
 function SatelliteCount({ count }) {
     const [NumberSatellite, setCount] = useState(0);

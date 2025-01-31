@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState,useCallback } from "react"; 
-import ModeSvg from "../../../assets/Mode.svg";
+import ModeSvg from "../../../assets/Svg/Mode.svg";
 function CurrentFlightMode({ mode }) {
   const [flightMode, setMode] = useState("N/A");
   useEffect(() => {

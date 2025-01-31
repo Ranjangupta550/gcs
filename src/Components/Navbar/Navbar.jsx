@@ -1,12 +1,12 @@
 import React from "react";
-import ParameterStatusIcon from "../ParameterStatus/ParameterStatusIcon";
-import GpsStatus from "./GpsStatus/GpsStatus";
-import NetworkStatus from "./NetworkSatus/NetworkStatus"; 
-import BatteryStatus from "./BatteryStatus/BatteryStatus";
-import SatelliteCount from "./SatelliteCount/SattelliteCount";
-import CurrentFlightMode from "./CurrentFlightMode/CurrentFLightMode";
+import ParameterStatusIcon from "../Common/StatusIconsSwitcher";
+import GpsStatus from "./Status/GpsStatus";
+import NetworkStatus from "./Status/NetworkStatus"; 
+import BatteryStatus from "./Status/BatteryStatus";
+import SatelliteCount from "./Status/SattelliteCount";
+import CurrentFlightMode from "./Status/CurrentFLightMode";
 import useStatusSimulation from "../../useSum";
-import ConnectionStatus from "./ConnectionStatus/ConnectionStatus";
+import ConnectionStatus from "./ConnectionButton/ConnectDisconnectButton";
 function Navbar() {
     const { gpsLevel,networkLevel , batteryLevel, satelliteCount, flightMode } = useStatusSimulation();
   return (

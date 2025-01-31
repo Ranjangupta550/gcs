@@ -87,3 +87,48 @@ export const controlYaw = async (action) => {
     return { success: false, error: `Yaw control error: ${error.message}` };
   }
 };
+
+export const controlHeight = async (action) => {
+    try {
+      const response = await fetch(`${apiBaseUrl}yaw`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { success: false, error: `Yaw control error: ${error.message}` };
+    }
+  };
+
+  export const controlPitch = async (action) => {
+    try {
+      const response = await fetch(`${apiBaseUrl}yaw`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { success: false, error: `Yaw control error: ${error.message}` };
+    }
+  };
+
+  export const controlRoll = async (action) => {
+    try {
+      const response = await fetch(`${apiBaseUrl}yaw`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      return { success: false, error: `Yaw control error: ${error.message}` };
+    }
+  };
