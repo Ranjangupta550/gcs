@@ -20,6 +20,9 @@ function MainPage() {
             <div id="main" className="h-[calc(100vh-50px)] flex w-screen gap-2 p-1 pl-2 pr-2">
                 <div className="w-[30%] overflow-hidden rounded-md bg-ParameterBox opacity-80">
                     <DroneParameter />
+                   <div className="w-full h-[45%] flex justify-center items-center p-2 overflow-hidden">
+                    <ControlPanel />
+                   </div>
                 </div>
                 <div className="w-[70%] overflow-hidden rounded-md border-4 border-ParameterBox border-opacity-100">
                    {/* <ControlPanel /> */}
