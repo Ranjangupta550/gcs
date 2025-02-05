@@ -1,134 +1,154 @@
-// api.js
+// import {endPoint} from './api';
+const endPoint = "http://192.168.29.14:5000/api/";
+let droneConnectionStatus = false;
 
-const apiBaseUrl = "http://192.168.29.13:5000/";
-
-const handleResponse = async (response) => {
-  // console.log(response)
-  if (response.status==200) {
-    // console.log("success")
-    const data = await response;
-    return { success: true, data };
-  } else {
-    const error = await response.text();
-    return { success: false, error: `Server error: ${error}` };
-  }
-};
+export const isDroneConnected = () => droneConnectionStatus;
 
 export const connectDrone = async () => {
   try {
-    const response = await fetch(`${apiBaseUrl}connection`, {
-      method: "POST",
-    });
-    return await handleResponse(response);
+    const response = await fetch(`${endPoint}connection`, { method: "POST" });
+    console.log(response);
+    const data = await response.json();
+    console.log(data);
+    if (data.message === true) {
+      droneConnectionStatus = true;
+      return { success: true };
+    } else {
+      return { success: false };
+    }
   } catch (error) {
-    return { success: false, error: `Connection error: ${error.message}` };
+    console.error("Error connecting drone:", error);
+    return { success: false, error };
   }
 };
 
 export const disconnectDrone = async () => {
   try {
-    const response = await fetch(`${apiBaseUrl}disconnect`, {
+    const response = await fetch(`${endPoint}disconnection`, {
       method: "POST",
     });
-    return await handleResponse(response);
+    console.log("disconnect = ", response);
+    const data = await response.json();
+    console.log( data);
+    if (data.message === true) {
+      droneConnectionStatus = false;
+      return { success: true };
+    }
+    else 
+    {
+        return { success: false };
+    }
   } catch (error) {
-    return { success: false, error: `Disconnect error: ${error.message}` };
+    console.error("Error disconnecting drone:", error);
+    return { success: false, error };
   }
 };
 
 export const armDrone = async () => {
   try {
-    const response = await fetch(`${apiBaseUrl}arm`, {
-      method: "POST",
-    });
-    return await handleResponse(response);
+    const response = await fetch(`${endPoint}arm`, { method: "POST" });
+    console.log(response);
+    return await response.json();
   } catch (error) {
-    return { success: false, error: `Arm error: ${error.message}` };
+    console.error("Error arming drone:", error);
+    return { success: false, error };
   }
 };
 
 export const disarmDrone = async () => {
   try {
-    const response = await fetch(`${apiBaseUrl}disarm`, {
-      method: "POST",
-    });
-    return await handleResponse(response);
+    const response = await fetch(`${endPoint}disarm`, { method: "POST" });
+    return await response.json();
   } catch (error) {
-    return { success: false, error: `Disarm error: ${error.message}` };
+    console.error("Error disarming drone:", error);
+    return { success: false, error };
   }
 };
 
-export const controlThrottle = async (action) => {
+// ✅ Throttle Control
+export const controlThrottle = async (direction) => {
   try {
-    const response = await fetch(`${apiBaseUrl}throttl`, {
+    const response = await fetch(`${endPoint}throttle/${direction}`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ action }),
     });
-    return await handleResponse(response);
+    return await response.json();
   } catch (error) {
-    return { success: false, error: `Throttle control error: ${error.message}` };
+    console.error("Error controlling throttle:", error);
+    return { success: false, error };
   }
 };
 
-export const controlYaw = async (action) => {
+// ✅ Yaw Control
+export const controlYaw = async (direction) => {
   try {
-    const response = await fetch(`${apiBaseUrl}yaw`, {
+    const response = await fetch(`${endPoint}yaw/${direction}`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ action }),
     });
-    return await handleResponse(response);
+    return await response.json();
   } catch (error) {
-    return { success: false, error: `Yaw control error: ${error.message}` };
+    console.error("Error controlling yaw:", error);
+    return { success: false, error };
   }
 };
 
-export const controlHeight = async (action) => {
-    try {
-      const response = await fetch(`${apiBaseUrl}yaw`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ action }),
-      });
-      return await handleResponse(response);
-    } catch (error) {
-      return { success: false, error: `Yaw control error: ${error.message}` };
-    }
-  };
+// ✅ Height Control
+export const controlHeight = async (direction) => {
+  try {
+    const response = await fetch(`${endPoint}height/${direction}`, {
+      method: "POST",
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error controlling height:", error);
+    return { success: false, error };
+  }
+};
 
-  export const controlPitch = async (action) => {
-    try {
-      const response = await fetch(`${apiBaseUrl}yaw`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ action }),
-      });
-      return await handleResponse(response);
-    } catch (error) {
-      return { success: false, error: `Yaw control error: ${error.message}` };
-    }
-  };
+// ✅ Roll Control
+export const controlRoll = async (direction) => {
+  try {
+    const response = await fetch(`${endPoint}roll/${direction}`, {
+      method: "POST",
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error controlling roll:", error);
+    return { success: false, error };
+  }
+};
 
-  export const controlRoll = async (action) => {
+// ✅ Pitch Control
+export const controlPitch = async (direction) => {
+  try {
+    const response = await fetch(`${endPoint}pitch/${direction}`, {
+      method: "POST",
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error controlling pitch:", error);
+    return { success: false, error };
+  }
+};
+
+
+export const getTelemetry = async () => {
     try {
-      const response = await fetch(`${apiBaseUrl}yaw`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ action }),
+      const response = await fetch(`${endPoint}telemetry`, {
+        method: "GET",
       });
-      return await handleResponse(response);
+  
+      const data = await response.json();
+      console.log("Telemetry: ", data);
+      console.log("Telemetry data: ", data.message);
+  
+      if (data.message!=null) {
+        console.log("inside this if block");  
+        return data.message; // Assuming telemetry data is in data.telemetry
+      } else {
+        return null;
+      }
     } catch (error) {
-      return { success: false, error: `Yaw control error: ${error.message}` };
+      console.error("Error fetching telemetry data:", error);
+      return null;
     }
   };

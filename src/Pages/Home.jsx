@@ -5,6 +5,7 @@ import Navbar from "../Components/Navbar/Navbar";
 import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import FlightControlPannel from "../Components/FlightControlPannel/FlightControlPannel";
 import Map from "../Components/Map/Map";
+import StatusBox from "../Components/Statusbox/Statusbox";
 function MainPage() {
     const [count, setCount] = useState(0)
 
@@ -24,8 +25,10 @@ function MainPage() {
                     <FlightControlPannel />
                    </div>
                 </div>
-                <div className="w-[70%] overflow-hidden rounded-md border-4 border-ParameterBox border-opacity-100">
-                   {/* <ControlPanel /> */}
+                <div className="w-[70%] overflow-hidden rounded-md border-4 relative border-ParameterBox border-opacity-100">
+                   <div className="w-auto h-auto  z-10 bottom-0 left-1 absolute">
+                          <StatusBox/>
+                   </div>
                      <Map/>
                 </div>
             </div>

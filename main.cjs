@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Notification } = require("electron");
 const path = require("path");
 
 let mainWindow;
@@ -15,6 +15,8 @@ function createWindow() {
 
   mainWindow.loadURL("http://localhost:5173"); // URL of your Vite app
   mainWindow.webContents.openDevTools(); // Optional, for development purposes
+
+
 
   // Add event listeners for maximized and unmaximize events
   mainWindow.on("maximize", () => {
