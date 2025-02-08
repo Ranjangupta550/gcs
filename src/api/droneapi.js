@@ -1,5 +1,7 @@
+import { ColorRing } from "react-loader-spinner";
+
 // import {endPoint} from './api';
-const endPoint = "http://192.168.29.14:5000/api/";
+const endPoint = "http://192.168.29.13:5000/api/";
 let droneConnectionStatus = false;
 
 export const isDroneConnected = () => droneConnectionStatus;
@@ -29,14 +31,12 @@ export const disconnectDrone = async () => {
     });
     console.log("disconnect = ", response);
     const data = await response.json();
-    console.log( data);
+    console.log(data);
     if (data.message === true) {
       droneConnectionStatus = false;
       return { success: true };
-    }
-    else 
-    {
-        return { success: false };
+    } else {
+      return { success: false };
     }
   } catch (error) {
     console.error("Error disconnecting drone:", error);
@@ -68,9 +68,10 @@ export const disarmDrone = async () => {
 // ✅ Throttle Control
 export const controlThrottle = async (direction) => {
   try {
-    const response = await fetch(`${endPoint}throttle/${direction}`, {
+    const response = await fetch(`${endPoint}throttle${direction}`, {
       method: "POST",
     });
+    console.log(response);
     return await response.json();
   } catch (error) {
     console.error("Error controlling throttle:", error);
@@ -130,25 +131,24 @@ export const controlPitch = async (direction) => {
   }
 };
 
-
 export const getTelemetry = async () => {
-    try {
-      const response = await fetch(`${endPoint}telemetry`, {
-        method: "GET",
-      });
-  
-      const data = await response.json();
-      console.log("Telemetry: ", data);
-      console.log("Telemetry data: ", data.message);
-  
-      if (data.message!=null) {
-        console.log("inside this if block");  
-        return data.message; // Assuming telemetry data is in data.telemetry
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching telemetry data:", error);
+  try {
+    const response = await fetch(`${endPoint}telemetry`, {
+      method: "GET",
+    });
+
+    const data = await response.json();
+    console.log("Telemetry: ", data);
+    console.log("Telemetry data: ", data.message);
+
+    if (data.message != null) {
+      console.log("inside this if block");
+      return data.message; // Assuming telemetry data is in data.telemetry
+    } else {
       return null;
     }
-  };
+  } catch (error) {
+    console.error("Error fetching telemetry data:", error);
+    return null;
+  }
+};

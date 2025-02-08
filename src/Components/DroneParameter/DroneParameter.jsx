@@ -6,16 +6,15 @@ import Loader from "../Common/Loader"; // Custom loader component
 function DroneParameter() {
   const [telemetry, setTelemetry] = useState(null); // Store telemetry data, initially null
   const [isConnected, setIsConnected] = useState(isDroneConnected()); // Check drone connection status
-  const [loading, setLoading] = useState(false); // For showing loading state
-
+  
   // Function to format values (limits float values to 4 decimal places)
   const formatValue = (value) => {
     return value !== undefined && value !== null ? value.toFixed(4) : "0";
   };
-
+  
   // Function to fetch telemetry data when the drone is connected
   const fetchTelemetryData = async () => {
-    setLoading(true); // Start loading
+     // Start loading
     try {
       const data = await getTelemetry(); // Fetch telemetry from backend
       console.log("Received telemetry data:", data);
@@ -24,30 +23,33 @@ function DroneParameter() {
       console.error("Error fetching telemetry data:", error);
       setTelemetry(null); // Reset telemetry in case of error
     }
-    setLoading(false); // Stop loading
+    
   };
-
+  
   // Effect to fetch telemetry data when the drone is connected
   useEffect(() => {
     if (isConnected) {
-      fetchTelemetryData(); // Fetch telemetry data when connected
+      const interval = setInterval(() => {
+        // fetchTelemetryData(); // Fetch telemetry data periodically
+      },500); // Fetch data every second
+      return () => clearInterval(interval); // Clean up on component unmount
     } else {
       setTelemetry(null); // Reset telemetry when drone disconnects
     }
   }, [isConnected]); // Re-run if the connection status changes
-
+  
   // Periodically check if the drone is connected
   useEffect(() => {
     const interval = setInterval(() => {
       setIsConnected(isDroneConnected()); // Update connection status every second
-    }, 1000);
+    },500);
     return () => clearInterval(interval); // Clean up on component unmount
   }, []);
 
   return (
     <div>
       {/* Show loading spinner while fetching telemetry */}
-      {loading && <Loader />}
+    
 
       {/* Display the telemetry data with formatted values */}
       <div className="h-[50%] grid grid-cols-2 justify-center items-center p-2 gap-1">
@@ -65,3 +67,49 @@ function DroneParameter() {
 }
 
 export default DroneParameter;
+
+
+
+/*
+const [telemetry, setTelemetry] = useState(null); // Store telemetry data, initially null
+const [isConnected, setIsConnected] = useState(isDroneConnected()); // Check drone connection status
+
+// Function to format values (limits float values to 4 decimal places)
+const formatValue = (value) => {
+  return value !== undefined && value !== null ? value.toFixed(4) : "0";
+};
+
+// Function to fetch telemetry data when the drone is connected
+const fetchTelemetryData = async () => {
+   // Start loading
+  try {
+    const data = await getTelemetry(); // Fetch telemetry from backend
+    console.log("Received telemetry data:", data);
+    setTelemetry(data); // Store fetched telemetry data
+  } catch (error) {
+    console.error("Error fetching telemetry data:", error);
+    setTelemetry(null); // Reset telemetry in case of error
+  }
+  
+};
+
+// Effect to fetch telemetry data when the drone is connected
+useEffect(() => {
+  if (isConnected) {
+    const interval = setInterval(() => {
+      fetchTelemetryData(); // Fetch telemetry data periodically
+    },500); // Fetch data every second
+    return () => clearInterval(interval); // Clean up on component unmount
+  } else {
+    setTelemetry(null); // Reset telemetry when drone disconnects
+  }
+}, [isConnected]); // Re-run if the connection status changes
+
+// Periodically check if the drone is connected
+useEffect(() => {
+  const interval = setInterval(() => {
+    setIsConnected(isDroneConnected()); // Update connection status every second
+  }, 1000);
+  return () => clearInterval(interval); // Clean up on component unmount
+}, []);
+*/

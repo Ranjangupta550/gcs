@@ -5,13 +5,15 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    fullscreen: false, // Fullscreen false initially
+    fullscreen: false, // Do not open in full screen mode
     frame: false, // Disable default frame to create a custom title bar
     resizable: true, // Allow resizing
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
     },
   });
+
+  mainWindow.maximize(); // Open the window in maximized mode
 
   mainWindow.loadURL("http://localhost:5173"); // URL of your Vite app
   mainWindow.webContents.openDevTools(); // Optional, for development purposes

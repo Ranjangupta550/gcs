@@ -17,12 +17,13 @@ function FlightControlPannel() {
   const [isArmed, setIsArmed] = useState(false);
   const [isConnected, setIsConnected] = useState(isDroneConnected());
 
-  // Periodically check drone connection status
   useEffect(() => {
     const interval = setInterval(() => {
       setIsConnected(isDroneConnected());
-    }, 1000); // Check every second
-
+      if (!isDroneConnected() && isArmed) {
+        handleDisarm();
+      }
+    }, 500);
     return () => clearInterval(interval);
   }, []);
 
@@ -30,7 +31,7 @@ function FlightControlPannel() {
     if (!isConnected) return;
     try {
       const response = await armDrone();
-      if (response.message==true) setIsArmed(true);
+      if (response.message === true) setIsArmed(true);
     } catch (error) {
       console.error("Error while arming:", error);
     }
@@ -40,15 +41,25 @@ function FlightControlPannel() {
     if (!isConnected) return;
     try {
       const response = await disarmDrone();
-      if (response.success) setIsArmed(false);
+      if (response.message === true) setIsArmed(false);
     } catch (error) {
       console.error("Error while disarming:", error);
     }
   };
 
-  const handleControl = async (actionType, action) => {
-    if (!isConnected || !isArmed) return;
+  const handleConnectDisconnect = async () => {
+    if (isConnected) {
+      await handleDisarm();
+      await disconnectDrone();
+      setIsConnected(false);
+    } else {
+      await connectDrone();
+      setIsConnected(true);
+    }
+  };
 
+  const handleControl = async (actionType, value) => {
+    if (!isConnected || !isArmed) return;
     let controlFunction;
     switch (actionType) {
       case "throttle":
@@ -70,11 +81,10 @@ function FlightControlPannel() {
         console.error("Invalid control action");
         return;
     }
-
     try {
-      const response = await controlFunction(action);
+      const response = await controlFunction(value);
       if (!response.success) {
-        console.error(`${actionType} control failed:`, response.error);
+        console.error("Control action failed");
       }
     } catch (error) {
       console.error(`Error controlling ${actionType}:`, error);
@@ -97,163 +107,94 @@ function FlightControlPannel() {
       </div>
 
       <div className="flex w-full h-full flex-col">
-
         {/* Throttle Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Throttle +"
             command="THROTTLE_UP"
-            sendCommand={() => handleControl("throttle", "up")}
+            sendCommand={() => handleControl("throttle", 1)}
             isEnabled={isConnected && isArmed}
             shortcut="↑"
           />
           <ControlButton
             label="Throttle -"
             command="THROTTLE_DOWN"
-            sendCommand={() => handleControl("throttle", "down")}
+            sendCommand={() => handleControl("throttle", 0)}
             isEnabled={isConnected && isArmed}
             shortcut="↓"
           />
         </div>
-
         {/* Yaw Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Yaw Left"
             command="YAW_LEFT"
-            sendCommand={() => handleControl("yaw", "left")}
+            sendCommand={() => handleControl("yaw", 1)}
             isEnabled={isConnected && isArmed}
             shortcut="←"
           />
           <ControlButton
             label="Yaw Right"
             command="YAW_RIGHT"
-            sendCommand={() => handleControl("yaw", "right")}
+            sendCommand={() => handleControl("yaw", 0)}
             isEnabled={isConnected && isArmed}
             shortcut="→"
           />
         </div>
-
         {/* Height Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Height +"
             command="HEIGHT_UP"
-            sendCommand={() => handleControl("height", "up")}
+            sendCommand={() => handleControl("height", 1)}
             isEnabled={isConnected && isArmed}
             shortcut="H"
           />
           <ControlButton
             label="Height -"
             command="HEIGHT_DOWN"
-            sendCommand={() => handleControl("height", "down")}
+            sendCommand={() => handleControl("height", 0)}
             isEnabled={isConnected && isArmed}
             shortcut="L"
           />
         </div>
-
         {/* Roll Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Roll Left"
             command="ROLL_LEFT"
-            sendCommand={() => handleControl("roll", "left")}
+            sendCommand={() => handleControl("roll", 1)}
             isEnabled={isConnected && isArmed}
             shortcut="Q"
           />
           <ControlButton
             label="Roll Right"
             command="ROLL_RIGHT"
-            sendCommand={() => handleControl("roll", "right")}
+            sendCommand={() => handleControl("roll", 0)}
             isEnabled={isConnected && isArmed}
             shortcut="E"
           />
         </div>
-
         {/* Pitch Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Pitch Up"
             command="PITCH_UP"
-            sendCommand={() => handleControl("pitch", "up")}
+            sendCommand={() => handleControl("pitch", 1)}
             isEnabled={isConnected && isArmed}
             shortcut="W"
           />
           <ControlButton
             label="Pitch Down"
             command="PITCH_DOWN"
-            sendCommand={() => handleControl("pitch", "down")}
+            sendCommand={() => handleControl("pitch", 0)}
             isEnabled={isConnected && isArmed}
             shortcut="S"
           />
         </div>
-
       </div>
     </div>
   );
 }
 
 export default FlightControlPannel;
-
-
-
- 
-
-
-/*
-import React, { useState, useEffect } from "react";
-import ControlButton from "../Common/ControlButton";
-import { 
-  armDrone, disarmDrone, isDroneConnected 
-} from "../../api/droneapi.js";
-
-function FlightControlPannel() {
-  const [isArmed, setIsArmed] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-
-  useEffect(() => {
-    const fetchStatus = async () => {
-      setIsConnected(await isDroneConnected());  // Fetch real-time status
-    };
-
-    fetchStatus(); // Initial check
-    const interval = setInterval(fetchStatus, 2000); // Poll every 2s
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleArm = async () => {
-    if (!isConnected) return;
-    try {
-      const response = await armDrone();
-      if (response.message === true) setIsArmed(true);
-    } catch (error) {
-      console.error("Error while arming:", error);
-    }
-  };
-
-  const handleDisarm = async () => {
-    if (!isConnected) return;
-    try {
-      const response = await disarmDrone();
-      if (response.success) setIsArmed(false);
-    } catch (error) {
-      console.error("Error while disarming:", error);
-    }
-  };
-
-  return (
-    <div>
-      <h2>Flight Control Panel</h2>
-      <ControlButton
-        label={isArmed ? "Disarm" : "Arm"}
-        sendCommand={isArmed ? handleDisarm : handleArm}
-        isEnabled={isConnected}
-      />
-    </div>
-  );
-}
-
-export default FlightControlPannel;
-
-*/
