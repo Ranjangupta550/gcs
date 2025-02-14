@@ -10,20 +10,21 @@ import {
   controlHeight, 
   controlRoll, 
   controlPitch, 
-  isDroneConnected 
+  isDroneConnected, 
+  controlLand,
+  controlSetAlt,
 } from "../../api/droneapi.js";
 
 function FlightControlPannel() {
   const [isArmed, setIsArmed] = useState(false);
   const [isConnected, setIsConnected] = useState(isDroneConnected());
 
+  // Periodically check drone connection status
   useEffect(() => {
     const interval = setInterval(() => {
       setIsConnected(isDroneConnected());
-      if (!isDroneConnected() && isArmed) {
-        handleDisarm();
-      }
-    }, 500);
+    }, 500); // Check every half second
+
     return () => clearInterval(interval);
   }, []);
 
@@ -41,25 +42,15 @@ function FlightControlPannel() {
     if (!isConnected) return;
     try {
       const response = await disarmDrone();
-      if (response.message === true) setIsArmed(false);
+      if (response.message) setIsArmed(false);
     } catch (error) {
       console.error("Error while disarming:", error);
     }
   };
 
-  const handleConnectDisconnect = async () => {
-    if (isConnected) {
-      await handleDisarm();
-      await disconnectDrone();
-      setIsConnected(false);
-    } else {
-      await connectDrone();
-      setIsConnected(true);
-    }
-  };
-
-  const handleControl = async (actionType, value) => {
+  const handleControl = async (actionType, action) => {
     if (!isConnected || !isArmed) return;
+
     let controlFunction;
     switch (actionType) {
       case "throttle":
@@ -77,19 +68,76 @@ function FlightControlPannel() {
       case "pitch":
         controlFunction = controlPitch;
         break;
+      case "land":
+        controlFunction = controlLand;
+        break;
+      case "setAlt":
+        console.log("Setting altitude");
+        controlFunction = controlSetAlt;
+        break;
       default:
         console.error("Invalid control action");
         return;
     }
+
     try {
-      const response = await controlFunction(value);
+      const response = await controlFunction(action);
       if (!response.success) {
-        console.error("Control action failed");
+        console.error(`${actionType} control failed:`, response.error);
       }
     } catch (error) {
       console.error(`Error controlling ${actionType}:`, error);
     }
   };
+
+  // 🔥 Add a useEffect to listen for keypress events
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (!isConnected || !isArmed) return; // Only work when connected and armed
+
+      switch (event.key.toLowerCase()) {
+        case "p":
+          isArmed ? handleDisarm() : handleArm();
+          break;
+        case "w":
+          handleControl("throttle", "up");
+          break;
+        case "s":
+          handleControl("throttle", "down");
+          break;
+        case "a":
+          handleControl("yaw", "anticlock");
+          break;
+        case "d":
+          handleControl("yaw", "clock");
+          break;
+        case "h":
+          handleControl("land", "land");
+          break;
+        case "l":
+          handleControl("setAlt", "setalt");
+          break;
+        case "arrowleft":
+          handleControl("roll", "left");
+          break;
+        case "arrowright":
+          break;
+        case "arrowup":
+          handleControl("pitch", "forward");
+          break;
+        case "arrowdown":
+          handleControl("pitch", "backward");
+        default:
+          console.log("Key not mapped:", event.key);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [isConnected, isArmed]);
 
   return (
     <div className="flex items-center pl-2 pr-2 h-full w-full flex-col border-4 border-opacity-15 border-white rounded-md bg-navbar bg-opacity-50">
@@ -101,97 +149,121 @@ function FlightControlPannel() {
             command="ARM"
             sendCommand={isArmed ? handleDisarm : handleArm}
             isEnabled={isConnected}
-            shortcut="A"
+            shortcut="p"
           />
         </div>
       </div>
 
       <div className="flex w-full h-full flex-col">
+
         {/* Throttle Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Throttle +"
             command="THROTTLE_UP"
-            sendCommand={() => handleControl("throttle", 1)}
+            sendCommand={() => handleControl("throttle", "up")}
             isEnabled={isConnected && isArmed}
-            shortcut="↑"
+            shortcut="W"
           />
           <ControlButton
             label="Throttle -"
             command="THROTTLE_DOWN"
-            sendCommand={() => handleControl("throttle", 0)}
+            sendCommand={() => handleControl("throttle", "down")}
             isEnabled={isConnected && isArmed}
-            shortcut="↓"
+            shortcut="S"
           />
         </div>
+
         {/* Yaw Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Yaw Left"
             command="YAW_LEFT"
-            sendCommand={() => handleControl("yaw", 1)}
+            sendCommand={() => handleControl("yaw", "left")}
             isEnabled={isConnected && isArmed}
-            shortcut="←"
+            shortcut="A"
           />
           <ControlButton
             label="Yaw Right"
             command="YAW_RIGHT"
-            sendCommand={() => handleControl("yaw", 0)}
+            sendCommand={() => handleControl("yaw", "right")}
             isEnabled={isConnected && isArmed}
-            shortcut="→"
+            shortcut="D"
           />
         </div>
+
         {/* Height Controls */}
-        <div className="flex justify-evenly h-14">
+        {/* <div className="flex justify-evenly h-14">
           <ControlButton
             label="Height +"
             command="HEIGHT_UP"
-            sendCommand={() => handleControl("height", 1)}
+            sendCommand={() => handleControl("height", "up")}
             isEnabled={isConnected && isArmed}
             shortcut="H"
           />
           <ControlButton
             label="Height -"
             command="HEIGHT_DOWN"
-            sendCommand={() => handleControl("height", 0)}
+            sendCommand={() => handleControl("height", "down")}
             isEnabled={isConnected && isArmed}
             shortcut="L"
           />
-        </div>
+        </div> */}
+
         {/* Roll Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Roll Left"
             command="ROLL_LEFT"
-            sendCommand={() => handleControl("roll", 1)}
+            sendCommand={() => handleControl("roll", "left")}
             isEnabled={isConnected && isArmed}
-            shortcut="Q"
+            shortcut="←"
           />
           <ControlButton
             label="Roll Right"
             command="ROLL_RIGHT"
-            sendCommand={() => handleControl("roll", 0)}
+            sendCommand={() => handleControl("roll", "right")}
             isEnabled={isConnected && isArmed}
-            shortcut="E"
+            shortcut="→"
           />
         </div>
+
         {/* Pitch Controls */}
         <div className="flex justify-evenly h-14">
           <ControlButton
             label="Pitch Up"
             command="PITCH_UP"
-            sendCommand={() => handleControl("pitch", 1)}
+            sendCommand={() => handleControl("pitch", "up")}
             isEnabled={isConnected && isArmed}
-            shortcut="W"
+            shortcut="↑"
           />
           <ControlButton
             label="Pitch Down"
             command="PITCH_DOWN"
-            sendCommand={() => handleControl("pitch", 0)}
+            sendCommand={() => handleControl("pitch", "down")}
             isEnabled={isConnected && isArmed}
-            shortcut="S"
+            shortcut="↓"
           />
         </div>
+        <div  className="flex justify-evenly h-14">
+          <ControlButton
+            label="Land"
+            command="land"
+            sendCommand={() => handleControl("land", "land")}
+            isEnabled={isConnected && isArmed}
+            shortcut="L"
+          />
+          <ControlButton
+            label="SetAlt"
+            command="setalt"
+            sendCommand={() => handleControl("setAlt", "setalt")}
+            isEnabled={isConnected && isArmed}
+            shortcut="F" 
+          />
+
+        </div>
+       
+
       </div>
     </div>
   );
