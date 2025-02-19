@@ -1,205 +1,113 @@
-import { ColorRing } from "react-loader-spinner";
+// const socketUrl = "http://localhost:5000"; // Adjust the URL as needed
+// let socket = null;
+// let isConnected = false; // Tracks WebSocket connection status
+// let droneConnected = false; // Tracks drone connection status
+// let pendingRequests = {}; // Stores pending requests waiting for a response
 
-// import {endPoint} from './api';
-// const endPoint = "http://192.168.29.11:5000/api/";
-const endPoint = "http://192.168.105.92:5000/api/";
+// // Function to create a WebSocket connection when called
+// export const connectWebSocket = () => {
+//   return new Promise((resolve, reject) => {
+//     if (socket && socket.readyState === WebSocket.OPEN) {
+//       console.log("WebSocket already connected.");
+//       resolve({ success: true });
+//       return;
+//     }
 
-// const endPoint = "http://192.168.29.14:5000/api/";
-let droneConnectionStatus = false;
+//     socket = new WebSocket(socketUrl);
 
-export const isDroneConnected = () => droneConnectionStatus;
+//     socket.onopen = () => {
+//       console.log("WebSocket Connected!");
+//       isConnected = true;
+//       resolve({ success: true });
+//     };
 
-export const connectDrone = async () => {
-  try {
-    const response = await fetch(`${endPoint}connection`, { method: "POST" });
-    console.log(response);
-    const data = await response.json();
-    console.log(data);
-    if (data.message === true) {
-      droneConnectionStatus = true;
-      return { success: true };
-    } else {
-      return { success: false };
-    }
-  } catch (error) {
-    console.error("Error connecting drone:", error);
-    return { success: false, error };
-  }
-};
+//     socket.onmessage = (event) => {
+//       const data = JSON.parse(event.data);
+//       console.log("Received WebSocket Message:", data);
 
-export const disconnectDrone = async () => {
-  try {
-    const response = await fetch(`${endPoint}disconnection`, {
-      method: "POST",
-    });
-    console.log("disconnect = ", response);
-    const data = await response.json();
-    console.log(data);
-    if (data.message === true) {
-      droneConnectionStatus = false;
-      return { success: true };
-    } else {
-      return { success: false };
-    }
-  } catch (error) {
-    console.error("Error disconnecting drone:", error);
-    return { success: false, error };
-  }
-};
+//       // Update drone connection status
+//       if (data.type === "connection_status") {
+//         droneConnected = data.connected;
+//       }
 
-export const armDrone = async () => {
-  try {
-    const response = await fetch(`${endPoint}arm`, { method: "POST" });
-    console.log(response);
-    return await response.json();
-  } catch (error) {
-    console.error("Error arming drone:", error);
-    return { success: false, error };
-  }
-};
+//       // Resolve pending request based on response ID
+//       if (data.requestId && pendingRequests[data.requestId]) {
+//         pendingRequests[data.requestId].resolve(data);
+//         delete pendingRequests[data.requestId];
+//       }
+//     };
 
-export const disarmDrone = async () => {
-  try {
-    const response = await fetch(`${endPoint}disarm`, { method: "POST" });
-    return await response.json();
-  } catch (error) {
-    console.error("Error disarming drone:", error);
-    return { success: false, error };
-  }
-};
+//     socket.onerror = (error) => {
+//       console.error("WebSocket Error:", error);
+//       reject({ success: false, error });
+//     };
 
-// ✅ Throttle Control
-export const controlThrottle = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}throttle${direction}`, {
-      method: "POST",
-    });
-    console.log(response);
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling throttle:", error);
-    return { success: false, error };
-  }
-};
+//     socket.onclose = () => {
+//       console.log("WebSocket Disconnected.");
+//       isConnected = false;
+//     };
+//   });
+// };
 
-// ✅ Yaw Control
-export const controlYaw = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}yaw${direction}`, {
-      method: "POST",
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling yaw:", error);
-    return { success: false, error };
-  }
-};
+// // Function to close the WebSocket connection
+// export const disconnectWebSocket = () => {
+//   return new Promise((resolve) => {
+//     if (socket) {
+//       socket.close();
+//       socket = null;
+//       isConnected = false;
+//       resolve({ success: true });
+//     } else {
+//       resolve({ success: false });
+//     }
+//   });
+// };
 
-// ✅ Height Control
-export const controlHeight = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}height${direction}`, {
-      method: "POST",
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling height:", error);
-    return { success: false, error };
-  }
-};
+// // Function to send WebSocket message and return a Promise
+// const sendWebSocketRequest = (command, payload = {}) => {
+//   return new Promise((resolve, reject) => {
+//     if (!socket || !isConnected) {
+//       reject(new Error("WebSocket Not Connected"));
+//       return;
+//     }
 
-// ✅ Roll Control
-export const controlRoll = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}roll${direction}`, {
-      method: "POST",
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling roll:", error);
-    return { success: false, error };
-  }
-};
+//     const requestId = Math.random().toString(36).substr(2, 9);
+//     const message = JSON.stringify({ requestId, command, ...payload });
 
-// ✅ Pitch Control
-export const controlPitch = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}pitch${direction}`, {
-      method: "POST",
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling pitch:", error);
-    return { success: false, error };
-  }
-};
-export const controlLand= async (direction) => {
-  console.log("inside controlLand ",direction);
-  try {
-    const response = await fetch(`${endPoint}land`, {
-      method: "POST",
-    });
-    console.log("control land ",response);
-    return await response.json();
-  } catch (error) {
-    console.error("Error returning Home:", error);
-    return { success: false, error };
-  }
-};
-export const controlSetAlt = async (direction) => {
-  console.log("inside controlSetAlt ",direction);
-  try {
-    const response = await fetch(`${endPoint}setalt`, {
-      method: "POST",
-    });
-    console.log("control setAlt ",response);
-    return await response.json();
-  } catch (error) {
-    console.error("Error setting altitude:", error);
-    return { success: false, error };
-  }
-};
-export const getTelemetry = async () => {
-  try {
-    const response = await fetch(`${endPoint}telemetry`, {
-      method: "GET",
-    });
+//     pendingRequests[requestId] = { resolve, reject };
 
-    const data = await response.json();
-    console.log("Telemetry: ", data);
-    console.log("Telemetry data: ", data.message);
+//     socket.send(message);
+//     console.log("Sent WebSocket Command:", message);
+//   });
+// };
 
-    if (data.message != null) {
-      console.log("inside this if block");
-      return data.message; // Assuming telemetry data is in data.telemetry
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching telemetry data:", error);
-    return null;
-  }
-};
+// // **Drone Connection Functions**
+// export const connectDrone = async () => {
+//   const connectionStab=await connectWebSocket(); // First, establish WebSocket connection
+//   console.log(connectionStab);
 
+//   const response = sendWebSocketRequest(`connection`); // Then, send connection command
+//   return response;
+// };
 
-export const getFlightMode = async () => {
-  try {
-    const response = await fetch(`${endPoint}flightmode`, {
-      method: "GET",
-    });
+// export const disconnectDrone = async () => {
+//   const response = await sendWebSocketRequest("disconnect"); // Send disconnect command first
+//   await disconnectWebSocket(); // Then, close WebSocket connection
+//   return response;
+// };
 
-    const data = await response.json();
-    console.log("Flight Mode: ", data);
-    console.log("Flight Mode data: ", data.message);
+// // **Drone Control Commands**
+// export const armDrone = () => sendWebSocketRequest("arm");
+// export const disarmDrone = () => sendWebSocketRequest("disarm");
+// export const controlThrottle = (direction) => sendWebSocketRequest("throttle", { direction });
+// export const controlYaw = (direction) => sendWebSocketRequest("yaw", { direction });
+// export const controlHeight = (direction) => sendWebSocketRequest("height", { direction });
+// export const controlRoll = (direction) => sendWebSocketRequest("roll", { direction });
+// export const controlPitch = (direction) => sendWebSocketRequest("pitch", { direction });
+// export const controlLand = () => sendWebSocketRequest("land");
+// export const controlSetAlt = (altitude) => sendWebSocketRequest("set_altitude", { altitude });
+// export const getTelemetry = () => sendWebSocketRequest("get_telemetry");
+// export const getFlightMode = () => sendWebSocketRequest("get_flight_mode");
 
-    if (data.message != null) {
-      console.log("inside this if block");
-      return data.message; // Assuming telemetry data is in data.telemetry
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching Flight Mode data:", error);
-    return null;
-  }
-};
+// // Check if drone is connected
+// export const isDroneConnected = () => droneConnected;
