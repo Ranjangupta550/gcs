@@ -49,6 +49,7 @@ function MainPage() {
 
       <Text />
 
+
     </>
   );
 }
