@@ -9,10 +9,11 @@ const ConnectionButton = ({ isConnected, setIsConnected }) => {
 
   useEffect(() => {
     const checkConnection = () => setIsConnected(isDroneConnected());
-    checkConnection();
-    const interval = setInterval(checkConnection, 1000);
+    
 
-    return () => clearInterval(interval);
+    // const intervalId = setInterval(checkConnection, 1000);
+
+    // return () => clearInterval(intervalId);
   }, [setIsConnected]);
 
   const handleClick = async () => {

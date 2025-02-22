@@ -90,7 +90,7 @@ function FlightControlPannel() {
     }
   };
 
-  // 🔥 Add a useEffect to listen for keypress events
+
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (!isConnected || !isArmed) return; // Only work when connected and armed

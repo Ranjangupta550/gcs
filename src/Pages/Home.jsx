@@ -43,13 +43,6 @@ function MainPage() {
           className="w-screen h-[30px] border-2 relative bottom-0"
         ></div>
       </div>
-
-
-
-
-      <Text />
-
-
     </>
   );
 }
