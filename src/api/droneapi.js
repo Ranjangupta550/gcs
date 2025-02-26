@@ -18,13 +18,13 @@ export const connectDrone = async () => {
   }
 };
 
-export const handshake = async () => {
-  const response = await sendCommand("handshake");
-  console.log("Handshake response: ");  
-  console.log(response);
-  if (response.message) console.log("Handshake successful");
-  return response;
-};
+// export const handshake = async () => {
+//   const response = await sendCommand("handshake");
+//   console.log("Handshake response: ");  
+//   console.log(response);
+//   if (response.message) console.log("Handshake successful");
+//   return response;
+// };
 // handshake();  
 
 // ✅ Disconnect Drone
@@ -63,4 +63,9 @@ export const getFlightMode = () => sendCommand("getFlightMode");
 export const setFlightMode = (mode) => sendCommand("setFlightMode", { mode });
 
 // ✅ Get Telemetry Data
-export const getTelemetry = () => sendCommand("telemetry");
+
+export const getTelemetry =async () => {
+  const telemetryData = await sendCommand("telemetry");
+  // console.log("Telemetry data requested",telemetryData);
+  return telemetryData;
+}

@@ -7,35 +7,15 @@ import CurrentFlightMode from "./Status/CurrentFLightMode";
 import { isDroneConnected, getTelemetry,getFlightMode } from "../../api/droneapi";
 import ConnectDisconnectButton from "./ConnectionButton/ConnectDisconnectButton";
 import InputParameter from "../inputParameter/inputParameter";
+import useTelemetry from "../../api/Telemetry/useTelemetryStore";
 
 
 
 function Navbar() {
+    const telemetry = useTelemetry();
   const [isConnected, setIsConnected] = useState(isDroneConnected());
-  const [telemetry, setTelemetry] = useState(null);
-  const [formData, setFormData] = useState(false);
-  const [flightMode, setFlightMode] = useState(null);
+    const [formData, setFormData] = useState(false);
 
-
-
-  useEffect(() => {
-    if (isConnected) {
-      // Fetch telemetry data when the drone is connected
-      const fetchTelemetryData = async () => {
-        // const data = await getTelemetry();
-        // setTelemetry(data); // Set telemetry data
-        const getFlightModeData = await getFlightMode();
-        setFlightMode(getFlightModeData);
-      };
-
-      fetchTelemetryData();
-    } else {
-      setTelemetry(null); 
-        setFlightMode(null);
-      
-      // Reset telemetry data when disconnected
-    }
-  }, [isConnected]); // Re-run when the connection status changes
 
 return (
     <>
@@ -67,7 +47,7 @@ return (
 
                 {/* Satellite Count */}
                 <div id="SatelliteCount" className="flex w-28 justify-evenly pt-1">
-                    <SatelliteCount count={telemetry?.satelliteCount || 0} />{" "}
+                    <SatelliteCount count={telemetry?.gps.satellites || 0} />{" "}
                     {/* Show Satellite Count */}
                 </div>
 
@@ -76,7 +56,7 @@ return (
                     id="CurrentFlightMode"
                     className="flex w-28 justify-evenly items-center pt-1"
                 >
-                    <CurrentFlightMode mode={flightMode || "N/A"} />{" "}
+                    <CurrentFlightMode mode={telemetry?.system.flight_mode || "N/A"} />{" "}
                    
                 </div>
             </div>

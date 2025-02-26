@@ -7,7 +7,7 @@ import FlightControlPannel from "../Components/FlightControlPannel/FlightControl
 import Map from "../Components/Map/Map";
 import StatusBox from "../Components/Statusbox/Statusbox";
 // import InputParameter from "../Components/InputParameter/InputParameter";
-import Text from "../api/text";
+// import Text from "../api/text";
 function MainPage() {
   const [count, setCount] = useState(0);
 

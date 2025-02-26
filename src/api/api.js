@@ -270,7 +270,7 @@ import { io } from "socket.io-client";
 // 🌐 Connect to the WebSocket server
 // const SOCKET_SERVER_URL = "http://192.168.29.11:5000"; // Update with your actual server IP
 
-const socket = io("http://192.168.29.13:5000");
+const socket = io("http://192.168.29.14:5000");
 
 const ServerConnection = () => {
     // ✅ Handle connection
