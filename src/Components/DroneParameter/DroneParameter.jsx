@@ -1,10 +1,23 @@
-import React from "react";
+import  {useEffect,useState} from "react";
 import ParaCard from "../Common/ParameterCard";
-import useTelemetry from "../../api/Telemetry/useTelemetryStore";
+import useTelemetry from "../../Global/centralTelemetry";
+import { isDroneConnected } from "../../api/droneapi";
+
 
 function DroneParameter() {
-  const telemetry = useTelemetry(); // Get telemetry data from hook
-  console.log("Telemetry data: ", telemetry);
+  const [telemetry, setTelemetry] = useState({});
+  const checkDroneConnection = () => {
+    if (isDroneConnected()) {
+      setTelemetry(useTelemetry());
+    } else {
+      setTelemetry({});
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(checkDroneConnection, 1000); // Check every second
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
   const formatValue = (value) => (value !== undefined && value !== null ? value.toFixed(4) : "0");
 

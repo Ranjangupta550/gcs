@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { connectDrone, disconnectDrone, isDroneConnected } from "../../../api/droneapi.js";
 import Loader from "../../Common/Loader.jsx";
-import Notification from "../../../utils/Notification";
+import Notification from "../../../utils/Notification.jsx";
+import useTelemetry from "../../../Global/centralTelemetry.js";
+import { use } from "react";
 
 const ConnectionButton = ({ isConnected, setIsConnected }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +27,7 @@ const ConnectionButton = ({ isConnected, setIsConnected }) => {
         response = await disconnectDrone();
       } else {
         response = await connectDrone();
+
       }
 
       console.log("Drone Response:", response);

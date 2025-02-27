@@ -18,15 +18,6 @@ export const connectDrone = async () => {
   }
 };
 
-// export const handshake = async () => {
-//   const response = await sendCommand("handshake");
-//   console.log("Handshake response: ");  
-//   console.log(response);
-//   if (response.message) console.log("Handshake successful");
-//   return response;
-// };
-// handshake();  
-
 // ✅ Disconnect Drone
 export const disconnectDrone = async () => {
   try {

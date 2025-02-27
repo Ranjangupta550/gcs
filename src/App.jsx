@@ -1,5 +1,5 @@
 import { useState ,useEffect} from 'react'
-import useTelemetryStore from './api/Telemetry/useTelemetryStore';
+// import useTelemetryStore from './api/Telemetry/useTelemetryStore';
 
 import MainPage from './Pages/Home'
 
