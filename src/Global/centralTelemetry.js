@@ -1,26 +1,13 @@
-import { useState, useEffect } from "react";
-import { isDroneConnected, getTelemetry } from "../api/droneapi";
+import useTelemetryStore from "./telemertyStore";
 const useTelemetry = () => {
-    const [telemetry, setTelemetry] = useState(null);
-
-    useEffect(async() => {
-        // const interval = setInterval(async () => {
-           
-        // },); // Check every 1 second
-        if (isDroneConnected()) {
-            const data = await getTelemetry();
-            setTelemetry(data);
-        } else {
-            setTelemetry(null); // Reset telemetry if drone disconnects
-        }
-        // return () => clearInterval(interval); // Cleanup on unmount
-    }, []);
-
-    if (!isDroneConnected()) {
+    try {
+        const telemetryData = useTelemetryStore.getState().getTelemetry(); // ✅ Directly access latest telemetry
+        console.log("Telemetry data:", telemetryData);
+        return telemetryData;
+    } catch (error) {
+        console.error("Failed to get telemetry data:", error);
         return null;
     }
-
-    return telemetry?.message;
 };
 
 export default useTelemetry;

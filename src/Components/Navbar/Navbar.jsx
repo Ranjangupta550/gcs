@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { isDroneConnected } from "../../api/droneapi";
+import React from "react";
+import connectionStatus from "../../Global/connectionStatus"; // ✅ Import Global Store
 import ConnectDisconnectButton from "./ConnectionButton/ConnectionButton";
 import useTelemetry from "../../Global/centralTelemetry";
 import BatteryStatus from "./Status/BatteryStatus";
@@ -8,14 +8,10 @@ import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
 import SatelliteCount from "./Status/SattelliteCount";
 
-
 function Navbar() {
-   const  telemetry=null
-    const [isConnected, setIsConnected] = useState(isDroneConnected());
 
-    useEffect(() => {
-        setIsConnected(isDroneConnected());
-    }, []);
+    const telemetry = useTelemetry(); // ✅ Global Telemetry
+    const isConnected = connectionStatus((state) => state.isConnected); // ✅ Global Drone Status
 
     return (
         <>
@@ -34,16 +30,16 @@ function Navbar() {
                     </div>
 
                     <div id="SatelliteCount" className="flex w-28 justify-evenly pt-1">
-                        <SatelliteCount count={telemetry?.gps.satellites ?? 0} />
+                        <SatelliteCount count={telemetry?.gps?.satellites ?? 0} />
                     </div>
 
                     <div id="CurrentFlightMode" className="flex w-28 justify-evenly items-center pt-1">
-                        <CurrentFlightMode mode={telemetry?.system.flight_mode || "N/A"} />
+                        <CurrentFlightMode mode={telemetry?.system?.flight_mode || "N/A"} />
                     </div>
                 </div>
 
                 <div className="LeftSidebar w-auto pr-2 flex">
-                    <ConnectDisconnectButton isConnected={isConnected} setIsConnected={setIsConnected} />
+                    <ConnectDisconnectButton /> {/* ✅ No need to pass props */}
                 </div>
             </div>
         </>

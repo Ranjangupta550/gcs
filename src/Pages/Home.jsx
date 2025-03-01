@@ -6,10 +6,13 @@ import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import FlightControlPannel from "../Components/FlightControlPannel/FlightControlPannel";
 import Map from "../Components/Map/Map";
 import StatusBox from "../Components/Statusbox/Statusbox";
+import ConnectDisconnectButton from "../Components/Navbar/ConnectionButton/ConnectionButton";
 // import InputParameter from "../Components/InputParameter/InputParameter";
+import connectionStatus from "../Global/connectionStatus";
 // import Text from "../api/text";
 function MainPage() {
   const [count, setCount] = useState(0);
+  // const isConnected = connectionStatus((state) => state.isConnected); // ✅ Global Drone 
 
   return (
     <>
@@ -34,8 +37,8 @@ function MainPage() {
             <div className="w-auto h-auto  z-10 bottom-0 left-1 absolute">
               <StatusBox />
             </div>
-            <Map />
-            
+            {/* <Map /> */}
+            {/* <ConnectDisconnectButton /> */}
           </div>
         </div>
         <div

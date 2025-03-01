@@ -265,12 +265,20 @@
 // };
 
 // export { socket }; // Exporting socket instance for use in other modules
-import { io } from "socket.io-client";
+
 
 // 🌐 Connect to the WebSocket server
 // const SOCKET_SERVER_URL = "http://192.168.29.11:5000"; // Update with your actual server IP
 
-const socket = io("http://192.168.29.14:5000");
+// const socket = io("http://192.168.29.14:5000");
+import { io } from "socket.io-client";
+// const socket = io("http://localhost:5000");
+const socket=io("http://192.168.29.42:5000");
+// const COMMAND_SERVER_URL = "http://localhost:5000";
+// const TELEMETRY_SERVER_URL = "http://localhost:5001";
+
+// export const socket = io(COMMAND_SERVER_URL);
+// export const telemetrySocket = io(TELEMETRY_SERVER_URL);
 
 const ServerConnection = () => {
     // ✅ Handle connection

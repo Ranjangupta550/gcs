@@ -1,38 +1,18 @@
-import { sendCommand } from "./api"; // Import reusable function
+import { sendCommand } from "./api"; // ✅ Import reusable function
+import connectionStatus from "../Global/connectionStatus"; // ✅ Import Global Store
 
-// ✅ Get Drone Connection Status
-let droneConnectionStatus = false;
-export const isDroneConnected = () => droneConnectionStatus;
-
-// ✅ Connect Drone
 export const connectDrone = async () => {
-  try {
-    const response = await sendCommand("connection");
-    console.log(response);
-    if (response.message) droneConnectionStatus = true;
-    return response;
-  }
-  catch (error) {
-    console.error("Error connecting drone:", error);
-    return { message: false, error };
-  }
+    return await connectionStatus.getState().connect(); // ✅ Call Zustand function
 };
 
-// ✅ Disconnect Drone
 export const disconnectDrone = async () => {
-  try {
-    const response = await sendCommand("disconnection");
-    console.log(response);
-    console.log(response.message);
-    if (response.message) droneConnectionStatus = false;
-    return response;
-  }
-  catch (error) {
-    console.error("Error disconnecting drone:", error);
-    return { message: false, error };
-  }
-
+    return await connectionStatus.getState().disconnect(); // ✅ Call Zustand function
 };
+
+export const isDroneConnected = () => {
+    return connectionStatus.getState().isDroneConnected();
+};
+
 
 // ✅ Arm & Disarm
 export const armDrone = () => sendCommand("arm");
