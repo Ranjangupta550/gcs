@@ -6,7 +6,7 @@ import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import FlightControlPannel from "../Components/FlightControlPannel/FlightControlPannel";
 import Map from "../Components/Map/Map";
 import StatusBox from "../Components/Statusbox/Statusbox";
-import ConnectDisconnectButton from "../Components/Navbar/ConnectionButton/ConnectionButton";
+import ConnectionButton from "../Components/Navbar/ConnectionButton/ConnectionButton";
 // import InputParameter from "../Components/InputParameter/InputParameter";
 import connectionStatus from "../Global/connectionStatus";
 // import Text from "../api/text";
@@ -16,6 +16,10 @@ function MainPage() {
 
   return (
     <>
+    {/* <div className=" absolute z-10  right-1 top-7">
+    <ConnectionButton />
+    </div> */}
+     
       <div className="flex flex-col w-screen h-screen bg-MainBackground relative">
         <div id="Togglebar" className="h-auto">
           <ToggleBar />
@@ -37,8 +41,7 @@ function MainPage() {
             <div className="w-auto h-auto  z-10 bottom-0 left-1 absolute">
               <StatusBox />
             </div>
-            {/* <Map /> */}
-            {/* <ConnectDisconnectButton /> */}
+            <Map />
           </div>
         </div>
         <div

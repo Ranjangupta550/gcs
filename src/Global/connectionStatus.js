@@ -1,9 +1,11 @@
 import { create } from "zustand";
 import { sendCommand } from "../api/api"; // ✅ Import reusable function
 import { useState } from "react";
+import { useTelemetryStore}  from "./telemetryStore.js"; // ✅ Import telemetry store
 
 const connectionStatus = create((set) => ({
     isConnected: false, // ✅ Initial status
+
 
     // ✅ Connect Drone
     connect: async () => {
@@ -11,6 +13,12 @@ const connectionStatus = create((set) => ({
             const response = await sendCommand("connection");
             if (response.message) {
                 set({ isConnected: true }); // ✅ Connection successful to state update
+                console.log("Connected");
+                console.log("isConnected", connectionStatus.getState().isConnected);
+                useTelemetryStore.getState().startTelemetry();
+               
+
+
             }
             return response;
         } catch (error) {
@@ -35,6 +43,7 @@ const connectionStatus = create((set) => ({
 
     // ✅ Get Connection Status
     isDroneConnected: () => {
+        console.log("isConnected", connectionStatus.getState().isConnected);
         return connectionStatus.getState().isConnected;
     },
 }));

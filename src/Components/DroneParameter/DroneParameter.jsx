@@ -4,8 +4,17 @@ import useTelemetry from "../../Global/centralTelemetry";
 import useGlobalDroneStore from "../../Global/connectionStatus";
 
 function DroneParameter() {
-    const telemetry = useTelemetry(); 
-  //  const  telemetry=null
+    // const [telemetry, setTelemetry] = useState(useTelemetry());
+
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setTelemetry(useTelemetry());
+    //     }, 1000);
+
+    //     return () => clearInterval(interval);
+    // }, []);
+    const telemetry = useTelemetry();
+    // const telemetry=useGlobalDroneStore((state)=>state.telemetry); 
     const isConnected = useGlobalDroneStore((state) => state.isConnected);
 
     const formatValue = (value) => (value !== undefined && value !== null ? value.toFixed(4) : "0");

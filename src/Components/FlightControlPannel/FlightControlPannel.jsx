@@ -21,7 +21,8 @@ function FlightControlPannel() {
     if (!isConnected) return;
     try {
       const response = await armDrone();
-      if (response.message === true) setIsArmed(true);
+      console.log("Arm response2: ", response);
+      if (response === true) setIsArmed(true);
     } catch (error) {
       console.error("Error while arming:", error);
     }
@@ -31,7 +32,7 @@ function FlightControlPannel() {
     if (!isConnected) return;
     try {
       const response = await disarmDrone();
-      if (response.message) setIsArmed(false);
+      if (response) setIsArmed(false);
     } catch (error) {
       console.error("Error while disarming:", error);
     }

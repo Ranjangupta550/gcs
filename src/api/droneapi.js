@@ -15,28 +15,61 @@ export const isDroneConnected = () => {
 
 
 // ✅ Arm & Disarm
-export const armDrone = () => sendCommand("arm");
-export const disarmDrone = () => sendCommand("disarm");
+export const armDrone = async () => {
+  const response = await sendCommand("arm");
+  console.log("Arm response: ", response);
+  return response.message;
+};
+
+export const disarmDrone = async () => {
+  const response = await sendCommand("disarm");
+  console.log("Disarm response: ", response);
+  return response.message;
+};
 
 // ✅ Drone Controls
-export const controlThrottle = (direction) => sendCommand("throttle", { direction });
-export const controlYaw = (direction) => sendCommand("controlYaw", { direction });
-export const controlHeight = (direction) => sendCommand("controlHeight", { direction });
-export const controlRoll = (direction) => sendCommand("controlRoll", { direction });
-export const controlPitch = (direction) => sendCommand("controlPitch", { direction });
-export const controlLand = () => sendCommand("controlLand");
+export const controlThrottle = (direction) => {
+  console.log("Throttle direction: ", direction);
+  return sendCommand("throttle", { direction });
+};
+export const controlYaw = (direction) => {
+  console.log("Yaw direction: ", direction);
+  return sendCommand("controlYaw", { direction });
+};
+export const controlHeight = (direction) => {
+  console.log("Height direction: ", direction);
+  return sendCommand("controlHeight", { direction });
+};
+export const controlRoll = (direction) => {
+  console.log("Roll direction: ", direction);
+  return sendCommand("controlRoll", { direction });
+};
+export const controlPitch = (direction) => {
+  console.log("Pitch direction: ", direction);
+  return sendCommand("controlPitch", { direction });
+};
+export const controlLand = () => {
+  console.log("Landing drone");
+  return sendCommand("controlLand");
+};
 export const controlSetAlt = (altitude) => {
   console.log("Altitude: ", altitude);
- sendCommand( altitude );
-}
+  return sendCommand("controlSetAlt", { altitude });
+};
 // ✅ Flight Modes
-export const getFlightMode = () => sendCommand("getFlightMode");
-export const setFlightMode = (mode) => sendCommand("setFlightMode", { mode });
+export const getFlightMode = () => {
+  console.log("Getting flight mode");
+  return sendCommand("getFlightMode");
+};
+export const setFlightMode = (mode) => {
+  console.log("Setting flight mode: ", mode);
+  return sendCommand("setFlightMode", { mode });
+};
 
 // ✅ Get Telemetry Data
 
-export const getTelemetry =async () => {
-  const telemetryData = await sendCommand("telemetry");
-  // console.log("Telemetry data requested",telemetryData);
-  return telemetryData;
-}
+// export const getTelemetry =async () => {
+//   const telemetryData = await sendCommand("telemetry");
+//   // console.log("Telemetry data requested",telemetryData);
+//   return telemetryData;
+// }
