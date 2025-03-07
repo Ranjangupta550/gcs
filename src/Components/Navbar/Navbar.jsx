@@ -7,6 +7,7 @@ import CurrentFlightMode from "./Status/CurrentFlightMode";
 import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
 import SatelliteCount from "./Status/SattelliteCount";
+import CameraWindow from "../../Pages/CameraWindow";
 
 function Navbar() {
 
@@ -38,7 +39,8 @@ function Navbar() {
                     </div>
                 </div>
 
-                <div className="LeftSidebar w-auto pr-2 flex">
+                <div className="LeftSidebar w-auto pr-2 flex gap-4 justify-center items-center">
+                    <CameraWindow /> {/* ✅ No need to pass props */}
                     <ConnectDisconnectButton /> {/* ✅ No need to pass props */}
                 </div>
             </div>

@@ -1,58 +1,58 @@
-const { app, BrowserWindow, ipcMain, Notification } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
-let mainWindow;
+let mainWindow, videoWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    fullscreen: false, // Do not open in full screen mode
-    frame: false, // Disable default frame to create a custom title bar
-    resizable: true, // Allow resizing
+    fullscreen: false,
+    frame: false,
+    resizable: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
     },
   });
 
-  mainWindow.maximize(); // Open the window in maximized mode
-
-  mainWindow.loadURL("http://localhost:5173"); // URL of your Vite app
-  mainWindow.webContents.openDevTools(); // Optional, for development purposes
-
-
-
-  // Add event listeners for maximized and unmaximize events
-  mainWindow.on("maximize", () => {
-    mainWindow.webContents.send("window-state-change", "maximized");
-  });
-
-  mainWindow.on("unmaximize", () => {
-    mainWindow.webContents.send("window-state-change", "restored");
-  });
+  mainWindow.maximize();
+  mainWindow.loadURL("http://localhost:5173");
+  mainWindow.webContents.openDevTools();
 }
 
-app.on("ready", createWindow);
+app.whenReady().then(createWindow);
 
-// IPC event handlers for minimize, maximize, restore, and close
-ipcMain.on("minimize", () => {
-  if (mainWindow) {
-    mainWindow.minimize();
+// ✅ IPC Event Handlers for Main Window
+ipcMain.on("minimize-window", () => mainWindow?.minimize());
+ipcMain.on("maximize-window", () => mainWindow?.maximize());
+ipcMain.on("restore-window", () => mainWindow?.restore());
+ipcMain.on("close-window", () => mainWindow?.close());
+
+// ✅ Open Video Stream Window
+ipcMain.on("open-video-stream", () => {
+  if (!videoWindow) {
+    videoWindow = new BrowserWindow({
+      width: 640,
+      height: 480,
+      frame: false,
+      resizable: true,
+      title: "Live Video Stream",
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+      },
+    });
+
+    videoWindow.loadURL("http://localhost:5173/video");
+
+    videoWindow.on("closed", () => {
+      videoWindow = null;
+    });
+  } else {
+    videoWindow.focus();
   }
 });
 
-ipcMain.on("maximize", () => {
-  if (mainWindow) {
-    mainWindow.maximize();
-  }
-});
-
-ipcMain.on("restore", () => {
-  if (mainWindow) {
-    mainWindow.restore();
-  }
-});
-
-ipcMain.on("close", () => {
-  if (mainWindow) {
-    mainWindow.close();
-  }
-});
+// ✅ IPC Event Handlers for Video Window
+ipcMain.on("minimize-video-window", () => videoWindow?.minimize());
+ipcMain.on("maximize-video-window", () => videoWindow?.maximize());
+ipcMain.on("restore-video-window", () => videoWindow?.restore());
+ipcMain.on("close-video-window", () => videoWindow?.close());
