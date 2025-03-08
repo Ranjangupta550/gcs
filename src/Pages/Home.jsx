@@ -22,7 +22,7 @@ function MainPage() {
      
       <div className="flex flex-col w-screen h-screen bg-MainBackground relative">
         <div id="Togglebar" className="h-auto">
-          <ToggleBar />
+          {/* <ToggleBar /> */}
         </div>
         <div id="Navbar" className="h-auto">
           <Navbar />

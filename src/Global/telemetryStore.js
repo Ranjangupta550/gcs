@@ -80,7 +80,7 @@ const useTelemetryStore = create((set, get) => ({
     stopTelemetry: () => {
         console.log("🛑 Stopping telemetry...");
         set({ isListening: false, telemetry: null });
-        socket.off("telemetry_response");
+        // socket.off("telemetry_response");
     },
 
     getTelemetry: () => get().telemetry, // ✅ Use Zustand state

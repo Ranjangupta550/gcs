@@ -10,40 +10,39 @@ function VideoStream() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
-      {/* Toggle Bar */}
-      <ToggleBar />
+     
 
       {/* Close Button */}
-      <button
+      {/* <button
         onClick={() => window.api.send("close-video-window")}
         className="absolute top-4 left-4 bg-red-500 px-4 py-2 rounded"
       >
         Close
-      </button>
+      </button> */}
 
       {/* Toggle Controls Button */}
-      <button
+      {/* <button
         onClick={toggleControls}
         className="absolute top-4 right-4 bg-blue-500 px-4 py-2 rounded"
       >
         {showControls ? "Hide Controls" : "Show Controls"}
-      </button>
+      </button> */}
 
       {/* Video Stream (Updated YouTube Embed Link) */}
       <iframe
-        src="https://www.youtube.com/embed/Eko52fem1Xw"
-        className="w-3/4 h-3/4 border-2 border-gray-500"
+        src="http://192.168.29.102"
+        className="w-[98%] h-[98%] border-2 border-gray-500"
         allowFullScreen
       ></iframe>
 
       {/* Custom Controls */}
-      {showControls && (
+      {/* {showControls && (
         <div className="mt-4 flex gap-4">
           <button className="bg-green-500 px-4 py-2 rounded">Start Stream</button>
           <button className="bg-red-500 px-4 py-2 rounded">Stop Stream</button>
           <button className="bg-yellow-500 px-4 py-2 rounded">Record</button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

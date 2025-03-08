@@ -32,9 +32,10 @@ const connectionStatus = create((set) => ({
         try {
             const response = await sendCommand("disconnection");
             if (response.message) {
+                useTelemetryStore.getState().stopTelemetry();
                 set({ isConnected: false }); // ✅ Disconnection successful to state update
             }
-            return response;
+            return response.message;
         } catch (error) {
             console.error("Error disconnecting drone:", error);
             return { message: false, error };

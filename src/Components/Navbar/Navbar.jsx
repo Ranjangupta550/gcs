@@ -8,6 +8,7 @@ import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
 import SatelliteCount from "./Status/SattelliteCount";
 import CameraWindow from "../../Pages/CameraWindow";
+import MissionUpload from "../../Components/Common/UploadFiles";
 
 function Navbar() {
 
@@ -40,6 +41,7 @@ function Navbar() {
                 </div>
 
                 <div className="LeftSidebar w-auto pr-2 flex gap-4 justify-center items-center">
+                    <MissionUpload /> {/* ✅ No need to pass props */}
                     <CameraWindow /> {/* ✅ No need to pass props */}
                     <ConnectDisconnectButton /> {/* ✅ No need to pass props */}
                 </div>
