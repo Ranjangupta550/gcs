@@ -4,7 +4,6 @@ const { screen } = require("electron");
 
 let mainWindow, videoWindow;
 
-
 function createWindow() {
   mainWindow = new BrowserWindow({
     fullscreen: false,
@@ -29,11 +28,11 @@ app.whenReady().then(createWindow);
 ipcMain.on("minimize", () => mainWindow?.minimize());
 ipcMain.on("maximize", () => mainWindow?.maximize());
 ipcMain.on("restore", () => mainWindow?.restore());
-ipcMain.on("close", () =>{
- 
-    videoWindow?.close()
-  mainWindow?.close()
-} );
+ipcMain.on("close", () => {
+  videoWindow?.close();
+  mainWindow?.close();
+});
+
 // ✅ Open Video Stream Window
 ipcMain.on("open-video-stream", () => {
   if (!videoWindow) {
@@ -44,7 +43,7 @@ ipcMain.on("open-video-stream", () => {
       frame: true,
       resizable: true,
       webPreferences: {
-        preload: path.join(__dirname, "preload.js"),
+        preload: path.join(__dirname, "preload.cjs"),
         contextIsolation: true,
       },
     });
@@ -62,6 +61,7 @@ ipcMain.on("open-video-stream", () => {
 
     videoWindow.loadURL("http://localhost:5173/video");
     videoWindow.menuBarVisible = false;
+    videoWindow.webContents.openDevTools(); // Open DevTools for videoWindow
 
     videoWindow.on("maximize", () => videoWindow.webContents.send("window-state-change", "maximized"));
     videoWindow.on("unmaximize", () => videoWindow.webContents.send("window-state-change", "restored"));

@@ -9,6 +9,7 @@ const FileUpload = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [notification, setNotification] = useState(null);
     const fileReaderRef = useRef(null); // Store FileReader instance
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         const handleUploadResponse = (response) => {
@@ -21,14 +22,12 @@ const FileUpload = () => {
                     message: "The mission file has been uploaded successfully.",
                     type: "success",
                 });
-                console.log("Mission uploaded successfully.");
             } else {
                 setNotification({
                     title: "Upload Failed",
                     message: "Failed to upload the mission file.",
                     type: "error",
                 });
-                console.log("Failed to upload the mission file.");
             }
 
             resetUpload();
@@ -43,21 +42,20 @@ const FileUpload = () => {
 
     const handleFileChange = (event) => {
         if (event.target.files.length > 0) {
-            setFile(event.target.files[0]);
-            console.log("File selected:", event.target.files[0]);
+            const selectedFile = event.target.files[0];
+            setFile(selectedFile);
+            console.log("File selected:", selectedFile);
         }
     };
 
     const handleUpload = () => {
         if (!file) {
             setNotification({ title: "Error", message: "No file selected!", type: "error" });
-            console.log("No file selected!");
             return;
         }
 
         if (!socket) {
             setNotification({ title: "Error", message: "WebSocket connection not established!", type: "error" });
-            console.log("WebSocket connection not established!");
             return;
         }
 
@@ -65,13 +63,11 @@ const FileUpload = () => {
         console.log("Uploading file:", file.name);
 
         const reader = new FileReader();
-        fileReaderRef.current = reader; // Store reader in ref
+        fileReaderRef.current = reader;
 
         reader.onload = (event) => {
             const arrayBuffer = event.target.result;
-            const fileData = new Uint8Array(arrayBuffer); // Convert to Uint8Array
-
-            console.log("File data read (buffer format):", fileData);
+            const fileData = new Uint8Array(arrayBuffer);
 
             socket.emit("upload", { filename: file.name, data: fileData });
 
@@ -81,27 +77,40 @@ const FileUpload = () => {
         reader.onerror = () => {
             setNotification({ title: "Error", message: "Failed to read file.", type: "error" });
             setIsUploading(false);
-            console.log("Error reading file.");
         };
 
-        reader.readAsArrayBuffer(file); // Read as binary buffer
+        reader.readAsArrayBuffer(file);
     };
 
     const resetUpload = () => {
         if (fileReaderRef.current) {
-            fileReaderRef.current.abort(); // Abort file reading
+            fileReaderRef.current.abort();
         }
-        setIsUploading(false);
+
         setFile(null);
-        setIsOpen(false);
-        console.log("Upload process canceled.");
+        setIsUploading(false);
+
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""; // Properly reset file input
+        }
+
+        setTimeout(() => {
+            setIsOpen(false);
+            setNotification(null); // Clear notification after closing
+        }, 100);
+    };
+
+    const openModal = () => {
+        setFile(null); // Ensure file is reset before opening
+        setIsUploading(false);
+        setIsOpen(true);
     };
 
     return (
         <div className="flex flex-col items-center">
             <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                onClick={() => setIsOpen(true)}
+                onClick={openModal}
             >
                 Upload Mission
             </button>
@@ -113,6 +122,7 @@ const FileUpload = () => {
 
                         <input
                             type="file"
+                            ref={fileInputRef}
                             accept=".waypoints"
                             onChange={handleFileChange}
                             className="mb-4 border p-2 w-full"

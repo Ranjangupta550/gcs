@@ -36,8 +36,8 @@
 // ===========================
 // Enter your WiFi credentials
 // ===========================
-const char* ssid = "Sidak_ defence _4G";
-const char* password = "Sidak@1234";
+const char *ssid = "Ranjan's Galaxy Note10 Lite";
+const char *password = "ranjan124";
 
 void startCameraServer();
 void setupLedFlash(int pin);
