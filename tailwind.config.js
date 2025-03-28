@@ -4,10 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        MainBackground: "#3F3F3F", // Main background
+        MainBackground: "#1d1719", // Main background
         togglebar: "#030712",
         navbar: "#1A1A1B", // Navbar background
-        ParameterBox : "#555050", // Parameter box background
+        ParameterBox : "#1d1718", // Parameter box background
         statusGreen: "#22E208", // Green status indicator
         cardBg: "#634F4F", // Card background
         neutralGray: "#D9D9D9", // Neutral gray

@@ -72,8 +72,8 @@ function FlightControlPannel() {
 
     try {
       const response = await controlFunction(action);
-      if (!response.success) {
-        console.error(`${actionType} control failed:`, response.error);
+      if (!response || response.error) {
+        console.error(`${actionType} control failed:`, response?.error || "Unknown error");
       }
     } catch (error) {
       console.error(`Error controlling ${actionType}:`, error);
@@ -166,8 +166,8 @@ function FlightControlPannel() {
 
         {/* Pitch Controls */}
         <div className="flex justify-evenly h-14">
-          <ControlButton label="Pitch Up" command="PITCH_UP" sendCommand={() => handleControl("pitch", "up")} isEnabled={isConnected && isArmed} shortcut="↑" />
-          <ControlButton label="Pitch Down" command="PITCH_DOWN" sendCommand={() => handleControl("pitch", "down")} isEnabled={isConnected && isArmed} shortcut="↓" />
+          <ControlButton label="Pitch Up" command="PITCH_UP" sendCommand={() => handleControl("pitch", "forward")} isEnabled={isConnected && isArmed} shortcut="↑" />
+          <ControlButton label="Pitch Down" command="PITCH_DOWN" sendCommand={() => handleControl("pitch", "backward")} isEnabled={isConnected && isArmed} shortcut="↓" />
         </div>
 
         {/* Land & SetAlt Controls */}
