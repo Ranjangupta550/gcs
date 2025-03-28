@@ -4,3 +4,6 @@
 *{
     user-select: none;
 }
+input{
+    user-select: text;
+}

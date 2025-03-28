@@ -1,84 +1,94 @@
 import React, { useState, useEffect } from "react";
 import Map, { Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import droneSvg from "../../assets/Svg/DroneSvg.svg"; // Ensure the correct path
+import droneSvg from "../../assets/Svg/DroneSvg.svg";
+import useTelemetry from "../../Global/centralTelemetry";
+import MapControls from "./MapControls";
 
-const getRandomLocation = (baseLongitude, baseLatitude) => {
-    const randomOffset = () => (Math.random() - 0.5) * 0.005; // Small random movement
-    return {
-        longitude: baseLongitude + randomOffset(),
-        latitude: baseLatitude + randomOffset(),
-    };
+const DEFAULT_LOCATION = {
+    longitude: 77.5083, // Default location
+    latitude: 28.4829,
 };
 
+const roundTo4 = (num) => (num ? parseFloat(num.toFixed(4)) : 0);
+
 const MapComponent = () => {
-    const [userLocation, setUserLocation] = useState({
-        longitude: 28.509937, // Gurgaon, India
-        latitude: 77.37992                                          ,
-    });
+    const telemetry = useTelemetry();
+    const isConnected = telemetry?.nav?.longitude !== undefined && telemetry?.nav?.latitude !== undefined;
+
+    const [userLocation, setUserLocation] = useState(DEFAULT_LOCATION);
+    const [followDrone, setFollowDrone] = useState(true); // Auto-follow enabled initially
 
     const [viewState, setViewState] = useState({
-        longitude: 28.5099,
-        latitude: 77.37992,
-        zoom: 10, // Higher zoom for navigation feel
-        pitch: 60                                            , // Tilt view for better navigation perspective
-        bearing: 0, // Rotation (can be dynamic in the future)
+        longitude: DEFAULT_LOCATION.longitude,
+        latitude: DEFAULT_LOCATION.latitude,
+        zoom: 17,
+        pitch: 0,
+        bearing: 0,
+        mapStyle: "mapbox://styles/mapbox/satellite-v9", // Default map style
     });
 
+    // Update user location from telemetry & auto-follow if enabled
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            const newLocation = getRandomLocation(77.3910, 28.5355);
-            setUserLocation(newLocation);
+        if (isConnected && telemetry?.nav) {
+            const newUserLocation = {
+                longitude: roundTo4(telemetry.nav.longitude || DEFAULT_LOCATION.longitude),
+                latitude: roundTo4(telemetry.nav.latitude || DEFAULT_LOCATION.latitude),
+            };
+            console.log("New User Location: ", newUserLocation);
+            setUserLocation(newUserLocation);
 
-            // Automatically update map view to follow the location
-            setViewState((prevState) => ({
-                ...prevState,
-                longitude: newLocation.longitude,
-                latitude: newLocation.latitude,
-            }));
-        },1000); // Update every 3 seconds
-
-        return () => clearInterval(intervalId); // Cleanup interval
-    }, []);
+            if (followDrone) {
+                setViewState((prevState) => ({
+                    ...prevState,
+                    longitude: newUserLocation.longitude,
+                    latitude: newUserLocation.latitude,
+                   
+                }));
+            }
+        }
+    }, [telemetry?.nav?.longitude, telemetry?.nav?.latitude, isConnected, followDrone]);
 
     return (
-        <div className="w-full h-full">
+        <div className="relative w-full h-full">
             <Map
                 {...viewState}
                 mapboxAccessToken="pk.eyJ1IjoicmFuamFuLTk4MzciLCJhIjoiY200eno4ZnBoMThzZTJpc2Nia2Zma2gyNiJ9.hszQOHoScU6INliFAnReZA"
-                onMove={(evt) => setViewState(evt.viewState)} // Allow manual map movement
+                onMove={(evt) => {
+                    setViewState((prev) => ({
+                        ...prev,
+                        ...evt.viewState, // Ensure all properties are updated
+                        mapStyle: prev.mapStyle, // Keep map style persistent
+                    }));
+                    setFollowDrone(false); // Stop auto-follow on user movement
+                }}
                 style={{ width: "100%", height: "100%" }}
-                 mapStyle="mapbox://styles/mapbox/navigation-night-v1"// Better for navigation mode
             >
-                {/* User Location Marker */}
+                {/* Drone Marker */}
                 <Marker longitude={userLocation.longitude} latitude={userLocation.latitude}>
                     <div className="relative">
                         <img
                             src={droneSvg}
                             alt="Drone"
-                            className="w-12 h-12 drop-shadow-lg transform rotate-[viewState.bearing] transition-transform duration-500"
-                            onError={(e) => { e.target.onerror = null; e.target.src = "https://upload.wikimedia.org/wikipedia/commons/e/ec/Location_dot_red.svg"; }}
+                            className="w-12 h-12 drop-shadow-lg transition-transform duration-500"
                         />
                         <div className="absolute w-16 h-16 bg-blue-200 opacity-30 rounded-full animate-ping -top-2 -left-2"></div>
                     </div>
                 </Marker>
             </Map>
+
+            {/* Map Control Buttons */}
+            <MapControls setViewState={setViewState} />
+
+            {/* Recenter Button (Follow Drone) */}
+            <button
+                onClick={() => setFollowDrone(true)}
+                className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md"
+            >
+                Follow Drone
+            </button>
         </div>
     );
 };
 
 export default MapComponent;
-
-
-
-
-
-// Map Style Name	Mapbox Style URL
-// Streets (default, detailed)	mapbox://styles/mapbox/streets-v11
-// Outdoor (terrain, parks, trails)	mapbox://styles/mapbox/outdoors-v11
-// Light (minimal, grayscale)	mapbox://styles/mapbox/light-v10
-// Dark (night mode)	mapbox://styles/mapbox/dark-v10
-// Satellite (imagery)	mapbox://styles/mapbox/satellite-v9
-// Satellite Streets (hybrid)	mapbox://styles/mapbox/satellite-streets-v11
-// Navigation Day (for navigation apps)	mapbox://styles/mapbox/navigation-day-v1
-// Navigation Night (dark mode for navigation)	mapbox://styles/mapbox/navigation-night-v1

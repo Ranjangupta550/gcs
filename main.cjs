@@ -1,58 +1,81 @@
-const { app, BrowserWindow, ipcMain, Notification } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const { screen } = require("electron");
 
-let mainWindow;
+let mainWindow, videoWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    fullscreen: false, // Do not open in full screen mode
-    frame: false, // Disable default frame to create a custom title bar
-    resizable: true, // Allow resizing
+    fullscreen: false,
+    frame: true,
+    resizable: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
     },
   });
 
-  mainWindow.maximize(); // Open the window in maximized mode
-
-  mainWindow.loadURL("http://localhost:5173"); // URL of your Vite app
-  mainWindow.webContents.openDevTools(); // Optional, for development purposes
-
-
-
-  // Add event listeners for maximized and unmaximize events
-  mainWindow.on("maximize", () => {
-    mainWindow.webContents.send("window-state-change", "maximized");
-  });
-
-  mainWindow.on("unmaximize", () => {
-    mainWindow.webContents.send("window-state-change", "restored");
-  });
+  mainWindow.maximize();
+  mainWindow.loadURL("http://localhost:5173");
+  mainWindow.menuBarVisible = false;
+  mainWindow.webContents.openDevTools();
+  mainWindow.on("maximize", () => mainWindow.webContents.send("window-state-change", "maximized"));
+  mainWindow.on("unmaximize", () => mainWindow.webContents.send("window-state-change", "restored"));
 }
 
-app.on("ready", createWindow);
+app.whenReady().then(createWindow);
 
-// IPC event handlers for minimize, maximize, restore, and close
-ipcMain.on("minimize", () => {
-  if (mainWindow) {
-    mainWindow.minimize();
-  }
-});
-
-ipcMain.on("maximize", () => {
-  if (mainWindow) {
-    mainWindow.maximize();
-  }
-});
-
-ipcMain.on("restore", () => {
-  if (mainWindow) {
-    mainWindow.restore();
-  }
-});
-
+// ✅ IPC Handlers for Main Window
+ipcMain.on("minimize", () => mainWindow?.minimize());
+ipcMain.on("maximize", () => mainWindow?.maximize());
+ipcMain.on("restore", () => mainWindow?.restore());
 ipcMain.on("close", () => {
-  if (mainWindow) {
-    mainWindow.close();
+  videoWindow?.close();
+  mainWindow?.close();
+});
+
+// ✅ Open Video Stream Window
+ipcMain.on("open-video-stream", () => {
+  if (!videoWindow) {
+    const displays = screen.getAllDisplays();
+    const externalDisplay = displays.find((display) => display.bounds.x !== 0 || display.bounds.y !== 0);
+
+    videoWindow = new BrowserWindow({
+      frame: true,
+      resizable: true,
+      webPreferences: {
+        preload: path.join(__dirname, "preload.cjs"),
+        contextIsolation: true,
+      },
+    });
+
+    if (externalDisplay) {
+      videoWindow.setBounds({
+        x: externalDisplay.bounds.x,
+        y: externalDisplay.bounds.y,
+        width: externalDisplay.size.width,
+        height: externalDisplay.size.height,
+      });
+    } else {
+      videoWindow.maximize();
+    }
+
+    videoWindow.loadURL("http://localhost:5173/video");
+    videoWindow.menuBarVisible = false;
+    videoWindow.webContents.openDevTools(); // Open DevTools for videoWindow
+
+    videoWindow.on("maximize", () => videoWindow.webContents.send("window-state-change", "maximized"));
+    videoWindow.on("unmaximize", () => videoWindow.webContents.send("window-state-change", "restored"));
+
+    videoWindow.on("closed", () => {
+      videoWindow = null;
+    });
+  } else {
+    videoWindow.focus();
   }
 });
+
+// ✅ Separate IPC Handlers for Video Window
+ipcMain.on("minimize-video", () => videoWindow?.minimize());
+ipcMain.on("maximize-video", () => videoWindow?.maximize());
+ipcMain.on("restore-video", () => videoWindow?.restore());
+ipcMain.on("close-video", () => videoWindow?.close());

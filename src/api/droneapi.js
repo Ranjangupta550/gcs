@@ -1,205 +1,74 @@
-import { ColorRing } from "react-loader-spinner";
-
-// import {endPoint} from './api';
-// const endPoint = "http://192.168.29.11:5000/api/";
-const endPoint = "http://192.168.105.92:5000/api/";
-
-// const endPoint = "http://192.168.29.14:5000/api/";
-let droneConnectionStatus = false;
-
-export const isDroneConnected = () => droneConnectionStatus;
+import { sendCommand } from "./api"; // ✅ Import reusable function
+import connectionStatus from "../Global/connectionStatus"; // ✅ Import Global Store
+import { socket } from "./api"; // ✅ Import reusable function
 
 export const connectDrone = async () => {
-  try {
-    const response = await fetch(`${endPoint}connection`, { method: "POST" });
-    console.log(response);
-    const data = await response.json();
-    console.log(data);
-    if (data.message === true) {
-      droneConnectionStatus = true;
-      return { success: true };
-    } else {
-      return { success: false };
-    }
-  } catch (error) {
-    console.error("Error connecting drone:", error);
-    return { success: false, error };
-  }
+    return await connectionStatus.getState().connect(); // ✅ Call Zustand function
 };
 
 export const disconnectDrone = async () => {
-  try {
-    const response = await fetch(`${endPoint}disconnection`, {
-      method: "POST",
-    });
-    console.log("disconnect = ", response);
-    const data = await response.json();
-    console.log(data);
-    if (data.message === true) {
-      droneConnectionStatus = false;
-      return { success: true };
-    } else {
-      return { success: false };
-    }
-  } catch (error) {
-    console.error("Error disconnecting drone:", error);
-    return { success: false, error };
-  }
+    return await connectionStatus.getState().disconnect(); // ✅ Call Zustand function
 };
 
+export const isDroneConnected = () => {
+    return connectionStatus.getState().isDroneConnected();
+};
+
+
+// ✅ Arm & Disarm
 export const armDrone = async () => {
-  try {
-    const response = await fetch(`${endPoint}arm`, { method: "POST" });
-    console.log(response);
-    return await response.json();
-  } catch (error) {
-    console.error("Error arming drone:", error);
-    return { success: false, error };
-  }
+  const response = await sendCommand("arm");
+  console.log("Arm response: ", response);
+  return response.message;
 };
 
 export const disarmDrone = async () => {
-  try {
-    const response = await fetch(`${endPoint}disarm`, { method: "POST" });
-    return await response.json();
-  } catch (error) {
-    console.error("Error disarming drone:", error);
-    return { success: false, error };
-  }
+  const response = await sendCommand("disarm");
+  console.log("Disarm response: ", response);
+  return response.message;
 };
 
-// ✅ Throttle Control
-export const controlThrottle = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}throttle${direction}`, {
-      method: "POST",
-    });
-    console.log(response);
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling throttle:", error);
-    return { success: false, error };
-  }
+// ✅ Drone Controls
+export const controlThrottle = (direction) => {
+  console.log("Throttle direction: ", direction);
+  return sendCommand(`throttle${ direction }`);
 };
-
-// ✅ Yaw Control
-export const controlYaw = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}yaw${direction}`, {
-      method: "POST",
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling yaw:", error);
-    return { success: false, error };
-  }
+export const controlYaw = (direction) => {
+  console.log("Yaw direction: ", direction);
+  return sendCommand(`yaw${ direction }`);
 };
-
-// ✅ Height Control
-export const controlHeight = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}height${direction}`, {
-      method: "POST",
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling height:", error);
-    return { success: false, error };
-  }
+export const controlHeight = (direction) => {
+  console.log("Height direction: ", direction);
+  return sendCommand(`${ direction }`);
 };
-
-// ✅ Roll Control
-export const controlRoll = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}roll${direction}`, {
-      method: "POST",
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling roll:", error);
-    return { success: false, error };
-  }
+export const controlRoll = (direction) => {
+  console.log("Roll direction: ", direction);
+  return sendCommand(`roll${ direction }`);
 };
-
-// ✅ Pitch Control
-export const controlPitch = async (direction) => {
-  try {
-    const response = await fetch(`${endPoint}pitch${direction}`, {
-      method: "POST",
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error controlling pitch:", error);
-    return { success: false, error };
-  }
+export const controlPitch = (direction) => {
+  console.log("Pitch direction: ", direction);
+  return sendCommand(`pitch${ direction }`);
 };
-export const controlLand= async (direction) => {
-  console.log("inside controlLand ",direction);
-  try {
-    const response = await fetch(`${endPoint}land`, {
-      method: "POST",
-    });
-    console.log("control land ",response);
-    return await response.json();
-  } catch (error) {
-    console.error("Error returning Home:", error);
-    return { success: false, error };
-  }
+export const controlLand = (land) => {
+  console.log("Landing drone");
+  return sendCommand(`${land}`);
 };
-export const controlSetAlt = async (direction) => {
-  console.log("inside controlSetAlt ",direction);
-  try {
-    const response = await fetch(`${endPoint}setalt`, {
-      method: "POST",
-    });
-    console.log("control setAlt ",response);
-    return await response.json();
-  } catch (error) {
-    console.error("Error setting altitude:", error);
-    return { success: false, error };
-  }
+export const controlSetAlt = (altitude) => {
+  console.log("Altitude: ", altitude);
+  return sendCommand(`${ altitude }`);
 };
-export const getTelemetry = async () => {
-  try {
-    const response = await fetch(`${endPoint}telemetry`, {
-      method: "GET",
-    });
-
-    const data = await response.json();
-    console.log("Telemetry: ", data);
-    console.log("Telemetry data: ", data.message);
-
-    if (data.message != null) {
-      console.log("inside this if block");
-      return data.message; // Assuming telemetry data is in data.telemetry
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching telemetry data:", error);
-    return null;
-  }
+// ✅ Flight Modes
+export const getFlightMode = () => {
+  console.log("Getting flight mode");
+  return sendCommand("getFlightMode");
 };
-
-
-export const getFlightMode = async () => {
-  try {
-    const response = await fetch(`${endPoint}flightmode`, {
-      method: "GET",
-    });
-
-    const data = await response.json();
-    console.log("Flight Mode: ", data);
-    console.log("Flight Mode data: ", data.message);
-
-    if (data.message != null) {
-      console.log("inside this if block");
-      return data.message; // Assuming telemetry data is in data.telemetry
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching Flight Mode data:", error);
-    return null;
-  }
+export const setFlightMode = (mode) => {
+  console.log("Setting flight mode: ", mode);
+  return sendCommand("setFlightMode", { mode });
 };
+export const monitoring= async()=>{
+  const response = await sendCommand("monitoring");
+  console.log("monotring response: ", response);
+  return response.message;
+}
+

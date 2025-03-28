@@ -34,7 +34,7 @@ const blinkAnimation = `
 `;
 
 // Notification component
-const Notification = ({ title, message, type, duration = 3000, onClose }) => {
+const Notification = ({ title, message, type, duration = 2000, onClose }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

@@ -1,109 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import connectionStatus from "../../Global/connectionStatus"; // ✅ Import Global Store
+import ConnectDisconnectButton from "./ConnectionButton/ConnectionButton";
+import useTelemetry from "../../Global/centralTelemetry";
+import BatteryStatus from "./Status/BatteryStatus";
+import CurrentFlightMode from "./Status/CurrentFlightMode";
 import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
-import BatteryStatus from "./Status/BatteryStatus";
 import SatelliteCount from "./Status/SattelliteCount";
-import CurrentFlightMode from "./Status/CurrentFLightMode";
-import { isDroneConnected, getTelemetry,getFlightMode } from "../../api/droneapi";
-import ConnectDisconnectButton from "./ConnectionButton/ConnectDisconnectButton";
-import InputParameter from "../inputParameter/inputParameter";
-
-
+import CameraWindow from "../../Pages/CameraWindow";
+import MissionUpload from "../../Components/Common/UploadFiles";
 
 function Navbar() {
-  const [isConnected, setIsConnected] = useState(isDroneConnected());
-  const [telemetry, setTelemetry] = useState(null);
-  const [formData, setFormData] = useState(false);
-  const [flightMode, setFlightMode] = useState(null);
 
+    const telemetry = useTelemetry(); // ✅ Global Telemetry
+    const isConnected = connectionStatus((state) => state.isConnected); // ✅ Global Drone Status
 
-
-  useEffect(() => {
-    if (isConnected) {
-      // Fetch telemetry data when the drone is connected
-      const fetchTelemetryData = async () => {
-        // const data = await getTelemetry();
-        // setTelemetry(data); // Set telemetry data
-        const getFlightModeData = await getFlightMode();
-        setFlightMode(getFlightModeData);
-      };
-
-      fetchTelemetryData();
-    } else {
-      setTelemetry(null); 
-        setFlightMode(null);
-      
-      // Reset telemetry data when disconnected
-    }
-  }, [isConnected]); // Re-run when the connection status changes
-
-return (
-    <>
-        <div
-            id="Navbar"
-            className="bg-navbar h-18 w-full flex items-center justify-between relative"
-        >
-            <div className="Status-bar border-white h-full flex items-center justify-center">
-                {/* GPS Status */}
-                <div
-                    id="GPS"
-                    className="flex w-28 justify-evenly items-center column pt-1"
-                >
-                    <GpsStatus level={telemetry?.gpsStrength || 0} />{" "}
-                    {/* Show GPS Strength */}
-                </div>
-
-                {/* Network Status */}
-                <div id="Network" className="flex w-28 justify-evenly pt-1">
-                    <NetworkStatus level={telemetry?.networkStrength || 0} />{" "}
-                    {/* Show Network Strength */}
-                </div>
-
-                {/* Battery Status */}
-                <div id="Battery" className="flex w-28 justify-evenly pt-1">
-                    <BatteryStatus level={telemetry?.batteryLevel || 0} />{" "}
-                    {/* Show Battery Level */}
-                </div>
-
-                {/* Satellite Count */}
-                <div id="SatelliteCount" className="flex w-28 justify-evenly pt-1">
-                    <SatelliteCount count={telemetry?.satelliteCount || 0} />{" "}
-                    {/* Show Satellite Count */}
-                </div>
-
-                {/* Flight Mode */}
-                <div
-                    id="CurrentFlightMode"
-                    className="flex w-28 justify-evenly items-center pt-1"
-                >
-                    <CurrentFlightMode mode={flightMode || "N/A"} />{" "}
-                   
-                </div>
-            </div>
-
-            {/* Connect/Disconnect Button */}
-            <div className="LeftSidebar w-auto pr-2 flex">
-                <div className="flex items-center justify-center gap-2">
-                    <div
-                        className="text-white font-semibold w-40 border-2 border-white rounded-md flex text-center items-center justify-center cursor-pointer"
-                        onClick={() => setFormData(!formData)}
-                    >
-                        Upload Mission
+    return (
+        <>
+            <div id="Navbar" className="bg-navbar h-18 w-full flex items-center justify-between relative">
+                <div className="Status-bar border-white h-full flex items-center justify-center">
+                    <div id="GPS" className="flex w-28 justify-evenly items-center column pt-1">
+                        <GpsStatus level={telemetry?.gpsStrength || 0} />
                     </div>
-                    <ConnectDisconnectButton
-                        isConnected={isConnected}
-                        setIsConnected={setIsConnected}
-                    />
+
+                    <div id="Network" className="flex w-28 justify-evenly pt-1">
+                        <NetworkStatus level={telemetry?.networkStrength || 0} />
+                    </div>
+
+                    <div id="Battery" className="flex w-28 justify-evenly pt-1">
+                        <BatteryStatus level={telemetry?.batteryLevel || 0} />
+                    </div>
+
+                    <div id="SatelliteCount" className="flex w-28 justify-evenly pt-1">
+                        <SatelliteCount count={telemetry?.gps?.satellites ?? 0} />
+                    </div>
+
+                    <div id="CurrentFlightMode" className="flex w-28 justify-evenly items-center pt-1">
+                        <CurrentFlightMode mode={telemetry?.system?.flight_mode || "N/A"} />
+                    </div>
+                </div>
+
+                <div className="LeftSidebar w-auto pr-2 flex gap-4 justify-center items-center">
+                    <MissionUpload /> {/* ✅ No need to pass props */}
+                    <CameraWindow /> {/* ✅ No need to pass props */}
+                    <ConnectDisconnectButton /> {/* ✅ No need to pass props */}
                 </div>
             </div>
-        </div>
-        {formData && (
-           <div className="z-10 h-52  w-52  flex top-20 right-4 absolute bg-gray-500 rounded-md"> 
-           <InputParameter />
-           </div>
-        )}
-    </>
-);
+        </>
+    );
 }
 
 export default Navbar;

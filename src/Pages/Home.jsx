@@ -6,15 +6,23 @@ import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import FlightControlPannel from "../Components/FlightControlPannel/FlightControlPannel";
 import Map from "../Components/Map/Map";
 import StatusBox from "../Components/Statusbox/Statusbox";
+import ConnectionButton from "../Components/Navbar/ConnectionButton/ConnectionButton";
 // import InputParameter from "../Components/InputParameter/InputParameter";
+import connectionStatus from "../Global/connectionStatus";
+// import Text from "../api/text";
 function MainPage() {
   const [count, setCount] = useState(0);
+  // const isConnected = connectionStatus((state) => state.isConnected); // ✅ Global Drone 
 
   return (
     <>
+    {/* <div className=" absolute z-10  right-1 top-7">
+    <ConnectionButton />
+    </div> */}
+     
       <div className="flex flex-col w-screen h-screen bg-MainBackground relative">
         <div id="Togglebar" className="h-auto">
-          <ToggleBar />
+          {/* <ToggleBar /> */}
         </div>
         <div id="Navbar" className="h-auto">
           <Navbar />
@@ -34,7 +42,6 @@ function MainPage() {
               <StatusBox />
             </div>
             <Map />
-            
           </div>
         </div>
         <div
