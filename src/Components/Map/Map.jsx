@@ -4,6 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import droneSvg from "../../assets/Svg/DroneSvg.svg";
 import useTelemetry from "../../Global/centralTelemetry";
 import MapControls from "./MapControls";
+import Compass from "./Compass";
 
 const DEFAULT_LOCATION = {
     longitude: 77.5083, // Default location
@@ -11,9 +12,13 @@ const DEFAULT_LOCATION = {
 };
 
 const roundTo4 = (num) => (num ? parseFloat(num.toFixed(4)) : 0);
+// const roundTo2 = (num) => (num ? parseFloat(num.toFixed(0)) : 0);
 
 const MapComponent = () => {
     const telemetry = useTelemetry();
+    // console.log("Telemetry data yaw:", telemetry?.attitude?.yaw || "No telemetry available");
+
+  
     const isConnected = telemetry?.nav?.longitude !== undefined && telemetry?.nav?.latitude !== undefined;
 
     const [userLocation, setUserLocation] = useState(DEFAULT_LOCATION);
@@ -35,7 +40,7 @@ const MapComponent = () => {
                 longitude: roundTo4(telemetry.nav.longitude || DEFAULT_LOCATION.longitude),
                 latitude: roundTo4(telemetry.nav.latitude || DEFAULT_LOCATION.latitude),
             };
-            console.log("New User Location: ", newUserLocation);
+            // console.log("New User Location: ", newUserLocation);
             setUserLocation(newUserLocation);
 
             if (followDrone) {
@@ -51,6 +56,9 @@ const MapComponent = () => {
 
     return (
         <div className="relative w-full h-full">
+            <div id="compass" className="absolute z-10 bottom-16 right-14 w-[100px] h-[100px]">
+                <Compass direction={telemetry?.attitude?.yaw} />
+            </div>
             <Map
                 {...viewState}
                 mapboxAccessToken="pk.eyJ1IjoicmFuamFuLTk4MzciLCJhIjoiY200eno4ZnBoMThzZTJpc2Nia2Zma2gyNiJ9.hszQOHoScU6INliFAnReZA"
@@ -83,10 +91,12 @@ const MapComponent = () => {
             {/* Recenter Button (Follow Drone) */}
             <button
                 onClick={() => setFollowDrone(true)}
-                className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md"
+                className="absolute top-5 right-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md"
             >
                 Follow Drone
             </button>
+
+
         </div>
     );
 };
