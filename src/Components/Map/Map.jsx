@@ -4,7 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import droneSvg from "../../assets/Svg/DroneSvg.svg";
 import useTelemetry from "../../Global/centralTelemetry";
 import MapControls from "./MapControls";
-import Compass from "./Compass";
+import Compass from "./compass";
 
 const DEFAULT_LOCATION = {
     longitude: 77.5083, // Default location

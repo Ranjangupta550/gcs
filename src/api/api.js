@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 // const socket = io("http://localhost:3000");
-// const socket = io("http://192.168.29.14:5000");
-const socket =io("http://192.168.167.108:5000");
+const socket = io("http://192.168.29.14:5000");
+// const socket =io("http://192.168.167.108:5000");
 // const socket = io("http://192.168.73.134:5000");
 
 const ServerConnection = () => {
