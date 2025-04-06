@@ -82,4 +82,14 @@ export const  chnageFlightMode = async (mode)=>{
     return response.message;
   });
 }
-
+export const sendAltitude = async (altitude) => {
+  try {
+    console.log("Sending altitude: ", altitude);
+    socket.emit("data", { height: parseFloat(altitude) });
+    console.log("Altitude sent successfully");
+    return true;
+  } catch (error) {
+    console.error("Error sending altitude: ", error);
+    return false;
+  }
+};

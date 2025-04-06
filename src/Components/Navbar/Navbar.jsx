@@ -3,12 +3,15 @@ import connectionStatus from "../../Global/connectionStatus"; // ✅ Import Glob
 import ConnectDisconnectButton from "./ConnectionButton/ConnectionButton";
 import useTelemetry from "../../Global/centralTelemetry";
 import BatteryStatus from "./Status/BatteryStatus";
-import CurrentFlightMode from "./Status/CurrentFlightMode";
+import CurrentFlightMode from "./Status/CurrentFLightMode";
 import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
 import SatelliteCount from "./Status/SattelliteCount";
 import CameraWindow from "../../Pages/CameraWindow";
 import MissionUpload from "../../Components/Common/UploadFiles";
+// import text from "../../assets/text.json"; // ✅ Import text file
+import Text from "../FlightControlPannel/Text"
+
 
 function Navbar() {
 
@@ -38,6 +41,10 @@ function Navbar() {
                     <div id="CurrentFlightMode" className="flex w-28 justify-evenly items-center pt-1">
                         <CurrentFlightMode mode={telemetry?.system?.flight_mode || "N/A"} />
                     </div>
+                    
+                    {/* <div id="setAltitude">
+                        <Text/>
+                    </div> */}
                 </div>
 
                 <div className="LeftSidebar w-auto pr-2 flex gap-4 justify-center items-center">
