@@ -9,11 +9,12 @@ function createWindow() {
     fullscreen: false,
     frame: true,
     resizable: true,
+
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
     },
   });
-
+ 
   mainWindow.maximize();
   mainWindow.loadURL("http://localhost:5173");
   mainWindow.menuBarVisible = false;

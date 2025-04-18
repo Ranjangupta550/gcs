@@ -3,12 +3,15 @@ import connectionStatus from "../../Global/connectionStatus"; // ✅ Import Glob
 import ConnectDisconnectButton from "./ConnectionButton/ConnectionButton";
 import useTelemetry from "../../Global/centralTelemetry";
 import BatteryStatus from "./Status/BatteryStatus";
-import CurrentFlightMode from "./Status/CurrentFlightMode";
+import CurrentFlightMode from "./Status/CurrentFLightMode";
 import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
 import SatelliteCount from "./Status/SattelliteCount";
 import CameraWindow from "../../Pages/CameraWindow";
 import MissionUpload from "../../Components/Common/UploadFiles";
+// import text from "../../assets/text.json"; // ✅ Import text file
+import PilotDashboard from "../../auth/PilotDashboard"
+
 
 function Navbar() {
 
@@ -17,7 +20,7 @@ function Navbar() {
 
     return (
         <>
-            <div id="Navbar" className="bg-navbar h-18 w-full flex items-center justify-between relative">
+            <div id="Navbar" className="bg-navbar h-11 w-full flex items-center justify-between relative">
                 <div className="Status-bar border-white h-full flex items-center justify-center">
                     <div id="GPS" className="flex w-28 justify-evenly items-center column pt-1">
                         <GpsStatus level={telemetry?.gpsStrength || 0} />
@@ -38,9 +41,17 @@ function Navbar() {
                     <div id="CurrentFlightMode" className="flex w-28 justify-evenly items-center pt-1">
                         <CurrentFlightMode mode={telemetry?.system?.flight_mode || "N/A"} />
                     </div>
+                    
+                    {/* <div id="setAltitude">
+                        <Text/>
+                    </div> */}
                 </div>
 
                 <div className="LeftSidebar w-auto pr-2 flex gap-4 justify-center items-center">
+                    <div className="flex item-center justify-center">
+                    <PilotDashboard /> {/* ✅ No need to pass props */}
+                    </div>
+                   
                     <MissionUpload /> {/* ✅ No need to pass props */}
                     <CameraWindow /> {/* ✅ No need to pass props */}
                     <ConnectDisconnectButton /> {/* ✅ No need to pass props */}
