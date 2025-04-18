@@ -34,7 +34,22 @@ export const sendCommand = async (eventName) => {
     });
   });
 };
+export const sendCommandWithPayload = async (eventName, payload) => {
+  return new Promise((resolve, reject) => {
+    // if (!socket.connected) {
+    //   console.error("⚠️ WebSocket is not connected!");
+    //   return reject("WebSocket is not connected!");
+    // }
 
+    console.log(`🚀 Sending event: ${eventName} with payload:`, payload);
+    socket.emit(eventName, payload);
+
+    socket.once(`${eventName}_response`, (data) => {
+      console.log(`📩 Server Response for ${eventName}:`, data);
+      resolve(data);
+    });
+  });
+};
 ServerConnection();
 export { socket };
 
