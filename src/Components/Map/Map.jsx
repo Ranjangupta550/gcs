@@ -12,6 +12,7 @@ import Compass from "./compass";
 import { sendCommandWithPayload } from "../../api/api";
 
 
+
 function MapboxDrawControl(props) {
   useControl(
     () => new MapboxDraw(props),
@@ -40,11 +41,12 @@ const MapComponent = () => {
   const isConnected = telemetry?.nav?.longitude !== undefined && telemetry?.nav?.latitude !== undefined;
   const [userLocation, setUserLocation] = useState(DEFAULT_LOCATION);
   const [followDrone, setFollowDrone] = useState(true); // Auto-follow enabled initially
-
+  const [waypointSelectionIsOpen, setWaypointSelectionIsopen] = useState(false);
+  const roundTo4 = (num) => (num ? parseFloat(num.toFixed(4)) : 0);
   const [viewState, setViewState] = useState({
     longitude: DEFAULT_LOCATION.longitude,
     latitude: DEFAULT_LOCATION.latitude,
-    zoom: 17,
+    zoom: 2,
     pitch: 0,
     bearing: 0,
     mapStyle: "mapbox://styles/mapbox/satellite-v9",
@@ -75,6 +77,7 @@ const MapComponent = () => {
   const [horizontalFov, setHorizontalFov] = useState(60);
   const [waypoints, setWaypoints] = useState([]);
   const mapRef = useRef();
+  const [showMissionControls, setShowMissionControls] = useState(false);
 
 
 
@@ -85,6 +88,7 @@ const MapComponent = () => {
     if (features.length > 0 && features[0].geometry.type === 'Polygon') {
       setGeofenceData(features[0]);
       setWaypoints([]);
+      setShowMissionControls(true); // Show mission controls when a polygon is drawn
     }
   }, []);
 
@@ -93,12 +97,14 @@ const MapComponent = () => {
     if (features.length > 0 && features[0].geometry.type === 'Polygon') {
       setGeofenceData(features[0]);
       setWaypoints([]);
+      setShowMissionControls(true);
     }
   }, []);
 
   const onDrawDelete = useCallback(() => {
     setGeofenceData(null);
     setWaypoints([]);
+    setShowMissionControls(false); // Hide mission controls when polygon is deleted
   }, []);
 
   // Generate grid-based waypoints
@@ -173,34 +179,26 @@ const MapComponent = () => {
       geofenceBoundary: geofenceData.geometry.coordinates,
       waypoints: waypoints,
     };
-
+    
     try {
+      setShowMissionControls(false); // Hide mission controls after sending
       const response = await sendCommandWithPayload('geofence', payload);
       alert(response ? 'Mission sent successfully!' : 'Failed to send mission');
+      if (response.message) {
+        // setGeofenceData(null); // Clear geofence data after sending
+        // setWaypoints([]); // Clear waypoints after sending
+      }
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to send mission');
     }
   };
-
-//   // Fix for black map issue
-//   useEffect(() => {
-//     if (mapRef.current) {
-//       const map = mapRef.current.getMap();
-//       map.on('render', () => {
-//         if (map.isStyleLoaded()) {
-//           map.resize();
-//         }
-//       });
-//     }
-//   }, []);
-
   return (
     <div className="relative w-full h-full">
       {/* Compass */}
-      <div className="absolute z-10 bottom-16 right-14 w-[100px] h-[100px]">
+      {/* <div className="absolute z-10 bottom-16 right-14 w-[100px] h-[100px]">
         <Compass direction={telemetry?.attitude?.yaw} />
-      </div>
+      </div> */}
 
       {/* Map */}
       <Map
@@ -294,6 +292,7 @@ const MapComponent = () => {
             </button>
 
       {/* Controls Panel */}
+      {showMissionControls && (
       <div className="absolute top-4 left-4 bg-white bg-opacity-90 p-3 rounded shadow-md z-10">
         <div className="flex flex-col space-y-3">
           {/* Mission Parameters */}
@@ -324,6 +323,7 @@ const MapComponent = () => {
           </div>
 
           {/* Action Buttons */}
+
           <button
             onClick={generateWaypoints}
             disabled={!geofenceData}
@@ -340,9 +340,10 @@ const MapComponent = () => {
           </button>
         </div>
       </div>
+      )}
 
       {/* Map Controls (Zoom, etc.) */}
-      <div className="absolute bottom-4 right-4 z-10">
+      <div className="absolute top-12 right-4 z-10">
         <MapControls setViewState={setViewState} />
       </div>
 

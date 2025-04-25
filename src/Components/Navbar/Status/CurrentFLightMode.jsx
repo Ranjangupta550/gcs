@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from "react";
 import { chnageFlightMode } from "../../../api/droneapi";
-import Notification from "../../../utils/Notification";
+// import Notification from "../../../utils/Notification";
 
 const FLIGHT_MODES = [
   "STABILIZE",
@@ -35,7 +35,7 @@ const FLIGHT_MODES = [
   "NEW_MODE",
 ];
 
-function CurrentFlightMode({ mode }) {
+function CurrentFlightMode({ mode="NONE" }) {
   const [flightMode, setMode] = useState("N/A");
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -56,18 +56,18 @@ function CurrentFlightMode({ mode }) {
   };
 
   return (
-    <div className="relative  inline-block text-white">
+    <div className="relative  inline-block text-gray-500 font-bold">
       <div
         className="flex items-center gap-2 cursor-pointer rounded-lg"
         onClick={() => setShowDropdown(!showDropdown)}
       >
-        <button className="bg-blue-600 flex justify-center items-center text-center text-white w-14 h-7 px-1 py-1 rounded-lg hover:bg-gray-600 transition-all duration-200">
+        <button className="bg-red-500 flex justify-center items-center text-center text-white w-14 h-7 px-1 py-1 rounded-lg hover:bg-red-600 transition-all duration-200">
           Mode
         </button>
-        <p className="font-bold w-20 text-center">{flightMode}</p>
+        <p className="text-gray-500 font-custom w-20 text-center">{flightMode}</p>
       </div>
       {showDropdown && (
-        <div className="absolute bg-gray-800 shadow-lg rounded-lg mt-2 z-10 w-48 max-h-64 overflow-y-auto">
+        <div className="absolute bg-black text-white shadow-lg rounded-lg mt-2 z-10 w-48 max-h-64 overflow-y-auto">
           {FLIGHT_MODES.map((item) => (
             <div
               key={item}

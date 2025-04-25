@@ -8,7 +8,7 @@ import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
 import SatelliteCount from "./Status/SattelliteCount";
 import CameraWindow from "../../Pages/CameraWindow";
-import MissionUpload from "../../Components/Common/UploadFiles";
+// import MissionUpload from "../utils/UploadFiles";
 // import text from "../../assets/text.json"; // ✅ Import text file
 import PilotDashboard from "../../auth/PilotDashboard"
 
@@ -22,29 +22,25 @@ function Navbar() {
         <>
             <div id="Navbar" className="bg-navbar h-11 w-full flex items-center justify-between relative">
                 <div className="Status-bar border-white h-full flex items-center justify-center">
-                    <div id="GPS" className="flex w-28 justify-evenly items-center column pt-1">
+                    <div id="GPS" className="flex w-20 h-full justify-evenly items-center column pt-1">
                         <GpsStatus level={telemetry?.gpsStrength || 0} />
                     </div>
 
-                    <div id="Network" className="flex w-28 justify-evenly pt-1">
+                    <div id="Network" className="flex  w-20 h-full justify-evenly pt-1">
                         <NetworkStatus level={telemetry?.networkStrength || 0} />
                     </div>
 
-                    <div id="Battery" className="flex w-28 justify-evenly pt-1">
+                    <div id="Battery" className="flex w-20 h-full justify-evenly pt-1">
                         <BatteryStatus level={telemetry?.batteryLevel || 0} />
                     </div>
 
-                    <div id="SatelliteCount" className="flex w-28 justify-evenly pt-1">
+                    <div id="SatelliteCount" className="flex w-20 h-full justify-evenly pt-1">
                         <SatelliteCount count={telemetry?.gps?.satellites ?? 0} />
                     </div>
 
-                    <div id="CurrentFlightMode" className="flex w-28 justify-evenly items-center pt-1">
-                        <CurrentFlightMode mode={telemetry?.system?.flight_mode || "N/A"} />
+                    <div id="CurrentFlightMode" className="flex w-44  items-center  justify-evenly ">
+                        <CurrentFlightMode mode={telemetry?.system?.flight_mode} />
                     </div>
-                    
-                    {/* <div id="setAltitude">
-                        <Text/>
-                    </div> */}
                 </div>
 
                 <div className="LeftSidebar w-auto pr-2 flex gap-4 justify-center items-center">
@@ -52,8 +48,12 @@ function Navbar() {
                     <PilotDashboard /> {/* ✅ No need to pass props */}
                     </div>
                    
-                    <MissionUpload /> {/* ✅ No need to pass props */}
+                    {/* <MissionUpload /> ✅ No need to pass props */}
+                    <div className="flex item-center justify-center flex-col text-gray-500 font-bold text-[10px]">
                     <CameraWindow /> {/* ✅ No need to pass props */}
+                   
+                 </div>
+
                     <ConnectDisconnectButton /> {/* ✅ No need to pass props */}
                 </div>
             </div>

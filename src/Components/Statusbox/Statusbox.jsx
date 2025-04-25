@@ -11,7 +11,7 @@ const demoMessages = [
 
 const StatusBox = ({ logMessages = demoMessages }) => {
     return (
-        <div className="status-box flex flex-col z-10 h-24 bottom-0 w-96  text-white bg-opacity-100 rounded-lg p-2  overflow-y-auto  bg-black ">
+        <div className="status-box flex flex-col z-10 h-32 bottom-0 w-full   text-white bg-opacity-100 rounded-lg p-2 m-1 mt-3  overflow-y-auto  bg-backgroundSecondary ">
             {logMessages.map((msg, index) => (
                 <p className='text-yellow-500 font-semibold w-full mb-2' key={index}>{msg}</p>
             ))}

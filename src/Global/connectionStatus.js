@@ -1,68 +1,8 @@
-// import { create } from "zustand";
-// import { sendCommand, socket } from "../api/api"; // ✅ Import reusable function
-// import { useState } from "react";
-// import { useTelemetryStore}  from "./telemetryStore.js"; // ✅ Import telemetry store
-// import { monotring } from "../api/droneapi.js";
-// const connectionStatus = create((set) => ({
-//     isConnected: false, // ✅ Initial status
-
-
-//     // ✅ Connect Drone
-//     connect: async () => {
-//         try {
-//             const response = await sendCommand("connection");
-//             if (response.message) {
-//                 set({ isConnected: true }); // ✅ Connection successful to state update
-//                 console.log("Connected");
-
-//                 console.log("isConnected", connectionStatus.getState().isConnected);
-//                 setTimeout(() => {
-//                     useTelemetryStore.getState().startTelemetry();
-//                 }, 3000);
-               
-//             }
-//             return response;
-//         } catch (error) {
-//             console.error("Error connecting drone:", error);
-//             return { message: false, error };
-//         }
-//     },
-
-//     // ✅ Disconnect Drone
-//     disconnect: async () => {
-//         try {
-//             const response = await sendCommand("disconnection");
-//             if (response.message) {
-                
-//                 useTelemetryStore.getState().stopTelemetry();
-//                 set({ isConnected: false });
-//               // ✅ Disconnection successful to state update
-//             }
-//             return response.message;
-//         } catch (error) {
-//             console.error("Error disconnecting drone:", error);
-//             return { message: false, error };
-//         }
-//     },
-//     // ✅ Get Connection Status
-//     isDroneConnected: () => {
-//         console.log("isConnected", connectionStatus.getState().isConnected);
-//         return connectionStatus.getState().isConnected;
-//     },
-
-// }));
-
-// export default connectionStatus;
-
-// // socket.on("disconnection", () => {
-// //     console.log("Drone Disconnected Unexpectedly!");
-// //     useTelemetryStore.getState().stopTelemetry();
-// //     connectionStatus.setState({ isConnected: false });
-// // });
 import { create } from "zustand";
 import { sendCommand } from "../api/api";
 import { useTelemetryStore } from "./telemetryStore.js";
 import { monitoring } from "../api/droneapi.js";
+import notify from "../Components/utils/Notification/notify.jsx"
 
 const connectionStatus = create((set) => ({
     isConnected: false,
@@ -74,20 +14,15 @@ const connectionStatus = create((set) => ({
             if (response.message) {
                 set({ isConnected: true });
                 console.log("Connected");
-
-                // Start telemetry
+                // notify("Drone Connected", "success");
                 setTimeout(() => {
                     useTelemetryStore.getState().startTelemetry();
                 }, 3000);
-
-                // Start monitoring only when successfully connected
-                // setTimeout(() => {
-                //     connectionStatus.getState().monitor();
-                // }, 5000);
             }
             return response;
         } catch (error) {
             console.error("Error connecting drone:", error);
+            // notify("Drone Connection Failed", "error");
             return { message: false, error };
         }
     },
@@ -97,15 +32,18 @@ const connectionStatus = create((set) => ({
         try {
             const response = await sendCommand("disconnection");
             if (response.message) {
+
                setTimeout(() => {
                 useTelemetryStore.getState().stopTelemetry();
                 }
                 , 3000);
                 set({ isConnected: false });
+                // notify("Drone Disconnected", "success");
             }
             return response.message;
         } catch (error) {
             console.error("Error disconnecting drone:", error);
+            // notify("Drone Disconnection Failed", "error");
             return { message: false, error };
         }
     },
@@ -114,6 +52,7 @@ const connectionStatus = create((set) => ({
     monitor: async () => {
         try {
             const response = await monitoring();
+
             console.log("Monitoring response:", response);
             if (response === true) {
                 set({ isConnected: false });

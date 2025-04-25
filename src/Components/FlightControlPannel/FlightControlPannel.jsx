@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import connectionStatus from "../../Global/connectionStatus";
-import ControlButton from "../Common/ControlButton";
+import ControlButton from "../utils/ControlButton.jsx";
 import { armStatus } from "../../Global/armStatus.js";
 import Text from "./Text"
 

@@ -3,16 +3,30 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      keyframes: {
+        wave: {
+          "0%, 100%": { height: "10px" },
+          "50%": { height: "50px" },
+        },
+
+      },
+      animation: {
+        wave: "wave 1s ease-in-out infinite",
+      },
+      fontFamily: {
+        robotoMono: ['"Roboto Mono"', 'monospace'],
+        custom: ['Inter', 'sans-serif'], // no extra quotes needed
+      },
       colors: {
-        MainBackground: "#1d1719", // Main background
-        togglebar: "#030712",
-        navbar: "#1A1A1B", // Navbar background
-        ParameterBox : "#1d1718", // Parameter box background
-        statusGreen: "#22E208", // Green status indicator
-        cardBg: "#634F4F", // Card background
-        neutralGray: "#D9D9D9", // Neutral gray
-        warningStatus: "#D9D9D9", // Warning status color
-        draggerBox: "#D9D9D9", // Dragger box color
+        backgroundPrimary: "#000011", // Primary background
+        backgroundSecondary: "#1c1c1e", // Secondary background
+        backgroundTertiary: "#1A1A1B", // Tertiary background
+        backgroundQuaternary: "#1d1718", // Quaternary background
+        statusSuccess: "#22E208", // Success status indicator
+        backgroundAccent: "#634F4F", // Accent background
+        neutral: "#D9D9D9", // Neutral color
+        statusWarning: "#D9D9D9", // Warning status color
+        elementHighlight: "#D9D9D9", // Highlighted element color
       },
     },
   },

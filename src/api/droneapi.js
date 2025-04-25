@@ -14,7 +14,6 @@ export const isDroneConnected = () => {
     return connectionStatus.getState().isDroneConnected();
 };
 
-
 // ✅ Arm & Disarm
 export const armDrone = async () => {
   const response = await sendCommand("arm");

@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const { screen } = require("electron");
+const  { createUploadMissionWindow } = require("./src/Mission/UploadmissionWin.cjs");
+const { Menu } = require("electron");
 
 let mainWindow, videoWindow;
 
@@ -9,15 +11,18 @@ function createWindow() {
     fullscreen: false,
     frame: true,
     resizable: true,
+    backgroundColor: "#000000",
 
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   });
  
   mainWindow.maximize();
   mainWindow.loadURL("http://localhost:5173");
-  mainWindow.menuBarVisible = false;
+  mainWindow.menuBarVisible = true;
   mainWindow.webContents.openDevTools();
   mainWindow.on("maximize", () => mainWindow.webContents.send("window-state-change", "maximized"));
   mainWindow.on("unmaximize", () => mainWindow.webContents.send("window-state-change", "restored"));
@@ -80,3 +85,26 @@ ipcMain.on("minimize-video", () => videoWindow?.minimize());
 ipcMain.on("maximize-video", () => videoWindow?.maximize());
 ipcMain.on("restore-video", () => videoWindow?.restore());
 ipcMain.on("close-video", () => videoWindow?.close());
+
+
+
+
+
+
+//customMenu 
+
+const MenuTemplate = [
+  { label: "Mission",
+    submenu:[
+      {
+        label:"Upload Mission",
+        click:()=>{
+          createUploadMissionWindow();
+        },
+      },
+    ] ,
+  },
+
+];
+const appMenu =Menu.buildFromTemplate(MenuTemplate);
+Menu.setApplicationMenu(appMenu);

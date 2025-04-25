@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Loader from "../Common/Loader";
+import Loader from "./Loader";
 
 function ControlButton({ label, command, sendCommand, isEnabled, shortcut, isConnectionButton }) {
   const [isLoading, setIsLoading] = useState(false);

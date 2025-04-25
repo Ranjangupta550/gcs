@@ -1,6 +1,8 @@
 import { io } from "socket.io-client";
+import notify from "../Components/utils/Notification/notify";
 // const socket = io("http://localhost:3000");
-const socket = io("http://192.168.167.108:5000");
+// const socket = io("http://192.168.29.14:5000");
+const socket = io("http://localhost:5000");
 // const socket =io("http://192.168.167.108:5000");
 // const socket = io("http://192.168.73.134:5000");
 
@@ -8,18 +10,19 @@ const ServerConnection = () => {
   // ✅ Handle connection
   socket.on("connect", () => {
     console.log("✅ Connected to WebSocket server");
+    notify("Successfully connected to the server.", "success");
     
   });
 
   // ❌ Handle disconnection
   socket.on("disconnect", () => {
     console.log("❌ Disconnected from WebSocket server");
+    notify("Disconnected from the server.", "error");
   });
 };
 socket.on("heartbeat", (data) => {
-  console.log("📩 Server Response for heartbeat", data);
+  // console.log("📩 Server Response for heartbeat", data);
 });
-
 export const sendCommand = async (eventName) => {
   return new Promise((resolve, reject) => {
     console.log(`🚀 Sending event: ${eventName}`);
@@ -28,7 +31,7 @@ export const sendCommand = async (eventName) => {
 
     // ✅ Listen for the response with a one-time listener
     // console(`${eventName}_response`);
-    socket.on(`${eventName}_response`, (data) => {
+    socket.once(`${eventName}_response`, (data) => {
       console.log(`📩 Server Response for ${eventName}:`, data);
       resolve(data);
     });
@@ -36,10 +39,6 @@ export const sendCommand = async (eventName) => {
 };
 export const sendCommandWithPayload = async (eventName, payload) => {
   return new Promise((resolve, reject) => {
-    // if (!socket.connected) {
-    //   console.error("⚠️ WebSocket is not connected!");
-    //   return reject("WebSocket is not connected!");
-    // }
 
     console.log(`🚀 Sending event: ${eventName} with payload:`, payload);
     socket.emit(eventName, payload);
