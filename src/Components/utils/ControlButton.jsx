@@ -16,14 +16,14 @@ function ControlButton({ label, command, sendCommand, isEnabled, shortcut, isCon
     <button
       onClick={handleClick}
       disabled={!isEnabled || isLoading}
-      className={`px-1 py-2 m-2 text-white font-bold rounded transition-all duration-200 w-36 h-18 flex items-center justify-center
+      className={`px-1 py-2 m-2 border text-white text-[12px] font-bold rounded-full transition-all duration-200 w-28 h-12  flex items-center justify-center
         ${isEnabled
           ? (isConnectionButton ? "bg-green-500 hover:bg-green-700 active:bg-green-900" : "bg-blue-500 hover:bg-blue-700 active:bg-blue-900")
-          : "bg-red-500 cursor-not-allowed opacity-50"
+          : "bg-black cursor-not-allowed opacity-50"
         }`}
     >
       {isLoading ? <Loader /> : label} {/* Show Loader if loading */}
-      {!isLoading && shortcut && <span className="text-xs ml-2">[{shortcut}]</span>}
+      {!isLoading && shortcut && <span className="text-[10px]">[{shortcut}]</span>}
     </button>
   );
 }

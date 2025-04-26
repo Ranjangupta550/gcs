@@ -16,76 +16,80 @@ const ConnectionButton = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [notification, setNotification] = useState(null);
 
-/*     const handleClick = async () => {
-        setIsLoading(true);
+    const handleClick = async () => {
+      setIsLoading(true);
+      try {
         let response = isConnected ? await disconnect() : await connect();
+        console.log("Connection response received: ", response, "isConnected", isConnected);
 
-       if (response.message) {
-            if(isConnected&&response.message===true){
-                 notify("Drone Disconnected", "The drone has been successfully disconnected.", "success")
-            } else {
-                 notify("Drone Connected", "The drone has been successfully connected.", "success")      
-            }
-            if (!isConnected) {  // Only start monitoring after connecting
-                monitorDrone();
-            }
-        } 
-
+        if (response.message) {
+          console.log("Connection message: ", response.message);
+          if (isConnected && response.message) {
+            notify("Drone Disconnected", "success");
+          } else {
+            notify("Drone Connected", "success");
+            monitorDrone();
+          }
+         
+        } else {
+          notify("Unable to connect/disconnect the drone.", "error");
+        }
+      } catch (error) {
+        console.error("Error during connection handling: ", error);
+        notify("An unexpected error occurred.", "error");
+      } finally {
         setIsLoading(false);
-    };
- */
-
-const handleClick = async () => {
-  const action = isConnected ? 'Disconnecting' : 'Connecting';
-  const successMsg = isConnected ? 'Drone Disconnected Successfully' : 'Drone Connected Successfully';
-  const descMsg = isConnected
-    ? 'The drone has been successfully disconnected.'
-    : 'The drone has been successfully connected.';
-    setIsLoading(true);
-    const promise = isConnected ? disconnect() : connect();
-
-    const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("error")), 20000)
-    );
-
-    toast.promise(
-      Promise.race([promise, timeout]),
-      {
-        loading: `${action}...`,
-        success: () => {
-          if (!isConnected) monitorDrone();
-          return notify(successMsg, "success");
-        },
-        error: (err) => {
-          notify(
-            err.message === "error"
-              ? "Connection Timeout"
-              : "Unable to connect/disconnect the drone.",
-            "error"
-          );
-        },
       }
-    );
+    };
 
-    try {
-      await Promise.race([promise, timeout]);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-};
+
+// const handleClick = async () => {
+//   const action = isConnected ? 'Disconnecting' : 'Connecting';
+//   const successMsg = isConnected ? 'Drone Disconnected Successfully' : 'Drone Connected Successfully';
+//   const descMsg = isConnected
+//     ? 'The drone has been successfully disconnected.'
+//     : 'The drone has been successfully connected.';
+//     setIsLoading(true);
+//     const promise = isConnected ? disconnect() : connect();
+
+//     const timeout = new Promise((_, reject) =>
+//       setTimeout(() => reject(new Error("error")), 20000)
+//     );
+
+//     toast.promise(
+//       Promise.race([promise, timeout]),
+//       {
+//         loading: `${action}...`,
+//         success: () => {
+//           if (!isConnected) monitorDrone();
+//           return notify(successMsg, "success");
+//         },
+//         error: (err) => {
+//           notify(
+//             err.message === "error"
+//               ? "Connection Timeout"
+//               : "Unable to connect/disconnect the drone.",
+//             "error"
+//           );
+//         },
+//       }
+//     );
+
+//     try {
+//       await Promise.race([promise, timeout]);
+//     } catch (err) {
+//       console.error(err);
+//     } finally {
+//       setIsLoading(false);
+//     }
+// };
 
 
     const monitorDrone = async () => {
-        let response = await monitor();
-        console.log("Monitoring response recived: ", response);
-        if (response) {
-            // setNotification({
-            //     title: "Drone Disconnected",
-            //     message: "The drone disconnected unexpectedly.",
-            //     type: "error",
-            // });
+        let responseMonitor = await monitor();
+        console.log("Monitoring response received: ", responseMonitor);
+        if (responseMonitor) {
+            notify("Drone Disconnected Unexpectedly", "warning");
         }
     };
 

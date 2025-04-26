@@ -40,7 +40,7 @@ const connectionStatus = create((set) => ({
                 set({ isConnected: false });
                 // notify("Drone Disconnected", "success");
             }
-            return response.message;
+            return response;
         } catch (error) {
             console.error("Error disconnecting drone:", error);
             // notify("Drone Disconnection Failed", "error");

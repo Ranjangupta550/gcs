@@ -10,6 +10,7 @@ import useTelemetry from "../../Global/centralTelemetry";
 import MapControls from "./MapControls";
 import Compass from "./compass";
 import { sendCommandWithPayload } from "../../api/api";
+import notify from "../utils/Notification/notify";
 
 
 
@@ -46,7 +47,7 @@ const MapComponent = () => {
   const [viewState, setViewState] = useState({
     longitude: DEFAULT_LOCATION.longitude,
     latitude: DEFAULT_LOCATION.latitude,
-    zoom: 2,
+    zoom: 15,
     pitch: 0,
     bearing: 0,
     mapStyle: "mapbox://styles/mapbox/satellite-v9",
@@ -73,7 +74,7 @@ const MapComponent = () => {
     }, [telemetry?.nav?.longitude, telemetry?.nav?.latitude, isConnected, followDrone]);
 
   const [geofenceData, setGeofenceData] = useState(null);
-  const [altitude, setAltitude] = useState(50);
+  const [altitude, setAltitude] = useState(5);
   const [horizontalFov, setHorizontalFov] = useState(60);
   const [waypoints, setWaypoints] = useState([]);
   const mapRef = useRef();
@@ -177,16 +178,18 @@ const MapComponent = () => {
 
     const payload = {
       geofenceBoundary: geofenceData.geometry.coordinates,
-      waypoints: waypoints,
+      waypoints: waypoints.map(([lon, lat]) => [lat, lon, altitude]),
     };
     
     try {
       setShowMissionControls(false); // Hide mission controls after sending
-      const response = await sendCommandWithPayload('geofence', payload);
+      notify("Scanning started", "info")
+      const response = await sendCommandWithPayload('start_scan', payload);
       alert(response ? 'Mission sent successfully!' : 'Failed to send mission');
       if (response.message) {
         // setGeofenceData(null); // Clear geofence data after sending
         // setWaypoints([]); // Clear waypoints after sending
+        notify("Scanning successful", "success")
       }
     } catch (error) {
       console.error('Error:', error);
@@ -304,8 +307,8 @@ const MapComponent = () => {
                 value={altitude}
                 onChange={(e) => setAltitude(Number(e.target.value))}
                 className="w-full border rounded px-2 py-1 text-sm"
-                min="10"
-                step="5"
+                min="3"
+                step="1"
               />
             </div>
             <div>
@@ -315,7 +318,7 @@ const MapComponent = () => {
                 value={horizontalFov}
                 onChange={(e) => setHorizontalFov(Number(e.target.value))}
                 className="w-full border rounded px-2 py-1 text-sm"
-                min="30"
+                min="10"
                 max="120"
                 step="5"
               />
@@ -336,7 +339,7 @@ const MapComponent = () => {
             disabled={!geofenceData || waypoints.length === 0}
             className={`px-3 py-1.5 rounded text-sm ${!geofenceData || waypoints.length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
           >
-            Send Mission
+            Start Mission
           </button>
         </div>
       </div>

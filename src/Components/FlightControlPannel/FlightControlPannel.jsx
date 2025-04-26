@@ -113,29 +113,9 @@ function FlightControlPannel() {
   }, [isConnected, isArmed]);
 
   return (
-    <div className="relative flex items-center pl-2 pr-2 h-full w-full flex-col border-4 border-opacity-15 border-white rounded-md bg-navbar bg-opacity-50">
+    <div className="relative grid grid-rows-3 grid-cols-5  items-center pl-2 pr-2 h-full w-full  border-4 border-opacity-15 border-white rounded-md bg-navbar bg-opacity-50">
 
-      {/* ✅ Armed / Disarmed / Disconnected Status */}
-      <div className="absolute top-2 right-2 flex items-center gap-2">
-        {/* <span
-          className={`w-3 h-3 rounded-full ${
-            isConnected && isArmed ? "bg-green-500" : "bg-red-500"
-          }`}
-        /> */}
-        {/* <span className="text-white text-xs">
-          {!isConnected ? "Disconnected" : isArmed ? "Armed" : "Disarmed"}
-        </span> */}
-      </div>
-
-      {/* ✅ Header + Arm Button */}
-      <div className="flex w-full h-12 justify-between items-center p-1 mt-1 border-b-4 border-opacity-20 border-white rounded-sm">
-        <h2 className="text-lg font-bold text-white">Flight Control Panel</h2>
-       {/* <Text/> */}
-
-       <div className=" flex items-center justify-center w-1/2  mt-2 right-4">
-          <ControlButton label="Altitude" command="Altitide" sendCommand={() => handleControl("Altitide", "2")} isEnabled={isConnected && isArmed} shortcut="T" />
-          </div>
-        <div className="overflow-hidden w-28 flex items-center justify-center h-full">
+     
           <ControlButton
             label={isArmed ? "Disarm" : "Arm"}
             command="ARM"
@@ -143,44 +123,41 @@ function FlightControlPannel() {
             isEnabled={isConnected}
             shortcut="P"
           />
-        </div>
-      </div>
-
       {/* ✅ All Flight Controls (always visible) */}
-      <div className="flex w-full h-full flex-col">
+    
         {/* Throttle */}
-        <div className="flex justify-evenly h-14">
+     
           <ControlButton label="Throttle +" command="THROTTLE_UP" sendCommand={() => handleControl("throttle", "up")} isEnabled={isConnected && isArmed} shortcut="W" />
           <ControlButton label="Throttle -" command="THROTTLE_DOWN" sendCommand={() => handleControl("throttle", "down")} isEnabled={isConnected && isArmed} shortcut="S" />
-        </div>
+        
 
         {/* Yaw */}
-        <div className="flex justify-evenly h-14">
+
           <ControlButton label="Yaw Left" command="YAW_LEFT" sendCommand={() => handleControl("yaw", "left")} isEnabled={isConnected && isArmed} shortcut="A" />
           <ControlButton label="Yaw Right" command="YAW_RIGHT" sendCommand={() => handleControl("yaw", "right")} isEnabled={isConnected && isArmed} shortcut="D" />
-        </div>
+       
 
         {/* Roll */}
-        <div className="flex justify-evenly h-14">
+
           <ControlButton label="Roll Left" command="ROLL_LEFT" sendCommand={() => handleControl("roll", "left")} isEnabled={isConnected && isArmed} shortcut="←" />
           <ControlButton label="Roll Right" command="ROLL_RIGHT" sendCommand={() => handleControl("roll", "right")} isEnabled={isConnected && isArmed} shortcut="→" />
-        </div>
+      
 
         {/* Pitch */}
-        <div className="flex justify-evenly h-14">
+  
           <ControlButton label="Pitch Up" command="PITCH_UP" sendCommand={() => handleControl("pitch", "forward")} isEnabled={isConnected && isArmed} shortcut="↑" />
           <ControlButton label="Pitch Down" command="PITCH_DOWN" sendCommand={() => handleControl("pitch", "backward")} isEnabled={isConnected && isArmed} shortcut="↓" />
-        </div>
+     
 
         {/* Landing + Set Altitude */}
-        <div className="flex justify-evenly h-14">
-          <ControlButton label="E Land" command="LAND" sendCommand={() => handleControl("land", "land")} isEnabled={isConnected && isArmed} shortcut="H" />
-          <ControlButton label="Set Alt" command="SET_ALT" sendCommand={() => handleControl("setAlt", "setalt")} isEnabled={isConnected && isArmed} shortcut="L" />
-        </div>
+ 
+          <ControlButton label="Land" command="LAND" sendCommand={() => handleControl("land", "land")} isEnabled={isConnected && isArmed} shortcut="H" />
+          <ControlButton label="Auto Takeoff" command="SET_ALT" sendCommand={() => handleControl("setAlt", "setalt")} isEnabled={isConnected && isArmed} shortcut="L" />
+     
+        {/* <ControlButton label="Altitude" command="Altitide" sendCommand={() => handleControl("Altitide", "2")} isEnabled={isConnected && isArmed} shortcut="T" /> */}
 
          
 
-      </div>
     </div>
   );
 }

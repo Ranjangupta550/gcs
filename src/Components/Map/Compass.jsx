@@ -28,14 +28,14 @@ const ReactCompass = ({ direction = 0 }) => {
   };
 
   return (
-<div className="flex relative flex-col items-center gap-2">
+<div className="flex relative flex-col items-center  border-backgroundSecondary border-2  rounded-md ">
       {/* Heading label */}
       <h2 className="text-gray-300 absolute z-10 top-5 font-semibold text-sm">
         Heading: <span className="text-yellow-400">{directionName(heading)}</span> ({heading.toFixed(0)}°)
       </h2>
 
       {/* Compass container */}
-      <div className="w-[250px] h-[250px] bg-black rounded-md relative flex items-center justify-center shadow-lg">
+      <div className="w-full h-[250px] bg-backgroundPrimary rounded-md relative flex items-center justify-center shadow-lg">
 
         {/* Top triangle pointer for North */}
         <div className="absolute top-1 left-1/2 transform -translate-x-1/2 z-20">
