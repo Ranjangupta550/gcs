@@ -1,24 +1,35 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MainPage from "./Pages/Home";
-import VideoStream from "./Components/videoStream/VideoStream"; // 
-import { Toaster } from "react-hot-toast";
-// Import\ the Video Stream page
-import UploadMission from "./Components/utils/UploadFiles"
+import {Home,MainLayouts} from "./index";
+import { ToastBar,Toaster } from "react-hot-toast";
+import { Children } from "react";
 function App() {
-  // if (Notification.permission !== "granted") {
-  //   Notification.requestPermission();
-  // }
+
   return (
-    <Router>
-      <Toaster
-      /> {/* Add Toaster component for notifications */}
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/video" element={<VideoStream />} /> {/* Add the VideoStream page */}
-        <Route path="/upload" element={<UploadMission />} /> {/* Add the UploadMission page */}
-      
-      </Routes>
-    </Router>
+   <Router>
+    <Toaster
+      position="top-right"
+      reverseOrder={false}
+      toastOptions={{
+        // Define default options
+        className: '',
+        duration: 5000,
+        style: {
+          background: '#333',
+          color: '#fff',
+        },
+      }}
+    />  
+    
+    <Routes>
+      <Route path="/" element={<MainLayouts />} />
+      <Route path="/home" element={<Home />} />
+      {/* <Route path="/stats" element={<Stats />} /> */}
+      {/* <Route path="/about" element={<About />} /> */}
+      {/* <Route path="/contact" element={<Contact />} /> */}
+
+    </Routes>
+    
+   </Router>
   );
 }
 

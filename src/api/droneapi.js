@@ -1,4 +1,4 @@
-import { sendCommand } from "./api"; // ✅ Import reusable function
+import { sendCommand, sendCommandWithPayload } from "./api"; // ✅ Import reusable function
 import connectionStatus from "../Global/connectionStatus"; // ✅ Import Global Store
 import { socket } from "./api"; // ✅ Import reusable function
 
@@ -84,7 +84,19 @@ export const  chnageFlightMode = async (mode)=>{
 export const sendAltitude = async (altitude) => {
   try {
     console.log("Sending altitude: ", altitude);
-    socket.emit("data", { height: parseFloat(altitude) });
+    socket.emit("setAlt", { height: parseFloat(altitude) });
+    console.log("Altitude sent successfully");
+    return true;
+  } catch (error) {
+    console.error("Error sending altitude: ", error);
+    return false;
+  }
+};
+export const sendAutoTakeoff = async (altitude) => {
+  try {
+    altitude=Number(altitude);
+    console.log("Sending altitude: ", typeof( altitude));
+    await sendCommandWithPayload("setAlt", { height: altitude });
     console.log("Altitude sent successfully");
     return true;
   } catch (error) {

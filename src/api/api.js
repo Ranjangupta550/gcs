@@ -1,8 +1,8 @@
 import { io } from "socket.io-client";
 import notify from "../Components/utils/Notification/notify";
 // const socket = io("http://localhost:3000");
-// const socket = io("http://192.168.29.14:5000");
 const socket = io("http://192.168.29.05:5000");
+// const socket = io("http://192.168.66.108:5000");
 // const socket = io("http://localhost:5000");
 // const socket =io("http://192.168.167.108:5000");
 // const socket = io("http://192.168.73.134:5000");

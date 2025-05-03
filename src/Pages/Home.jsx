@@ -1,20 +1,16 @@
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import ToggleBar from "../Components/ToggleBar/ToggleBar";
 import Navbar from "../Components/Navbar/Navbar";
 import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import FlightControlPannel from "../Components/FlightControlPannel/FlightControlPannel";
 import Map from "../Components/Map/Map";
 import StatusBox from "../Components/Statusbox/Statusbox";
-import ConnectionButton from "../Components/Navbar/ConnectionButton/ConnectionButton";
-// import InputParameter from "../Components/InputParameter/InputParameter";
-import connectionStatus from "../Global/connectionStatus";
+
 import Compass from "../Components/Map/compass";
 // import Text from "../api/text";
 import useTelemetry from "../Global/centralTelemetry";
-import { use } from "react";
+
 function MainPage() {
   const [count, setCount] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
