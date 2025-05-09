@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { Navigation } from "../index";
+import { Home } from "../index";
 import { BrowserRouter,Route,Router } from "react-router-dom";
 
 
@@ -10,10 +10,11 @@ function MainLayouts() {
             
             {/* <Navigation /> */}
             <div className="h-full w-auto">
-                <Navigation />
+                {/* <Navigation /> */}
+             
             </div>
             <div className="flex item-center justify-center bg-backgroundTertiary  h-full w-full rounded-lg text-white border overflow-hidden">
-                <Outlet />
+              <Outlet />
 
             </div>
 
