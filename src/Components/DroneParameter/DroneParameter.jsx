@@ -18,13 +18,14 @@ function DroneParameter() {
             <ParaCard title="Longitude" value={formatValue(telemetry?.nav?.longitude)} unit="deg" />
             <ParaCard title="Latitude" value={formatValue(telemetry?.nav?.latitude)} unit="deg" />
             <ParaCard title="Vertical Speed" value={formatValue(telemetry?.nav?.climb_rate)} unit="m/s" />
+         
             <ParaCard title="Ground Speed" value={formatValue(telemetry?.nav?.groundspeed)} unit="m/s" />
             <ParaCard title="Speed" value={formatValue(telemetry?.nav?.airspeed)} unit="km/h" />
-            <ParaCard title="Battery" value={formatValue(telemetry?.battery?.current)} unit="Amp" />
-            <ParaCard title="Battery" value={formatValue(telemetry?.battery?.current)} unit="Amp" />
-            <ParaCard title="Battery" value={formatValue(telemetry?.battery?.current)} unit="Amp" />
-            <ParaCard title="Battery" value={formatValue(telemetry?.battery?.current)} unit="Amp" />
-            <ParaCard title="Battery" value={formatValue(telemetry?.battery?.current)} unit="Amp" />
+            <ParaCard title="Battery_Current" value={formatValue(telemetry?.battery?.current)} unit="Amp" />
+            <ParaCard title="Battery_Level" value={formatValue(telemetry?.battery?.level)} unit="%6" />
+            <ParaCard title="Battery_Voltage" value={formatValue(telemetry?.battery?.voltage)} unit="volts" />
+            {/* <ParaCard title="Battery" value={formatValue(telemetry?.battery?.current)} unit="Amp" /> */}
+            {/* <ParaCard title="Battery" value={formatValue(telemetry?.battery?.current)} unit="Amp" /> */}
 
         </div>
     );

@@ -1,4 +1,0 @@
-.drag-area {
-    -webkit-app-region: drag; /* Enables dragging */
-    user-select: none; /* Prevents text selection while dragging */
-  }

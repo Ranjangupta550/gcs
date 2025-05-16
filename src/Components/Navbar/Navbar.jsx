@@ -8,6 +8,7 @@ import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
 import SatelliteCount from "./Status/SattelliteCount";
 import CameraWindow from "../../Pages/CameraWindow";
+import { ServerStatus } from "../../index.js";
 // import MissionUpload from "../utils/UploadFiles";
 // import text from "../../assets/text.json"; // ✅ Import text file
 import PilotDashboard from "../../auth/PilotDashboard"
@@ -23,7 +24,7 @@ function Navbar() {
             <div id="Navbar" className="bg-navbar h-11 w-full flex items-center justify-between relative">
                 <div className="Status-bar border-white h-full flex items-center justify-center">
                     <div id="GPS" className="flex w-20 h-full justify-evenly items-center column pt-1">
-                        <GpsStatus level={telemetry?.gpsStrength || 0} />
+                        <GpsStatus level={telemetry?.gps?.fixtype || 0} />
                     </div>
 
                     <div id="Network" className="flex  w-20 h-full justify-evenly pt-1">
@@ -31,7 +32,7 @@ function Navbar() {
                     </div>
 
                     <div id="Battery" className="flex w-20 h-full justify-evenly pt-1">
-                        <BatteryStatus level={telemetry?.batteryLevel || 0} />
+                        <BatteryStatus level={telemetry?.battery.level || 0} />
                     </div>
 
                     <div id="SatelliteCount" className="flex w-20 h-full justify-evenly pt-1">
@@ -45,15 +46,18 @@ function Navbar() {
 
                 <div className="LeftSidebar w-auto pr-2 flex gap-4 justify-center items-center">
                     <div className="flex item-center justify-center">
-                    <PilotDashboard /> {/* ✅ No need to pass props */}
+                    {/* <PilotDashboard /> ✅ No need to pass props */}
+
                     </div>
+
                    
                     {/* <MissionUpload /> ✅ No need to pass props */}
                     <div className="flex item-center justify-center flex-col text-gray-500 font-bold text-[10px]">
                     <CameraWindow /> {/* ✅ No need to pass props */}
+
                    
                  </div>
-
+                    <ServerStatus /> {/* ✅ No need to pass props */}
                     <ConnectDisconnectButton /> {/* ✅ No need to pass props */}
                 </div>
             </div>

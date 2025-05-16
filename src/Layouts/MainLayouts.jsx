@@ -13,12 +13,9 @@ function MainLayouts() {
                 {/* <Navigation /> */}
              
             </div>
-            <div className="flex item-center justify-center bg-backgroundTertiary  h-full w-full rounded-lg text-white border overflow-hidden">
+            <div className="flex item-center justify-center bg-backgroundTertiary  h-full w-full rounded-lg text-white overflow-hidden">
               <Outlet />
-
             </div>
-
-           
             {/* <Outlet /> */}
         </div>
     )

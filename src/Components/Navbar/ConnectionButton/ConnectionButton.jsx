@@ -4,10 +4,12 @@ import connectionStatus from "../../../Global/connectionStatus.js";
 import Loader from "../../utils/Loader.jsx";
 import powerOff from "../../../assets/Svg/disconnectDrone.svg";
 import powerOn from "../../../assets/Svg/connectDrone.svg";
-import { toast } from "react-hot-toast";
-import successAnim from "../../../assets/animation/sucessAnimation.json";
-import Lottie from "lottie-react";
+
 import notify from "../../utils/Notification/notify.jsx";
+import DroneAnimation from "../../../assets/animation/DroneAnimation.json";
+import ConnectedAnimation from "../../../assets/animation/Tick.json";
+import DisconnectedAnimation from "../../../assets/animation/Cross.json";
+import Lottie from "lottie-react";
 
 const ConnectionButton = () => {
     const { isConnected, connect, disconnect } = connectionStatus();
@@ -97,55 +99,67 @@ const ConnectionButton = () => {
         <div
         onClick={handleClick}
         className={`
-          flex items-center space-x-2 rounded-md pl-2 w-40 shadow-md cursor-pointer
-          transition-all duration-300
-          ${isConnected ? "bg-green-100 hover:bg-green-200" : "bg-red-100 hover:bg-red-200"}
-          ${isLoading ? "opacity-70 pointer-events-none" : ""}
+          flex items-center gap-1 justify-center rounded-md w-28  cursor-pointer
+          transition-all duration-300 bg-[#1E1E1E] p-1 h-4/5
+          hover:bg-[#2D2D2D] text-white border border-gray-300 border-opacity-65 group relative
         `}
       >
-        {/* Text Label */}
+        <div>
+
+        {!isLoading && (
+          <Lottie
+          animationData={isConnected? ConnectedAnimation : DisconnectedAnimation}
+          alt="Power Icon"
+          className="w-10 h-8  transition duration-300"
+          loop={false}
+          />
+        )}
+         {isLoading && (
+           <Lottie
+           animationData={DroneAnimation}
+           alt="Power Icon"
+           className="w-10 h-8 transition duration-300"
+           loop={true}
+           />
+          )}
+
+          </div>
+
+     
         <span
-          className={`text-sm font-semibold w-28 ${
+          className={` font-semibold text-[8px]  pr-2 ${
             isLoading
               ? "text-yellow-600"
               : isConnected
-              ? "text-green-600"
-              : "text-red-600"
+              ? "text-white opacity-100 text-[10px]"
+              : "text-white opacity-90"
           }`}
         >
           {isLoading
             ? "Waiting..."
             : isConnected
-            ? "Connected"
-            : "Disconnected"}
+            ? "Drone Connected"
+            : "Drone Disconnected"}
         </span>
+
+        {isConnected&&(
+         <div className="z-10 absolute w-28 top-11 right-0 text-center text-white bg-[#1E1E1E] text-[8px] px-2 py-1 rounded-md 
+                    opacity-0 scale-95 transition-all duration-500 delay-200 
+                    group-hover:opacity-100 group-hover:scale-100">
+      click to Disconnect
+    </div>
+        )}
+        {!isConnected && (
+    <div className="z-10 absolute w-28 top-11 right-0 text-center text-white bg-[#1E1E1E] text-[8px] px-2 py-1 rounded-md 
+                    opacity-0 scale-95 transition-all duration-500 delay-200 
+                    group-hover:opacity-100 group-hover:scale-100">
+      click to connect
+    </div>
+  )}
+
+
       
         {/* Power Icon */}
-        <div
-          className={`
-            flex items-center justify-center w-10 h-10 rounded-full
-            transition-all duration-300
-            ${
-              isLoading
-                ? "bg-yellow-100 animate-pulse"
-                : isConnected
-                ? "bg-green-100"
-                : "bg-red-100"
-            }
-          `}
-        >
-          {isLoading ? (
-            <div className="scale-[0.4]">
-              <Loader />
-            </div>
-          ) : (
-            <img
-              src={isConnected ? powerOff : powerOn}
-              alt="Power"
-              className="w-5 h-5"
-            />
-          )}
-        </div>
       </div>
       
         );

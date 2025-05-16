@@ -1,6 +1,8 @@
 import { io } from "socket.io-client";
 import notify from "../Components/utils/Notification/notify";
-// const socket = io("http://localhost:3000");
+import useServerStatus from "../Global/serverStatus";
+// const socket = io("http://192.168.29.42:5000");
+// import notify from "../Components/utils/Notification/notify";
 const socket = io("http://192.168.29.05:5000");
 // const socket = io("http://192.168.66.108:5000");
 // const socket = io("http://localhost:5000");
@@ -11,14 +13,14 @@ const ServerConnection = () => {
   // ✅ Handle connection
   socket.on("connect", () => {
     console.log("✅ Connected to WebSocket server");
-    notify("Successfully connected to the server.", "success");
+    useServerStatus.getState().setServerStatus(true);
     
   });
 
   // ❌ Handle disconnection
   socket.on("disconnect", () => {
     console.log("❌ Disconnected from WebSocket server");
-    notify("Disconnected from the server.", "error");
+    useServerStatus.getState().setServerStatus(false);
   });
 };
 socket.on("heartbeat", (data) => {

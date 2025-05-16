@@ -36,11 +36,7 @@ const DEFAULT_LOCATION = {
 };
 
 const MapComponent = () => {
-  const telemetry = useTelemetry()
-
-  ;
-// const { droneConnected } = connectionStatus(); // ✅ Global Drone
-//  console.log("droneConnected", droneConnected);
+  const telemetry = useTelemetry();
   const isConnected =
     telemetry?.nav?.longitude !== undefined &&
     telemetry?.nav?.latitude !== undefined;

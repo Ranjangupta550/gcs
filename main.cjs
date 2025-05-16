@@ -1,5 +1,8 @@
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const { app, BrowserWindow, ipcMain, Menu, screen } = require('electron');
 const path = require('path');
+// Disable Electron security warnings in development
+
 
 let mainWindow;
 let videoWindow;

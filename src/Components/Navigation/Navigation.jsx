@@ -8,9 +8,7 @@ const Navigation = () => {
     const handler = (path) => {
       navigate(path);
     };
-
     window.api.receive('navigate', handler);
-
     return () => {
       // Proper cleanup
       window.api.removeListener('navigate');
