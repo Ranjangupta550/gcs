@@ -9,8 +9,13 @@ const SidebarTogglePanel = ({ isOpen, onToggle, children }) => {
     >
       <button
         onClick={onToggle}
-        className={`absolute w-5 top-64 h-20 z-10 bg-backgroundSecondary ${
-          isOpen ? "right-0 rounded-tl-md rounded-bl-md" : "rounded-tr-md rounded-br-md"
+        className={`absolute w-5 top-64 h-20 z-40 bg-backgroundSecondary 
+          transition-opacity duration-1000 ease-in-out 
+        
+          ${isOpen?"opacity-10 hover:opacity-100":"opacity-100"}
+          
+          ${
+          isOpen ? "right-0 rounded-tl-md rounded-bl-md" : "rounded-tr-md rounded-br-md "
         }`}
       >
         <img

@@ -4,7 +4,7 @@
 
 
 import React, { useState, useEffect } from "react";
-import { chnageFlightMode } from "../../../api/droneapi";
+import { chnageFlightMode } from "../../../services/emitHandler";
 // import Notification from "../../../utils/Notification";
 
 const FLIGHT_MODES = [
@@ -56,7 +56,7 @@ function CurrentFlightMode({ mode="NONE" }) {
   };
 
   return (
-    <div className="relative  inline-block text-gray-500 font-bold">
+    <div className="relative  inline-block text-white font-bold">
       <div
         className="flex items-center gap-2 cursor-pointer rounded-lg"
         onClick={() => setShowDropdown(!showDropdown)}
@@ -67,12 +67,12 @@ function CurrentFlightMode({ mode="NONE" }) {
         <p className="text-gray-500 font-custom w-20 text-center">{flightMode}</p>
       </div>
       {showDropdown && (
-        <div className="absolute bg-black text-white shadow-lg rounded-lg mt-2 z-10 w-48 max-h-64 overflow-y-auto">
+        <div className="absolute bg-backgroundSecondary text-white shadow-lg rounded-lg mt-2 z-10 w-48 max-h-64 overflow-y-auto">
           {FLIGHT_MODES.map((item) => (
             <div
               key={item}
-              className={`px-4 py-2 cursor-pointer text-sm text-center transition-all duration-200 ${
-                item === flightMode ? "bg-gray-600 font-bold" : "hover:bg-gray-600"
+              className={`px-4 py-2 mx-2 border-b border-opacity-20 border-white cursor-pointer text-[13px] text-center transition-all duration-200 ${
+                item === flightMode ? "bg-backgroundTertiary font-bold" : "hover:bg-gray-600"
               }`}
               onClick={() => handleModeChange(item)}
             >

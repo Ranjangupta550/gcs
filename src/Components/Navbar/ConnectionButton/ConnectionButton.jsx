@@ -1,10 +1,6 @@
 
 import React, { useState } from "react";
-import connectionStatus from "../../../Global/connectionStatus.js";
-import Loader from "../../utils/Loader.jsx";
-import powerOff from "../../../assets/Svg/disconnectDrone.svg";
-import powerOn from "../../../assets/Svg/connectDrone.svg";
-
+import connectionStatus from "../../../Store/connectionStatus.js";
 import notify from "../../utils/Notification/notify.jsx";
 import DroneAnimation from "../../../assets/animation/DroneAnimation.json";
 import ConnectedAnimation from "../../../assets/animation/Tick.json";
@@ -12,97 +8,30 @@ import DisconnectedAnimation from "../../../assets/animation/Cross.json";
 import Lottie from "lottie-react";
 
 const ConnectionButton = () => {
-    const { isConnected, connect, disconnect } = connectionStatus();
-    const monitor = connectionStatus.getState().monitor;  // Access monitor correctly
+  const isConnected = connectionStatus((state) => state.isConnected);
+  const connect = connectionStatus((state) => state.connect);
+  const disconnect = connectionStatus((state) => state.disconnect);
+  const isLoading = connectionStatus((state) => state.isLoading);
+  // console.log("isConnected", isConnected);
+  // console.log("isLoading", isLoading);  
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [notification, setNotification] = useState(null);
+  const handleClick = async () => {
+  
+    if (isConnected) {
+      await disconnect();
+    } else {
+      await connect();
+    }
+  };
 
-    const handleClick = async () => {
-      setIsLoading(true);
-      try {
-        let response = isConnected ? await disconnect() : await connect();
-        console.log("Connection response received: ", response, "isConnected", isConnected);
-
-        if (response.message) {
-          console.log("Connection message: ", response.message);
-          if (isConnected && response.message) {
-            notify("Drone Disconnected", "success");
-          } else {
-            notify("Drone Connected", "success");
-            monitorDrone();
-          }
-         
-        } else {
-          notify("Unable to connect/disconnect the drone.", "error");
-        }
-      } catch (error) {
-        console.error("Error during connection handling: ", error);
-        notify("An unexpected error occurred.", "error");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-
-// const handleClick = async () => {
-//   const action = isConnected ? 'Disconnecting' : 'Connecting';
-//   const successMsg = isConnected ? 'Drone Disconnected Successfully' : 'Drone Connected Successfully';
-//   const descMsg = isConnected
-//     ? 'The drone has been successfully disconnected.'
-//     : 'The drone has been successfully connected.';
-//     setIsLoading(true);
-//     const promise = isConnected ? disconnect() : connect();
-
-//     const timeout = new Promise((_, reject) =>
-//       setTimeout(() => reject(new Error("error")), 20000)
-//     );
-
-//     toast.promise(
-//       Promise.race([promise, timeout]),
-//       {
-//         loading: `${action}...`,
-//         success: () => {
-//           if (!isConnected) monitorDrone();
-//           return notify(successMsg, "success");
-//         },
-//         error: (err) => {
-//           notify(
-//             err.message === "error"
-//               ? "Connection Timeout"
-//               : "Unable to connect/disconnect the drone.",
-//             "error"
-//           );
-//         },
-//       }
-//     );
-
-//     try {
-//       await Promise.race([promise, timeout]);
-//     } catch (err) {
-//       console.error(err);
-//     } finally {
-//       setIsLoading(false);
-//     }
-// };
-
-
-    const monitorDrone = async () => {
-        let responseMonitor = await monitor();
-        console.log("Monitoring response received: ", responseMonitor);
-        if (responseMonitor) {
-            notify("Drone Disconnected Unexpectedly", "warning");
-        }
-    };
-
-    return (
-        <div
-        onClick={handleClick}
-        className={`
-          flex items-center gap-1 justify-center rounded-md w-28  cursor-pointer
-          transition-all duration-300 bg-[#1E1E1E] p-1 h-4/5
-          hover:bg-[#2D2D2D] text-white border border-gray-300 border-opacity-65 group relative
-        `}
+  return (
+    <div
+      onClick={handleClick}
+      className={`
+        flex items-center gap-1 justify-center rounded-md w-28  cursor-pointer
+        transition-all duration-300 bg-[#1E1E1E] p-1 h-4/5
+        hover:bg-[#2D2D2D] text-white border border-gray-300 border-opacity-65 group relative
+      `}
       >
         <div>
 

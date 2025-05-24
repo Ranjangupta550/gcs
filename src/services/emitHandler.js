@@ -1,18 +1,19 @@
 import { sendCommand, sendCommandWithPayload } from "./api"; // ✅ Import reusable function
-import connectionStatus from "../Global/connectionStatus"; // ✅ Import Global Store
+import connectionStatus from "../Store/connectionStatus"; // ✅ Import Global Store
 import { socket } from "./api"; // ✅ Import reusable function
 
 export const connectDrone = async () => {
-    return await connectionStatus.getState().connect(); // ✅ Call Zustand function
+  sendCommand("connection"); 
 };
 
 export const disconnectDrone = async () => {
-    return await connectionStatus.getState().disconnect(); // ✅ Call Zustand function
+  sendCommand("disconnection");
 };
 
 export const isDroneConnected = () => {
     return connectionStatus.getState().isDroneConnected();
 };
+
 
 // ✅ Arm & Disarm
 export const armDrone = async () => {

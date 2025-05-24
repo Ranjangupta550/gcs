@@ -73,7 +73,7 @@ ipcMain.on('open-video-stream', () => {
       videoWindow.maximize();
     }
 
-    videoWindow.loadURL('http://localhost:5173/video');
+    videoWindow.loadURL('http://localhost:5173/#/video');
     videoWindow.menuBarVisible = false;
     videoWindow.webContents.openDevTools();
 
@@ -159,6 +159,12 @@ function setApplicationMenu() {
             // createUploadMissionWindow();
           },
         },
+        {
+          label:'stats',
+          click:()=>{
+            mainWindow.webContents.send('navigate', '/mission-stats');
+          }
+        }
       ],
     },
   ];

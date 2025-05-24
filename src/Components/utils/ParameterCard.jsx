@@ -2,7 +2,7 @@ import React from 'react'
 const ParaCard = React.memo(({ title, value, unit }) => {
     return (
      <div className='parameter-card h-11  w-full  text-white
-     place-content-evenly bg-[#0e0a0a] rounded-md  fle-grax  flex-col '>
+     place-content-evenly bg-backgroundSecondary rounded-md  fle-grax  flex-col '>
         <h3 className='text-yellow-300 text-[10px]  ml-1'>{title}</h3>
         <div className=' items-center justify-center' >
         <div className='flex items-center relative'>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import notify from "./Notification/notify";
-import { sendCommandWithPayload } from "../../api/api";
+import { sendCommandWithPayload } from "../../services/api";
 
 const UploadFiles = () => {
   const [fileData, setFileData] = useState(null);

@@ -1,7 +1,7 @@
 import React from "react";
-import connectionStatus from "../../Global/connectionStatus"; // ✅ Import Global Store
+import connectionStatus from "../../Store/connectionStatus"; // ✅ Import Global Store
 import ConnectDisconnectButton from "./ConnectionButton/ConnectionButton";
-import useTelemetry from "../../Global/centralTelemetry";
+import useTelemetry from "../../Store/centralTelemetry";
 import BatteryStatus from "./Status/BatteryStatus";
 import CurrentFlightMode from "./Status/CurrentFLightMode";
 import GpsStatus from "./Status/GpsStatus";
@@ -21,9 +21,9 @@ function Navbar() {
 
     return (
         <>
-            <div id="Navbar" className="bg-navbar h-11 w-full flex items-center justify-between relative">
+            <div id="Navbar" className="bg-navbar h-11 w-full flex items-center justify-between  relative">
                 <div className="Status-bar border-white h-full flex items-center justify-center">
-                    <div id="GPS" className="flex w-20 h-full justify-evenly items-center column pt-1">
+                    <div id="GPS" className="flex border w-20 h-full justify-evenly items-center column pt-1">
                         <GpsStatus level={telemetry?.gps?.fixtype || 0} />
                     </div>
 

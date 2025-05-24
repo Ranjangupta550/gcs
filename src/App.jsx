@@ -1,39 +1,45 @@
-import { BrowserRouter,HashRouter as Router, Routes, Route, HashRouter } from "react-router-dom";
-import {Home,MainLayouts,Navigation,NotFound} from "./index";
-import { ToastBar,Toaster } from "react-hot-toast";
+import {
+  BrowserRouter,
+  HashRouter as Router,
+  Routes,
+  Route,
+  HashRouter,
+} from "react-router-dom";
+import { FlightControlPannel, Home, MainLayouts, Navigation, NotFound, VideoStream,MissionStats } from "./index";
+import { ToastBar, Toaster } from "react-hot-toast";
 import { Children } from "react";
-
+import { initServices } from "./services/server";
 function App() {
-const apiUrl = import.meta.env.VITE_API_URL;
-console.log(apiUrl);  // Should log: http://localhost:5173
-
-  
+ 
   return (
-   <HashRouter>
-    <Toaster
+    <HashRouter>
+      <Toaster
         position="top-right"
         reverseOrder={false}
         toastOptions={{
-          className: '',
+          className: "",
           duration: 5000,
           style: {
-            background: '#333',
-            color: '#fff',
+            background: "#333",
+            color: "#fff",
           },
         }}
       />
-    <Navigation />
+      <Navigation />
 
-   <Routes>
-      <Route path="/" element={<MainLayouts />}>
-        <Route index element={<Home />} />
-        <Route path="home" element={<Home />} />
+<Routes>
+  <Route path="/" element={<MainLayouts />}>
+    <Route index element={<Home />} />
+    <Route path="home" element={<Home />} />
+    <Route path="flightcontrol" element={<FlightControlPannel />} />
+  </Route>
 
-      </Route>
-        <Route path="*" element={<NotFound />} />
-    </Routes>
-   </HashRouter>
-
+  {/* Outside the MainLayouts (no sidebar, no navbar, clean view) */}
+  <Route path="/mission-stats" element={<MissionStats />} />
+  <Route path="/video" element={<VideoStream />} />
+  <Route path="*" element={<NotFound />} />
+</Routes>
+    </HashRouter>
   );
 }
 

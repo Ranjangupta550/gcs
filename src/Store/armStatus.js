@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { armDrone,disarmDrone } from "../api/droneapi";
-import {socket} from "../api/api";
+import { armDrone,disarmDrone } from "../services/emitHandler";
+import {socket} from "../services/api";
 
 
 export const armStatus=create((set)=>({

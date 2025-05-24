@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import ParaCard from "../utils/ParameterCard";
-import useTelemetry from "../../Global/centralTelemetry";
-import useGlobalDroneStore from "../../Global/connectionStatus";
+import useTelemetry from "../../Store/centralTelemetry";
+import useGlobalDroneStore from "../../Store/connectionStatus";
 
 function DroneParameter() {
 
     const telemetry = useTelemetry();
-    // const telemetry=useGlobalDroneStore((state)=>state.telemetry); 
+   
     const isConnected = useGlobalDroneStore((state) => state.isConnected);
 
     const formatValue = (value) => (value !== undefined && value !== null ? value.toFixed(2) : "0.00");
 
     return (
-        <div className="grid grid-cols-2 gap-1 bg-[#1A1A1D]  p-2 rounded-lg w-full max-w-4xl mx-auto shadow-lg">
+        <div className="grid grid-cols-2 gap-1   p-2 rounded-lg w-full mx-auto border-b-2 rounded-b-none border-borderColor px-1 shadow-lg">
             <ParaCard title="Altitude" value={formatValue(telemetry?.nav?.altitude)} unit="m" />
             <ParaCard title="Yaw" value={formatValue(telemetry?.attitude?.yaw)} unit="deg" />
             <ParaCard title="Longitude" value={formatValue(telemetry?.nav?.longitude)} unit="deg" />

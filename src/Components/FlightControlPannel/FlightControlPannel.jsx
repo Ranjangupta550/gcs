@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import connectionStatus from "../../Global/connectionStatus";
+import connectionStatus from "../../Store/connectionStatus";
 import ControlButton from "../utils/ControlButton.jsx";
-import { armStatus } from "../../Global/armStatus.js";
+import { armStatus } from "../../Store/armStatus.js";
 import Text from "./Text";
 
 import {
@@ -15,7 +15,7 @@ import {
   sendAltitude,
   sendAutoTakeoff,
 
-} from "../../api/droneapi.js";
+} from "../../services/emitHandler.js";
 import { use } from "react";
 
 function FlightControlPannel() {

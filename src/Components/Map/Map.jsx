@@ -5,12 +5,12 @@ import * as turf from "@turf/turf";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import droneSvg from "../../assets/Svg/DroneSvg.svg";
-import useTelemetry from "../../Global/centralTelemetry";
+import useTelemetry from "../../Store/centralTelemetry";
 import MapControls from "./MapControls";
 import Compass from "./compass";
-import { sendCommandWithPayload } from "../../api/api";
+import { sendCommandWithPayload } from "../../services/api";
 import notify from "../utils/Notification/notify";
-import connectionStatus from "../../Global/connectionStatus";
+import connectionStatus from "../../Store/connectionStatus";
 
 function MapboxDrawControl(props) {
   useControl(
@@ -35,7 +35,7 @@ const DEFAULT_LOCATION = {
   latitude: 28.4829,
 };
 
-const MapComponent = () => {
+const MapComponent = ({toggleSideBar}) => {
   const telemetry = useTelemetry();
   const isConnected =
     telemetry?.nav?.longitude !== undefined &&
@@ -46,6 +46,7 @@ const MapComponent = () => {
   const [waypointSelectionIsOpen, setWaypointSelectionIsopen] = useState(false);
   const roundTo4 = (num) => (num ? parseFloat(num.toFixed(4)) : 0);
   const [waypointsSaved, setWaypointsSaved] = useState(false);
+  const toggleSidebarr = toggleSideBar;
 
 
   const [viewState, setViewState] = useState({
@@ -55,6 +56,7 @@ const MapComponent = () => {
     pitch: 0,
     bearing: 0,
     mapStyle: "mapbox://styles/mapbox/satellite-v9",
+  
   });
   // Track drone position
   useEffect(() => {
@@ -81,7 +83,30 @@ const MapComponent = () => {
     telemetry?.nav?.latitude,
     isConnected,
     followDrone,
+  
+
+ 
   ]);
+  // In MapComponent.jsx
+
+
+// Add this effect to handle sidebar toggle
+useEffect(() => {
+  if (mapRef.current) {
+    setTimeout(() => {
+      const map = mapRef.current?.getMap();
+      if (map) {
+        map.resize(); // Force map to recalculate dimensions
+        if (followDrone) {
+          map.flyTo({
+            center: [userLocation.longitude, userLocation.latitude],
+            essential: true
+          });
+        }
+      }
+    }, 100); // Small delay to allow DOM update
+  }
+}, [toggleSideBar, followDrone, userLocation]);
 
   const [geofenceData, setGeofenceData] = useState(null);
   const [altitude, setAltitude] = useState(5);

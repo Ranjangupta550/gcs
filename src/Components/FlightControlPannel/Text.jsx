@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { sendAltitude } from '../../api/droneapi';
+import { sendAltitude } from '../../services/emitHandler';
 
 
 const Text = () => {
