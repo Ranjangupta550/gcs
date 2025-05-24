@@ -3,11 +3,27 @@ const { contextBridge, ipcRenderer } = require('electron');
 // Expose APIs to the renderer process
 contextBridge.exposeInMainWorld('api', {
   getLocation: () => ipcRenderer.invoke('get-location'),
+ 
+    receive: (channel, callback) => {
+    if (typeof callback === 'function') {
+      ipcRenderer.on(channel, (event, ...args) => callback(...args));
+    } else {
+      console.warn(`No valid callback provided for channel "${channel}"`);
+    }
+  },
+
+  removeListener: (channel) => {
+    ipcRenderer.removeAllListeners(channel);
+  } ,
+  selectMissionFile: () => {
+    console.log("Preload: sending selectMissionFile request");
+    return ipcRenderer.invoke("selectMissionFile");
+  },
   send: (channel, data) => {
     ipcRenderer.send(channel, data);
   },
-  receive: (channel, callback) => {
-    ipcRenderer.on(channel, (event, ...args) => callback(...args));
-  },
-  sendNotification: (title, message) => ipcRenderer.send('show-notification', { title, message }),
+    invoke: (channel, data) => ipcRenderer.invoke(channel, data),
+
+  
+  
 });
