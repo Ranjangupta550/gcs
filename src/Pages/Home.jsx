@@ -1,55 +1,76 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
-import ToggleBar from "../Components/ToggleBar/ToggleBar";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar/Navbar";
 import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import FlightControlPannel from "../Components/FlightControlPannel/FlightControlPannel";
 import Map from "../Components/Map/Map";
 import StatusBox from "../Components/Statusbox/Statusbox";
-import ConnectionButton from "../Components/Navbar/ConnectionButton/ConnectionButton";
-// import InputParameter from "../Components/InputParameter/InputParameter";
-import connectionStatus from "../Global/connectionStatus";
-// import Text from "../api/text";
-function MainPage() {
+import Compass from "../Components/Map/compass";
+import useTelemetry from "../Store/centralTelemetry";
+import icons from "../assets/icons";
+import { SidebarTogglePanel,SideBarComponents } from "../index";
+
+function Home() {
   const [count, setCount] = useState(0);
-  // const isConnected = connectionStatus((state) => state.isConnected); // ✅ Global Drone 
+  const [isConnected, setIsConnected] = useState(false);
+  const telemetry = useTelemetry();
+  const [toggleSideBar, setToggleSidebar] = useState(false);
+
+  const handleToggleBar = () => {
+  
+    setToggleSidebar(!toggleSideBar);
+  };
 
   return (
-    <>
-    {/* <div className=" absolute z-10  right-1 top-7">
-    <ConnectionButton />
-    </div> */}
-     
-      <div className="flex flex-col w-screen h-screen bg-MainBackground relative">
-        <div id="Togglebar" className="h-auto">
-          {/* <ToggleBar /> */}
-        </div>
-        <div id="Navbar" className="h-auto">
-          <Navbar />
-        </div>
-        <div
-          id="main"
-          className="h-[calc(100vh-50px)] flex w-screen gap-2 p-1 pl-2 pr-2"
-        >
-          <div className="w-[30%] overflow-hidden rounded-md bg-ParameterBox opacity-80">
-            <DroneParameter />
-            <div className="w-full h-[50%] flex justify-center items-center p-2 overflow-hidden">
-              <FlightControlPannel />
-            </div>
-          </div>
-          <div className="w-[70%] overflow-hidden rounded-md border-4 relative border-ParameterBox border-opacity-100">
-            <div className="w-auto h-auto  z-10 bottom-0 left-1 absolute">
-              <StatusBox />
-            </div>
-            <Map />
-          </div>
-        </div>
-        <div
-          id="footer"
-          className="w-screen h-[30px] border-2 relative bottom-0"
-        ></div>
+    <div
+      id="main"
+      className="flex font-robotoMono flex-col h-screen w-screen  bg-backgroundPrimary gap-y-1 overflow-hidden "
+    >
+      <div id="navbar" className="bg-[#00000] h-11 ml-2 mr-2 mt-1 rounded-md ">
+        <Navbar />
       </div>
-    </>
+      <div id="main-content" className="flex relative h-full w-full">
+
+      <div className="h-[99%] w-[100%] relative border-borderColor border-2   ml-2 mr-2 rounded-md flex justify-between overflow-hidden pr-1  ">
+        <div className=" w-[95%] h-full flex ">
+          <SidebarTogglePanel
+            isOpen={toggleSideBar}
+            onToggle={handleToggleBar}
+            children={<SideBarComponents/>}
+            
+            />
+
+          <div
+            id="map-win"
+            className={`${toggleSideBar? "w-[80%]":"w-full"} border-2 border-borderColor flex items-center relative rounded-lg overflow-hidden m-1 `}
+          >
+            <Map toggleSideBar={toggleSideBar} />
+          </div>
+        </div>
+
+        <div
+          id="rightside"
+          className=" w-[20%]  h-[99%] border-2 border-borderColor  items-center flex-col gap-y-1 flex   rounded-md  right-0 mt-1 mb-1"
+          >
+          <div className="w-full ">
+            <DroneParameter />
+          </div>
+          <div className="w-full  flex items-center justify-center">
+            <StatusBox />
+          </div>
+          <div className="relative bottom-1 w-full border-borderColor  rounded-md ">
+            <Compass direction={telemetry?.attitude?.yaw} />
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
   );
 }
-export default MainPage;
+export default Home;
+
+/* 
+  console.log("telemetry", telemetry);
+  const isConnected = connectionStatus((state) => state.isConnected);  ✅ Global Drone
+ */

@@ -9,12 +9,12 @@ function SatelliteCount({ count }) {
     }, [count]);
 
     return (
-        <div className="flex relative  text-white gap-2">
+        <div className="flex relative  text-gray-500">
             <div className="flex-col flex items-center">
-                <img src={SatelliteSvg} alt="" />
+                <img src={SatelliteSvg} className='w-8' alt="" />
                 <span className="text-[10px]">Satellite</span>
             </div>
-            <p className="text-white font-bold">{NumberSatellite}</p>
+            <p className="text-gray-500 font-bold">{NumberSatellite}</p>
            
         </div>
     );

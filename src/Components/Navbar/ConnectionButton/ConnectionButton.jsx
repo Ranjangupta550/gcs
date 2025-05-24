@@ -1,140 +1,97 @@
-// import React, { useState } from "react";
-// import connectionStatus from "../../../Global/connectionStatus.js";
-// import Loader from "../../Common/Loader.jsx";
-// import Notification from "../../../utils/Notification.jsx";
 
-// const ConnectionButton = () => {
-//     const { isConnected, connect, disconnect } = connectionStatus();
-//     const [isLoading, setIsLoading] = useState(false);
-//     const [notification, setNotification] = useState(null);
-
-//     const handleClick = async () => {
-//         setIsLoading(true);
-//         let response = isConnected ? await disconnect() : await connect();
-
-      
-//         if (response.message) {
-//             setNotification({
-//                 title: isConnected ? "Drone Disconnected" : "Drone Connected",
-//                 message: isConnected
-//                     ? "The drone has been successfully disconnected."
-//                     : "The drone has been successfully connected.",
-//                 type: isConnected ? "disconnect" : "success",
-//             });
-//         } else {
-//             setNotification({
-//                 title: "Connection Failed",
-//                 message: "Unable to connect/disconnect the drone.",
-//                 type: "error",
-//             });
-//         }
-
-
-//         setIsLoading(false);
-//     };
-
-//     return (
-//         <>
-//             <button
-//                 className="flex items-center space-x-1 rounded-md border transition-colors duration-300 h-full p-2 font-bold w-32 justify-center"
-//                 style={{
-//                     backgroundColor: isConnected ? "#FF0000" : "#00FF00",
-//                     color: "#FFFFFF",
-//                 }}
-//                 onClick={handleClick}
-//                 disabled={isLoading}
-//             >
-//                 {isLoading ? <Loader /> : isConnected ? "Disconnect" : "Connect"}
-//             </button>
-
-//             {notification && (
-//                 <Notification
-//                     title={notification.title}
-//                     message={notification.message}
-//                     type={notification.type}
-//                     onClose={() => setNotification(null)}
-//                 />
-//             )}
-//         </>
-//     );
-// };
-
-// export default ConnectionButton;
 import React, { useState } from "react";
-import connectionStatus from "../../../Global/connectionStatus.js";
-import Loader from "../../Common/Loader.jsx";
-import Notification from "../../../utils/Notification.jsx";
+import connectionStatus from "../../../Store/connectionStatus.js";
+import notify from "../../utils/Notification/notify.jsx";
+import DroneAnimation from "../../../assets/animation/DroneAnimation.json";
+import ConnectedAnimation from "../../../assets/animation/Tick.json";
+import DisconnectedAnimation from "../../../assets/animation/Cross.json";
+import Lottie from "lottie-react";
 
 const ConnectionButton = () => {
-    const { isConnected, connect, disconnect } = connectionStatus();
-    const monitor = connectionStatus.getState().monitor;  // Access monitor correctly
+  const isConnected = connectionStatus((state) => state.isConnected);
+  const connect = connectionStatus((state) => state.connect);
+  const disconnect = connectionStatus((state) => state.disconnect);
+  const isLoading = connectionStatus((state) => state.isLoading);
+  // console.log("isConnected", isConnected);
+  // console.log("isLoading", isLoading);  
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [notification, setNotification] = useState(null);
+  const handleClick = async () => {
+  
+    if (isConnected) {
+      await disconnect();
+    } else {
+      await connect();
+    }
+  };
 
-    const handleClick = async () => {
-        setIsLoading(true);
-        let response = isConnected ? await disconnect() : await connect();
+  return (
+    <div
+      onClick={handleClick}
+      className={`
+        flex items-center gap-1 justify-center rounded-md w-28  cursor-pointer
+        transition-all duration-300 bg-[#1E1E1E] p-1 h-4/5
+        hover:bg-[#2D2D2D] text-white border border-gray-300 border-opacity-65 group relative
+      `}
+      >
+        <div>
 
-        if (response.message) {
-            setNotification({
-                title: isConnected ? "Drone Disconnected" : "Drone Connected",
-                message: isConnected
-                    ? "The drone has been successfully disconnected."
-                    : "The drone has been successfully connected.",
-                type: isConnected ? "disconnect" : "success",
-            });
+        {!isLoading && (
+          <Lottie
+          animationData={isConnected? ConnectedAnimation : DisconnectedAnimation}
+          alt="Power Icon"
+          className="w-10 h-8  transition duration-300"
+          loop={false}
+          />
+        )}
+         {isLoading && (
+           <Lottie
+           animationData={DroneAnimation}
+           alt="Power Icon"
+           className="w-10 h-8 transition duration-300"
+           loop={true}
+           />
+          )}
 
-            if (!isConnected) {  // Only start monitoring after connecting
-                monitorDrone();
-            }
-        } else {
-            setNotification({
-                title: "Connection Failed",
-                message: "Unable to connect/disconnect the drone.",
-                type: "error",
-            });
-        }
+          </div>
 
-        setIsLoading(false);
-    };
+     
+        <span
+          className={` font-semibold text-[8px]  pr-2 ${
+            isLoading
+              ? "text-yellow-600"
+              : isConnected
+              ? "text-white opacity-100 text-[10px]"
+              : "text-white opacity-90"
+          }`}
+        >
+          {isLoading
+            ? "Waiting..."
+            : isConnected
+            ? "Drone Connected"
+            : "Drone Disconnected"}
+        </span>
 
-    const monitorDrone = async () => {
-        let response = await monitor();
-        console.log("Monitoring response recived: ", response);
-        if (response) {
-            setNotification({
-                title: "Drone Disconnected",
-                message: "The drone disconnected unexpectedly.",
-                type: "error",
-            });
-        }
-    };
+        {isConnected&&(
+         <div className="z-10 absolute w-28 top-11 right-0 text-center text-white bg-[#1E1E1E] text-[8px] px-2 py-1 rounded-md 
+                    opacity-0 scale-95 transition-all duration-500 delay-200 
+                    group-hover:opacity-100 group-hover:scale-100">
+      click to Disconnect
+    </div>
+        )}
+        {!isConnected && (
+    <div className="z-10 absolute w-28 top-11 right-0 text-center text-white bg-[#1E1E1E] text-[8px] px-2 py-1 rounded-md 
+                    opacity-0 scale-95 transition-all duration-500 delay-200 
+                    group-hover:opacity-100 group-hover:scale-100">
+      click to connect
+    </div>
+  )}
 
-    return (
-        <>
-            <button
-                className="flex items-center space-x-1 rounded-md border transition-colors duration-300 h-full p-2 font-bold w-32 justify-center"
-                style={{
-                    backgroundColor: isConnected ? "#FF0000" : "#00FF00",
-                    color: "#FFFFFF",
-                }}
-                onClick={handleClick}
-                disabled={isLoading}
-            >
-                {isLoading ? <Loader /> : isConnected ? "Disconnect" : "Connect"}
-            </button>
 
-            {notification && (
-                <Notification
-                    title={notification.title}
-                    message={notification.message}
-                    type={notification.type}
-                    onClose={() => setNotification(null)}
-                />
-            )}
-        </>
-    );
+      
+        {/* Power Icon */}
+      </div>
+      
+        );
 };
 
 export default ConnectionButton;

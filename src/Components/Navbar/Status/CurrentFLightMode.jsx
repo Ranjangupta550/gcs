@@ -1,19 +1,90 @@
-import React, { useEffect } from "react";
-import { useState,useCallback } from "react"; 
-import ModeSvg from "../../../assets/Svg/Mode.svg";
-function CurrentFlightMode({ mode }) {
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import { chnageFlightMode } from "../../../services/emitHandler";
+// import Notification from "../../../utils/Notification";
+
+const FLIGHT_MODES = [
+  "STABILIZE",
+  "ACRO",
+  "ALT_HOLD",
+  "AUTO",
+  "GUIDED",
+  "LOITER",
+  "RTL",
+  "CIRCLE",
+  "LAND",
+  "DRIFT",
+  "SPORT",
+  "FLIP",
+  "AUTOTUNE",
+  "POSHOLD",
+  "BRAKE",
+  "THROW",
+  "AVOID_ADSB",
+  "GUIDED_NOGPS",
+  "SMART_RTL",
+  "FLOWHOLD",
+  "FOLLOW",
+  "ZIGZAG",
+  "SYSTEMID",
+  "AUTOROTATE",
+  "NEW_MODE",
+];
+
+function CurrentFlightMode({ mode="NONE" }) {
   const [flightMode, setMode] = useState("N/A");
+  const [showDropdown, setShowDropdown] = useState(false);
+
   useEffect(() => {
     setMode(mode);
   }, [mode]);
+
+  const handleModeChange = async (newMode) => {
+    setShowDropdown(false); // Close the dropdown
+    console.log("Selected flight mode:", newMode);
+    const response = await chnageFlightMode(newMode);
+
+    if (response) {
+      Notification("success", `Flight mode changed to ${newMode}`);
+    } else {
+      Notification("error", `Failed to change flight mode to ${newMode}`);
+    }
+  };
+
   return (
-    <div className="flex relative items-center  text-white gap-2 w-">
-        <div className="flex items-center">
-            <img src={ModeSvg} alt="" className="w-10" />
-            
+    <div className="relative  inline-block text-white font-bold">
+      <div
+        className="flex items-center gap-2 cursor-pointer rounded-lg"
+        onClick={() => setShowDropdown(!showDropdown)}
+      >
+        <button className="bg-red-500 flex justify-center items-center text-center text-white w-14 h-7 px-1 py-1 rounded-lg hover:bg-red-600 transition-all duration-200">
+          Mode
+        </button>
+        <p className="text-gray-500 font-custom w-20 text-center">{flightMode}</p>
+      </div>
+      {showDropdown && (
+        <div className="absolute bg-backgroundSecondary text-white shadow-lg rounded-lg mt-2 z-10 w-48 max-h-64 overflow-y-auto">
+          {FLIGHT_MODES.map((item) => (
+            <div
+              key={item}
+              className={`px-4 py-2 mx-2 border-b border-opacity-20 border-white cursor-pointer text-[13px] text-center transition-all duration-200 ${
+                item === flightMode ? "bg-backgroundTertiary font-bold" : "hover:bg-gray-600"
+              }`}
+              onClick={() => handleModeChange(item)}
+            >
+              {item}
+            </div>
+          ))}
         </div>
-      <p className="text-white font-bold  w-16 flex items-center justify-center">{flightMode}</p>
+      )}
     </div>
   );
 }
+
 export default CurrentFlightMode;
+
+
