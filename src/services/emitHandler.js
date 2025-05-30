@@ -1,13 +1,40 @@
 import { sendCommand, sendCommandWithPayload } from "./api"; // ✅ Import reusable function
-import connectionStatus from "../Store/connectionStatus"; // ✅ Import Global Store
-import { socket } from "./api"; // ✅ Import reusable function
 
+import { socket } from "./api"; // ✅ Import reusable function
+import {connectionStatus, notify, startTimeout ,armStatus} from "../index";
 export const connectDrone = async () => {
   sendCommand("connection"); 
+  startTimeout("connection",20000,()=>{
+    console.log ("Connection failed Timeout");
+    notify("Connection timeout","error");
+    connectionStatus.getState().setConnectionandLoading(false,false)
+  })
+
 };
 
 export const disconnectDrone = async () => {
   sendCommand("disconnection");
+   startTimeout("disconnection",20000,()=>{
+    console.log ("disconnection failed Timeout");
+    notify("Connection timeout","error");
+    if(connectionStatus.getState().isDroneConnected()){
+      notify("Drone is still connected, please try again","error");
+      connectionStatus.getState().setLoading(false);
+    }
+
+   
+  })
+
+};
+
+export const sendWaypoints = async (payload) => {
+try {
+  await sendCommandWithPayload("start_scan", payload);
+} catch (error) {
+  console.error("Error sending waypoints: ", error);
+  notify("Failed to send waypoints", "error");
+}
+
 };
 
 export const isDroneConnected = () => {
@@ -17,15 +44,22 @@ export const isDroneConnected = () => {
 
 // ✅ Arm & Disarm
 export const armDrone = async () => {
-  const response = await sendCommand("arm");
-  console.log("Arm response: ", response);
-  return response.message;
+  sendCommand("arm");
+  startTimeout("arm",10000,()=>{
+    console.log ("Arm failed Timeout");
+    notify("Arm timeout","error");
+    armStatus.getState().setArmandLoading(false,false);
+  })
+
 };
 
 export const disarmDrone = async () => {
-  const response = await sendCommand("disarm");
-  console.log("Disarm response: ", response);
-  return response.message;
+  sendCommand("disarm");
+  startTimeout("disarm",10000,()=>{
+    console.log ("Disarm failed Timeout");
+    notify("Disarm timeout","error");
+    armStatus.getState().setArmandLoading(false,false);
+  })
 };
 
 // ✅ Drone Controls
@@ -73,8 +107,6 @@ export const monitoring= async()=>{
 }
 
 
-
-
 export const  chnageFlightMode = async (mode)=>{
   console.log("Changing flight mode to: ", mode);
   socket.emit("mode_switch", { mode }, (response) => {
@@ -85,7 +117,7 @@ export const  chnageFlightMode = async (mode)=>{
 export const sendAltitude = async (altitude) => {
   try {
     console.log("Sending altitude: ", altitude);
-    socket.emit("setAlt", { height: parseFloat(altitude) });
+    socket.emit("setalt", { height: parseFloat(altitude) });
     console.log("Altitude sent successfully");
     return true;
   } catch (error) {
@@ -97,7 +129,7 @@ export const sendAutoTakeoff = async (altitude) => {
   try {
     altitude=Number(altitude);
     console.log("Sending altitude: ", typeof( altitude));
-    await sendCommandWithPayload("setAlt", { height: altitude });
+    await sendCommandWithPayload("setalt", { height: altitude });
     console.log("Altitude sent successfully");
     return true;
   } catch (error) {

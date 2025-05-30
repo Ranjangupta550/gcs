@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import connectionStatus from "../../Store/connectionStatus";
-import ControlButton from "../utils/ControlButton.jsx";
-import { armStatus } from "../../Store/armStatus.js";
+import ControlButton from "../UI/ControlButton.jsx";
+
 import Text from "./Text";
+import { Button, armStatus,AutoTakeoffModal } from "../../index.js";
 
 import {
   controlThrottle,
@@ -14,18 +15,31 @@ import {
   controlSetAlt,
   sendAltitude,
   sendAutoTakeoff,
-
 } from "../../services/emitHandler.js";
 import { use } from "react";
 
 function FlightControlPannel() {
   const isConnected = connectionStatus((state) => state.isConnected);
   const isArmed = armStatus((state) => state.isArmed);
-  const handleArm = armStatus((state) => state.handleArm);
-  const handleDisarm = armStatus((state) => state.handleDisarm);
+  const handleArm = armStatus((state) => state.arm);
+  const handleDisarm = armStatus((state) => state.disArm);
   4;
-  const [Height, setAltHeight] = useState(false);
-  const [altitudeInput, setAltitudeInput] = useState("");
+  const [Height, setAltHeight] = useState(true);
+  // const [altitudeInput, setAltitudeInput] = useState("");
+
+
+   const [showModal, setShowModal] = useState(false);
+  const [autoTakeoffStarted, setAutoTakeoffStarted] = useState(false);
+
+  const handleAutoTakeoff = async (altitude) => {
+    try {
+      await sendAutoTakeoff(altitude); // 👈 backend call
+      setAutoTakeoffStarted(true);     // ✅ 
+      setShowModal(false);             // Close modal
+    } catch (err) {
+      console.error("Takeoff failed:", err);
+    }
+  };
 
   const handleControl = async (actionType, action) => {
     if (!isConnected || !isArmed) return;
@@ -118,7 +132,7 @@ function FlightControlPannel() {
     };
     const keydownHandler = (event) => {
       if (/^[a-z]$/i.test(event.key)) {
-      handleKeyPress(event);
+        handleKeyPress(event);
       }
     };
 
@@ -129,52 +143,66 @@ function FlightControlPannel() {
   }, [isConnected, isArmed]);
 
   return (
-    <div className="relative grid grid-rows-3 grid-cols-5  items-center pl-2 pr-2 h-full w-full  border-4 border-opacity-15 border-white rounded-md bg-navbar bg-opacity-50">
-      <ControlButton
-        label={isArmed ? "Disarm" : "Arm"}
-        command="ARM"
-        sendCommand={isArmed ? handleDisarm : handleArm}
-        isEnabled={isConnected}
-        shortcut="P"
-      />
+    <div className="relative border-2 h-full overflow-y-auto rounded-md border-borderColor flex flex-col w-full  ">
+      <div className="w-full h-14 flex items-center justify-evenly border-b-2 border-borderColor ">
+        <div>Drone Control</div>
+        <ControlButton
+          label={isArmed ? "Disarm" : "Arm"}
+          command="ARM"
+          sendCommand={isArmed ? handleDisarm : handleArm}
+          isEnabled={isConnected}
+          shortcut="P"
+        />
+      </div>
+
       {/* ✅ All Flight Controls (always visible) */}
 
       {/* Throttle */}
 
-      <ControlButton
-        label="Throttle +"
-        command="THROTTLE_UP"
-        sendCommand={() => handleControl("throttle", "up")}
-        isEnabled={isConnected && isArmed}
-        shortcut="W"
-      />
-      <ControlButton
-        label="Throttle -"
-        command="THROTTLE_DOWN"
-        sendCommand={() => handleControl("throttle", "down")}
-        isEnabled={isConnected && isArmed}
-        shortcut="S"
-      />
+      <div className="w-full h-14 flex items-center justify-center ">
+        <ControlButton
+          label="Throttle +"
+          command="THROTTLE_UP"
+          sendCommand={() => handleControl("throttle", "up")}
+          isEnabled={isConnected && isArmed}
+          shortcut="W"
+        />
+        <div className="h-1 w-12  bg-borderColor"></div>
+        <ControlButton
+          label="Throttle -"
+          command="THROTTLE_DOWN"
+          sendCommand={() => handleControl("throttle", "down")}
+          isEnabled={isConnected && isArmed}
+          shortcut="S"
+        />
+      </div>
 
       {/* Yaw */}
 
-      <ControlButton
-        label="Yaw Left"
-        command="YAW_LEFT"
-        sendCommand={() => handleControl("yaw", "left")}
-        isEnabled={isConnected && isArmed}
-        shortcut="A"
-      />
-      <ControlButton
-        label="Yaw Right"
-        command="YAW_RIGHT"
-        sendCommand={() => handleControl("yaw", "right")}
-        isEnabled={isConnected && isArmed}
-        shortcut="D"
-      />
+      <div className="w-full h-14 flex items-center justify-center ">
+        <ControlButton
+          label="Yaw Right"
+          command="YAW_RIGHT" 
+          sendCommand={() => handleControl("yaw", "right")} 
+          isEnabled={isConnected && isArmed}  
+          shortcut="D"
+        />
+        <div className="h-1 w-12  bg-borderColor"></div>
+        <ControlButton
+          label="Yaw Left"
+          command="YAW_LEFT"
+          sendCommand={() => handleControl("yaw", "left")}
+          isEnabled={isConnected && isArmed}
+          shortcut="A"
+        />
+
+      </div>
 
       {/* Roll */}
 
+      
+      <div className="w-full h-14 flex items-center justify-center ">
+        
       <ControlButton
         label="Roll Left"
         command="ROLL_LEFT"
@@ -182,6 +210,9 @@ function FlightControlPannel() {
         isEnabled={isConnected && isArmed}
         shortcut="←"
       />
+
+      <div className="h-1 w-12  bg-borderColor"></div>
+
       <ControlButton
         label="Roll Right"
         command="ROLL_RIGHT"
@@ -190,15 +221,21 @@ function FlightControlPannel() {
         shortcut="→"
       />
 
+
+      </div>
       {/* Pitch */}
 
-      <ControlButton
+
+
+     <div className="w-full h-14 flex items-center justify-center ">
+        <ControlButton
         label="Pitch Up"
         command="PITCH_UP"
         sendCommand={() => handleControl("pitch", "forward")}
         isEnabled={isConnected && isArmed}
         shortcut="↑"
       />
+      <div className="h-1 w-12  bg-borderColor"></div>
       <ControlButton
         label="Pitch Down"
         command="PITCH_DOWN"
@@ -207,9 +244,16 @@ function FlightControlPannel() {
         shortcut="↓"
       />
 
+     </div>
+
+
+
+    
+
       {/* Landing + Set Altitude */}
 
-      <ControlButton
+      <div className="w-full h-14 flex items-center justify-center ">
+            <ControlButton
         label="Land"
         command="LAND"
         sendCommand={() => handleControl("land", "land")}
@@ -217,45 +261,32 @@ function FlightControlPannel() {
         shortcut="H"
       />
       {/* <ControlButton label="Auto Takeoff" command="SET_ALT" sendCommand={() => handleControl("setAlt", "setalt")} isEnabled={isConnected && isArmed} shortcut="L" /> */}
-      <ControlButton
+
+      <div className="h-1 w-12  bg-borderColor"></div>
+
+     <ControlButton
         label="Auto Takeoff"
         command="SET_ALT"
-        sendCommand={() => setAltHeight(true)} // just show input on click
+        sendCommand={() => setShowModal(true)}
         isEnabled={isConnected && isArmed}
         shortcut="L"
+        className={
+          autoTakeoffStarted
+            ? "bg-green-600 hover:bg-green-700 active:bg-green-800"
+            : "bg-backgroundSecondary hover:bg-backgroundTertiary active:bg-backgroundQuaternary"
+        }
       />
-    {Height && (
-  <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-4 rounded shadow-md flex flex-col items-center">
-      <label className="mb-2 font-semibold">Enter Altitude (in meters):</label>
-      <input
-        type="number"
-        value={altitudeInput}
-        onChange={(e) => setAltitudeInput(Number(e.target.value))}
-        className="p-2 border rounded w-48 text-black mb-2"
-      />
-      <div className="flex gap-2">
-      <button
-  onClick={async () => {
-    if (!altitudeInput) return;
 
-    try {
-      await sendAutoTakeoff(altitudeInput); // 👈 Single call with altitude
-      setAltHeight(false);                  // Hide modal
-      setAltitudeInput("");                 // Reset input
-    } catch (err) {
-      console.error("Auto takeoff failed:", err);
-    }
-  }}
-  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
->
-  Confirm
-</button>
-      </div>
-    </div>
-  </div>
-)}
+         </div>
 
+{showModal && (
+        <AutoTakeoffModal
+          onConfirm={handleAutoTakeoff}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+
+  
     </div>
   );
 }

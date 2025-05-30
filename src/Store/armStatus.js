@@ -3,51 +3,21 @@ import { armDrone,disarmDrone } from "../services/emitHandler";
 import {socket} from "../services/api";
 
 
-export const armStatus=create((set)=>({
+ const armStatus=create((set)=>({
     isArmed:false,
+    isLoading:false,
     setArmStatus:(status)=>set({isArmed:status}),
+    setArmandLoading:(status,loading)=>set({isArmed:status,isLoading:loading}),
 
-    handleArm:async()=>{
-        try {
-            const response = await armDrone();
-            if(response){
-                set({isArmed:true});
-                console.log("Drone armed successfully!");
-                socket.on("disarm_response", (data) => {
-                    console.log("Disarm response:", data);
-                    if(data.message){
-                        set({isArmed:false});
-                    }
-                    else{
-                        console.log("Failed to disarm drone.");
-                    }
-                    // set({isArmed:false});
-                }
-                );
-            }
-            else{
-                console.log("Failed to arm drone.");
-            }
-
-        } catch (error) {
-            console.error("Error while arming:", error);
-        }
+    arm:async()=>{
+        set({isLoading:true});
+        await armDrone();  
+    },
+    disArm:async()=>{
+        set({isLoading:true});
+        await disarmDrone();
     },
 
-    handleDisarm:async()=>{
-        try {
-            const response = await disarmDrone();
-            if(response){
-                set({isArmed:false});
-                console.log("Drone disarmed successfully!");
-            }
-            else{
-                console.log("Failed to disarm drone.");
-            }
+}));
 
-        } catch (error) {
-            console.error("Error while disarming:", error);
-        }
-    },
-    
-}))
+export default armStatus;

@@ -1,8 +1,8 @@
 import { toast } from "react-hot-toast";
 import Lottie from "lottie-react";
-import successAnimation from "../../../assets/animation/sucessAnimation.json";
-import errorAnimation from "../../../assets/animation/errorAnimation.json"; // Import your error animation here
-import infoAnimation from "../../../assets/animation/infoAnimation.json"; // Import your info animation here  
+import successAnimation from "../../assets/animation/sucessAnimation.json";
+import errorAnimation from "../../assets/animation/errorAnimation.json"; // Import your error animation here
+import infoAnimation from "../../assets/animation/infoAnimation.json"; // Import your info animation here  
 
 
 const playsound=(type)=>{

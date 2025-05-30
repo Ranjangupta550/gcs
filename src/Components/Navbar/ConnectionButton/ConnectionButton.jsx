@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import connectionStatus from "../../../Store/connectionStatus.js";
-import notify from "../../utils/Notification/notify.jsx";
+import notify from "../../UI/notify.jsx";
 import DroneAnimation from "../../../assets/animation/DroneAnimation.json";
 import ConnectedAnimation from "../../../assets/animation/Tick.json";
 import DisconnectedAnimation from "../../../assets/animation/Cross.json";
@@ -12,8 +12,7 @@ const ConnectionButton = () => {
   const connect = connectionStatus((state) => state.connect);
   const disconnect = connectionStatus((state) => state.disconnect);
   const isLoading = connectionStatus((state) => state.isLoading);
-  // console.log("isConnected", isConnected);
-  // console.log("isLoading", isLoading);  
+
 
   const handleClick = async () => {
   

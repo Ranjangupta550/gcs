@@ -9,9 +9,9 @@ import useTelemetry from "../../Store/centralTelemetry";
 import MapControls from "./MapControls";
 import Compass from "./compass";
 import { sendCommandWithPayload } from "../../services/api";
-import notify from "../utils/Notification/notify";
+import notify from "../UI/notify";
 import connectionStatus from "../../Store/connectionStatus";
-
+import { sendWaypoints } from "../../index";
 function MapboxDrawControl(props) {
   useControl(
     () => new MapboxDraw(props),
@@ -228,16 +228,18 @@ useEffect(() => {
     try {
       setShowMissionControls(false); // Hide mission controls after sending
       notify("Scanning started", "info");
-      const response = await sendCommandWithPayload("start_scan", payload);
-      alert(response ? "Mission sent successfully!" : "Failed to send mission");
-      if (response.message) {
+      // const response = await sendCommandWithPayload("start_scan", payload);\
+      const response = await sendWaypoints(payload);
+      console.log("Response from backend:", response);
+      // alert(response ? "Mission sent successfully!" : "Failed to send mission");
+      if (response?.message) {
         // setGeofenceData(null); // Clear geofence data after sending
         // setWaypoints([]); // Clear waypoints after sending
         notify("Scanning successful", "success");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Failed to send mission");
+      // alert("Failed to send mission");
     }
   };
   return (

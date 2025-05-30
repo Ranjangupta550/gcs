@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import ParaCard from "../utils/ParameterCard";
+import ParaCard from "../UI/ParameterCard";
 import useTelemetry from "../../Store/centralTelemetry";
 import useGlobalDroneStore from "../../Store/connectionStatus";
 

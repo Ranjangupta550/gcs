@@ -1,12 +1,13 @@
 
 import { socket } from "./api";
-import {useTelemetryStore,connectionStatus,notify} from "../index";
+import {useTelemetryStore,connectionStatus,notify, clearTimeoutByKey,armStatus} from "../index";
 import { use } from "react";
 
 
 
 function responseHandler(){
     socket.on(`connection_response`, (data) => {
+        clearTimeoutByKey("connection");
         console.log("📩 Server Response for connection:", data);
      try
         {
@@ -27,7 +28,7 @@ function responseHandler(){
         }
     });
     socket.on(`disconnection_response`, (data) => {
-
+        clearTimeoutByKey("disconnection");
         console.log("📩 Server Response for disconnection:", data);
         try
         {
@@ -36,6 +37,7 @@ function responseHandler(){
                 notify("Drone disconnected successfully!", "success");
                 connectionStatus.getState().setConnectionandLoading(false,false);
                 useTelemetryStore.getState().setTelemetry(null);
+
             } else {
                 console.log("Failed to disconnect drone.");
                 notify("Failed to disconnect drone.", "error");
@@ -52,13 +54,60 @@ function responseHandler(){
         console.log("📩 Server Response for arm:", data);
     });
     socket.on(`monitoring_response`, (data) => {
-        console.log("📩 Server Response for disarm:", data);
+        console.log("📩 Server Response for monitoring:", data);
+        try{
+            if(data.connected===false){
+                connectionStatus.getState().setConnectionandLoading(false,false);
+                notify("Drone disconnected unexpectedly", "error");
+                // connectionStatus.getState().setConnectionandLoading(false,false);
+                useTelemetryStore.getState().setTelemetry(null);
+            }
+            else if (data.connected===true&&data.arm===false){
+               armStatus.getState().setArmandLoading(false,false);
+               notify("Drone disarmed unexpectedly", "error");
+            }
+        } catch (error) {
+            console.error("Error in monitoring response:", error);
+            notify("Error in monitoring response", "error");
+        }
     });
     socket.on(`arm_response`, (data) => {
+        clearTimeoutByKey("arm");
         console.log("📩 Server Response for arm:", data);
+        try {
+            if (data.message) {
+                console.log("✅ Drone armed successfully!");
+                notify("Drone armed successfully!", "success");
+                armStatus.getState().setArmandLoading(true,false);
+            } else {
+                console.log("Failed to arm drone.");
+                notify("Failed to arm drone.", "error");
+                armStatus.getState().setArmandLoading(false,false);
+            }
+        } catch (error) {
+            console.error("Error in arm response:", error);
+            notify("Error in arm response", "error");
+            armStatus.getState().setArmandLoading(false,false);
+        }
     });
     socket.on(`disarm_response`, (data) => {
+        clearTimeoutByKey("disarm");
         console.log("📩 Server Response for disarm:", data);
+        try {
+            if (data.message) {
+                console.log("✅ Drone disarmed successfully!");
+                notify("Drone disarmed successfully!", "success");
+                armStatus.getState().setArmandLoading(false,false);
+            } else {
+                console.log("Failed to disarm drone.");
+                notify("Failed to disarm drone.", "error");
+                armStatus.getState().setArmandLoading(false,false);
+            }
+        } catch (error) {
+            console.error("Error in disarm response:", error);
+            notify("Error in disarm response", "error");
+            armStatus.getState().setArmandLoading(false,false);
+        }
     });
     socket.on(`throttleup_response`, (data) => {
         console.log("📩 Server Response for throttle up:", data);
@@ -94,17 +143,17 @@ function responseHandler(){
         console.log("📩 Server Response for camera:", data);
     });
     socket.on(`telemetry_response`, (data) => {
-        console.log("📩 Server Response for telemetry:", data); 
-
+        // console.log("📩 Server Response for telemetry:", data); 
         useTelemetryStore.getState().setTelemetry(data);
      
     });
     socket.on(`mavmsg_response`, (data) => {    
-        console.log("📩 Server Response for get mavmessage:", data);
+        // console.log("📩 Server Response for get mavmessage:", data);
     });
     socket.on(`start_scan_response`, (data) => {
         console.log("📩 Server Response for start scan:", data);
     });
+
 }
 
 export default responseHandler;

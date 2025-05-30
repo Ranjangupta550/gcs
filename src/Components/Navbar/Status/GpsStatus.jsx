@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import ParameterStatusIcon from "../../utils/StatusIconsSwitcher";
+import ParameterStatusIcon from "../../UI/StatusIconsSwitcher";
 import GpsLogo from "../../../assets/NavBarSvg/GPS/GPSLogo.svg";
 
 function GpsStatus({ level }) {
