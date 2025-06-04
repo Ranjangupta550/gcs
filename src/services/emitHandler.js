@@ -2,6 +2,7 @@ import { sendCommand, sendCommandWithPayload } from "./api"; // ✅ Import reusa
 
 import { socket } from "./api"; // ✅ Import reusable function
 import {connectionStatus, notify, startTimeout ,armStatus} from "../index";
+
 export const connectDrone = async () => {
   sendCommand("connection"); 
   startTimeout("connection",20000,()=>{

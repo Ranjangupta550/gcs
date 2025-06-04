@@ -1,8 +1,8 @@
 import { io } from "socket.io-client";
-import useServerStatus from "../Store/serverStatus";
-import {connectionStatus,useTelemetryStore,serverStatus} from "../index"
+import {useServerStatus} from "../index";
+import {connectionStatus,useTelemetryStore} from "../index"
 import useTelemetry from "../Store/centralTelemetry";
-const socket = io("http://192.168.29.5:5000");
+const socket = io("http://192.168.29.14:5000");
  export const ServerConnection = () => {
   // ✅ Handle connection
   socket.on("connect", () => {
@@ -18,15 +18,10 @@ const socket = io("http://192.168.29.5:5000");
     useTelemetryStore.getState().setTelemetry(null);
 
   });
-};
-// socket.on("heartbeat", (data) => {
-//   // console.log("📩 Server Response for heartbeat", data);
-// });
+};  
 export const sendCommand = async (eventName) => {
 
   
-
-
   return new Promise((resolve, reject) => {
     console.log(`🚀 Sending event: ${eventName}`);
     socket.emit(eventName);

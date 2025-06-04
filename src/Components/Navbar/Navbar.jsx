@@ -22,8 +22,8 @@ function Navbar() {
     return (
         <>
             <div id="Navbar" className="bg-navbar h-11 w-full flex items-center justify-between  relative">
-                <div className="Status-bar border-white h-full flex items-center justify-center">
-                    <div id="GPS" className="flex border w-20 h-full justify-evenly items-center column pt-1">
+                <div className="Status-bar h-full flex items-center justify-center">
+                    <div id="GPS" className="flex w-20 h-full justify-evenly items-center column pt-1">
                         <GpsStatus level={telemetry?.gps?.fixtype || 0} />
                     </div>
 

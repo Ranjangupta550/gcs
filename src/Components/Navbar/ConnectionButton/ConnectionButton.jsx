@@ -6,6 +6,7 @@ import DroneAnimation from "../../../assets/animation/DroneAnimation.json";
 import ConnectedAnimation from "../../../assets/animation/Tick.json";
 import DisconnectedAnimation from "../../../assets/animation/Cross.json";
 import Lottie from "lottie-react";
+import { useServerStatus } from "../../../index.js";
 
 const ConnectionButton = () => {
   const isConnected = connectionStatus((state) => state.isConnected);
@@ -13,13 +14,18 @@ const ConnectionButton = () => {
   const disconnect = connectionStatus((state) => state.disconnect);
   const isLoading = connectionStatus((state) => state.isLoading);
 
+  const isServerConnected = useServerStatus().getServerStatus();
 
   const handleClick = async () => {
-  
+
     if (isConnected) {
       await disconnect();
     } else {
-      await connect();
+      if (isServerConnected) {
+        await connect();
+      } else {
+        notify("Server is not connected, please try again later", "error");
+      }
     }
   };
 

@@ -56,13 +56,13 @@ function responseHandler(){
     socket.on(`monitoring_response`, (data) => {
         console.log("📩 Server Response for monitoring:", data);
         try{
-            if(data.connected===false){
+            if(data?.message?.connected===false){
                 connectionStatus.getState().setConnectionandLoading(false,false);
                 notify("Drone disconnected unexpectedly", "error");
                 // connectionStatus.getState().setConnectionandLoading(false,false);
                 useTelemetryStore.getState().setTelemetry(null);
             }
-            else if (data.connected===true&&data.arm===false){
+            else if (data?.message?.connected===true&&data?.message?.arm===false){  
                armStatus.getState().setArmandLoading(false,false);
                notify("Drone disarmed unexpectedly", "error");
             }
