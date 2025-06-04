@@ -7,6 +7,7 @@ import serverConnected from "./animation/Tick.json";
 import serverDisconnected from "./animation/Cross.json";
 import arrowToggle from "./icons/ArrowToggle.svg";
 import arrowLeft from "./icons/ArrowLeft.svg";
+import followLocation from  "./Svg/FollowLocation.svg"
 
 
 const icons = {
@@ -17,7 +18,8 @@ const icons = {
     mission,
     serverConnected,
     serverDisconnected,
-    arrowToggle
+    arrowToggle,
+    followLocation,
 
 };
 export default icons;

@@ -8,6 +8,7 @@ function ControlButton({
   isEnabled,
   shortcut,
   isConnectionButton,
+  className = "",
 }) {
   const [isLoading, setIsLoading] = useState(false);
 

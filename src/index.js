@@ -26,3 +26,4 @@ export  { default as connectionStatus} from "./Store/connectionStatus"
 export { default as armStatus } from "./Store/armStatus";
 export {AutoTakeoffModal} from "./Components/UI/AutoTakeoffModal";
 export {sendWaypoints} from "./services/emitHandler";
+export { default as icons} from "./assets/icons"

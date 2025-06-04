@@ -11,7 +11,7 @@ import Compass from "./compass";
 import { sendCommandWithPayload } from "../../services/api";
 import notify from "../UI/notify";
 import connectionStatus from "../../Store/connectionStatus";
-import { sendWaypoints } from "../../index";
+import { sendWaypoints ,icons, Button} from "../../index";
 function MapboxDrawControl(props) {
   useControl(
     () => new MapboxDraw(props),
@@ -332,12 +332,17 @@ useEffect(() => {
           </>
         )}
       </Map>
-      <button
-        onClick={() => setFollowDrone(true)}
-        className="absolute top-5 right-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md"
-      >
-        Follow Drone
-      </button>
+      <div className="absolute right-8 top-4  z-10">
+        <Button
+          onClick={() => setFollowDrone(true)}
+          className="z-50 bg-black bg-opacity-60 h-10 w-10 flex items-center justify-center  text-white rounded-full shadow-md"
+          title="Follow Drone"
+          useBaseStyles={false}
+          tooltipPlacement="left"
+        >
+          <img src={icons.followLocation} width={29} alt="" />
+      </Button>
+        </div>
 
       {/* Controls Panel */}
       {showMissionControls && (

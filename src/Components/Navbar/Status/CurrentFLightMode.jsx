@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { chnageFlightMode } from "../../../services/emitHandler";
+import {connectionStatus} from "../../../index"
 const FLIGHT_MODES = [
   "STABILIZE",
   "ACRO",
@@ -31,6 +32,7 @@ const FLIGHT_MODES = [
 function CurrentFlightMode({ mode = "NONE" }) {
   const [flightMode, setMode] = useState("N/A");
   const [showDropdown, setShowDropdown] = useState(false);
+  const isConnected = connectionStatus((state) => state.isConnected);
 
   useEffect(() => {
     setMode(mode);
@@ -54,7 +56,13 @@ function CurrentFlightMode({ mode = "NONE" }) {
         className="flex items-center gap-2 cursor-pointer rounded-lg"
         onClick={() => setShowDropdown(!showDropdown)}
       >
-        <button className="bg-red-500 flex justify-center items-center text-center text-white w-14 h-7 px-1 py-1 rounded-lg hover:bg-red-600 transition-all duration-200">
+        <button className="bg-red-500 flex justify-center items-center text-center text-white w-14 h-7 px-1 py-1 rounded-lg hover:bg-red-600 transition-all duration-200
+        " 
+        style={{
+          backgroundColor: isConnected ? "1d1718" : "#FF9999",
+        }}
+          disabled={!isConnected}
+          title="Change Flight Mode"  >
           Mode
         </button>
         <p className="text-gray-500 font-custom w-20 text-center">

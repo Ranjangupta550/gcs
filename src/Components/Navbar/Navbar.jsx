@@ -23,9 +23,9 @@ function Navbar() {
         <>
             <div id="Navbar" className="bg-navbar h-11 w-full flex items-center justify-between  relative">
                 <div className="Status-bar h-full flex items-center justify-center">
-                    <div id="GPS" className="flex w-20 h-full justify-evenly items-center column pt-1">
+                    {/* <div id="GPS" className="flex w-20 h-full justify-evenly items-center column pt-1">
                         <GpsStatus level={telemetry?.gps?.fixtype || 0} />
-                    </div>
+                    </div> */}
 
                     <div id="Network" className="flex  w-20 h-full justify-evenly pt-1">
                         <NetworkStatus level={telemetry?.networkStrength || 0} />
