@@ -23,6 +23,7 @@ function FlightControlPannel() {
   const isArmed = armStatus((state) => state.isArmed);
   const handleArm = armStatus((state) => state.arm);
   const handleDisarm = armStatus((state) => state.disArm);
+  
   4;
   const [Height, setAltHeight] = useState(true);
   // const [altitudeInput, setAltitudeInput] = useState("");
@@ -152,13 +153,11 @@ function FlightControlPannel() {
           sendCommand={isArmed ? handleDisarm : handleArm}
           isEnabled={isConnected}
           shortcut="P"
-          className={{
-            backgroundColor: isArmed ? "#FF9999" : "#22c55e", // red if armed, green if not
-            color: "white",
-            borderColor: "border-borderColor",
-            hover: isArmed ? "hover:bg-[#FF6666]" : "hover:bg-[#16a34a]", // red hover if armed, green hover if not
-            active: isArmed ? "active:bg-[#FF3333]" : "active:bg-[#15803d]", // red active if armed, green active if not
-          }}
+className={isConnected ? (
+    isArmed
+      ? "bg-red-600 hover:bg-red-700 active:bg-[#FF3333] text-white border-borderColor"
+      : "bg-green-500 hover:bg-green-600 active:bg-green-700 text-white border-borderColor"
+  ) : ""}
         />
       </div>
 
@@ -273,11 +272,11 @@ function FlightControlPannel() {
         sendCommand={() => setShowModal(true)}
         isEnabled={isConnected && isArmed}
         shortcut="L"
-        className={
-          autoTakeoffStarted
-            ? "bg-green-600 hover:bg-green-700 active:bg-green-800"
-            : "bg-backgroundSecondary hover:bg-backgroundTertiary active:bg-backgroundQuaternary"
-        }
+        // className={
+        //   autoTakeoffStarted
+        //     ? "bg-green-600 hover:bg-green-700 active:bg-green-800"
+        //     : "bg-backgroundSecondary hover:bg-backgroundTertiary active:bg-backgroundQuaternary"
+        // }
       />
 
          </div>

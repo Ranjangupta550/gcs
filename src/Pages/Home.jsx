@@ -50,12 +50,12 @@ function Home() {
 
           <div
             id="rightside"
-            className=" w-[20%]  h-[99%] border-2 border-borderColor  items-center flex-col gap-y-1 flex   rounded-md  right-0 mt-1 mb-1"
+            className=" w-[20%]  h-[99%] border-2 border-borderColor  items-center flex-col justify-around  flex   rounded-md  right-0 mt-1 mb-1"
           >
-            <div className="w-full ">
+            <div className="w-full border ">
               <DroneParameter />
             </div>
-            <div className="w-full  flex items-center justify-center">
+            <div className="w-full   flex-col flex items-center justify-center">
               <StatusBox />
             </div>
             <div className="relative bottom-1 w-full border-borderColor  rounded-md ">
@@ -68,8 +68,3 @@ function Home() {
   );
 }
 export default Home;
-
-/* 
-  console.log("telemetry", telemetry);
-  const isConnected = connectionStatus((state) => state.isConnected);  ✅ Global Drone
- */

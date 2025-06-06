@@ -31,8 +31,7 @@ function ControlButton({
               ? "bg-backgroundSecondary hover:bg-[#2a2a2a] active:bg-[#333333] text-white transition-colors duration-200"
               : "bg-backgroundQuaternary hover:bg-[#3a3a3a] active:bg-[#454545] text-white transition-colors duration-200"
             : "bg-[#000000] border-black cursor-not-allowed opacity-50 text-gray-400"
-        }
-`}
+        } ${className} ${isLoading ? "cursor-wait" : ""}`}
     >
       {isLoading ? <Loader /> : label} {/* Show Loader if loading */}
       {!isLoading && shortcut && (

@@ -1,26 +1,23 @@
-// StatusBox.jsx
 import React from 'react';
 import './StatusBox.css';
+import {useMavmessageStore} from '../../index'; // Make sure this path is correct
 
-const demoMessages = [
-    'Drone is taking off',
-    'Drone is moving to the destination',
-    'Drone is landing',
-    'Drone is landed',
-];
+const StatusBox = () => {
+    const messages = useMavmessageStore((state) => state.mavmessages);
 
-const StatusBox = ({ logMessages = demoMessages }) => {
     return (
-        <div className="status-box flex flex-col z-10 max-h-44 bottom-0 w-full border-4 border-borderColor  text-white bg-opacity-100 rounded-lg p-2  overflow-y-auto  bg-backgroundSecondary ">
-            {logMessages.map((msg, index) => (
-
-
-                <div className='flex items-center justify-evenly my-1  border-b border-white border-opacity-20' key={index}>
-                    <span className=' w-8 h-full flex'>{index+1}.</span>
-                     <p className='text-white  text-opacity-70 h-full  border-white font-semibold w-full '>  {msg}</p>
+        <div className="status-box relative flex flex-col h-52 z-10 bottom-0 w-full border-2 border-borderColor text-white bg-opacity-100 rounded-lg p-1 overflow-y-auto bg-backgroundSecondary">
+            <h5 className='text-lg text-center relative top-0   text-white text-opacity-85 mb-2'>Status Messages</h5>
+            {messages.map((msg, index) => (
+                <div className='flex items-center justify-evenly my-1 border-b border-white border-opacity-20' key={index}>
+                    <div className='text-white text-opacity-70 font-semibold w-full'>
+                        <p className='text-sm'>{msg.message}</p>
+                        <div className="flex justify-between text-xs opacity-60">
+                            <span>{msg.severity}</span>
+                            <span>{msg.received_at}</span>
+                        </div>
+                    </div>
                 </div>
-        
-               
             ))}
         </div>
     );

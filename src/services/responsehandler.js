@@ -1,6 +1,6 @@
 
 import { socket } from "./api";
-import {useTelemetryStore,connectionStatus,notify, clearTimeoutByKey,armStatus} from "../index";
+import {useTelemetryStore,connectionStatus,notify, clearTimeoutByKey,armStatus,useMavmessageStore} from "../index";
 import { use } from "react";
 
 
@@ -58,6 +58,7 @@ function responseHandler(){
         try{
             if(data?.message?.connected===false){
                 connectionStatus.getState().setConnectionandLoading(false,false);
+                armStatus.getState().setArmandLoading(false,false);
                 notify("Drone disconnected unexpectedly", "error");
                 // connectionStatus.getState().setConnectionandLoading(false,false);
                 useTelemetryStore.getState().setTelemetry(null);
@@ -149,6 +150,16 @@ function responseHandler(){
     });
     socket.on(`mavmsg_response`, (data) => {    
         // console.log("📩 Server Response for get mavmessage:", data);
+        try {
+            if (data?.message) {
+                useMavmessageStore.getState().addMavmessage(data.message);
+            } else {
+                console.log("No MAVLink message received.");
+            }
+        } catch (error) {
+            console.error("Error in mavmsg response:", error);
+            notify("Error in mavmsg response", "error");
+        }
     });
     socket.on(`start_scan_response`, (data) => {
         console.log("📩 Server Response for start scan:", data);

@@ -1,88 +1,81 @@
 import { sendCommand, sendCommandWithPayload } from "./api"; // ✅ Import reusable function
 
 import { socket } from "./api"; // ✅ Import reusable function
-import {connectionStatus, notify, startTimeout ,armStatus} from "../index";
+import { connectionStatus, notify, startTimeout, armStatus } from "../index";
 
 export const connectDrone = async () => {
-  sendCommand("connection"); 
-  startTimeout("connection",20000,()=>{
-    console.log ("Connection failed Timeout");
-    notify("Connection timeout","error");
-    connectionStatus.getState().setConnectionandLoading(false,false)
-  })
-
+  sendCommand("connection");
+  startTimeout("connection", 20000, () => {
+    console.log("Connection failed Timeout");
+    notify("Connection timeout", "error");
+    connectionStatus.getState().setConnectionandLoading(false, false);
+  });
 };
 
 export const disconnectDrone = async () => {
   sendCommand("disconnection");
-   startTimeout("disconnection",20000,()=>{
-    console.log ("disconnection failed Timeout");
-    notify("Connection timeout","error");
-    if(connectionStatus.getState().isDroneConnected()){
-      notify("Drone is still connected, please try again","error");
+  startTimeout("disconnection", 20000, () => {
+    console.log("disconnection failed Timeout");
+    notify("Connection timeout", "error");
+    if (connectionStatus.getState().isDroneConnected()) {
+      notify("Drone is still connected, please try again", "error");
       connectionStatus.getState().setLoading(false);
     }
-
-   
-  })
-
+  });
 };
 
 export const sendWaypoints = async (payload) => {
-try {
-  await sendCommandWithPayload("start_scan", payload);
-} catch (error) {
-  console.error("Error sending waypoints: ", error);
-  notify("Failed to send waypoints", "error");
-}
-
+  try {
+    await sendCommandWithPayload("start_scan", payload);
+  } catch (error) {
+    console.error("Error sending waypoints: ", error);
+    notify("Failed to send waypoints", "error");
+  }
 };
 
 export const isDroneConnected = () => {
-    return connectionStatus.getState().isDroneConnected();
+  return connectionStatus.getState().isDroneConnected();
 };
-
 
 // ✅ Arm & Disarm
 export const armDrone = async () => {
   sendCommand("arm");
-  startTimeout("arm",10000,()=>{
-    console.log ("Arm failed Timeout");
-    notify("Arm timeout","error");
-    armStatus.getState().setArmandLoading(false,false);
-  })
-
+  startTimeout("arm", 10000, () => {
+    console.log("Arm failed Timeout");
+    notify("Arm timeout", "error");
+    armStatus.getState().setArmandLoading(false, false);
+  });
 };
 
 export const disarmDrone = async () => {
   sendCommand("disarm");
-  startTimeout("disarm",10000,()=>{
-    console.log ("Disarm failed Timeout");
-    notify("Disarm timeout","error");
-    armStatus.getState().setArmandLoading(false,false);
-  })
+  startTimeout("disarm", 10000, () => {
+    console.log("Disarm failed Timeout");
+    notify("Disarm timeout", "error");
+    armStatus.getState().setArmandLoading(false, false);
+  });
 };
 
 // ✅ Drone Controls
 export const controlThrottle = (direction) => {
   console.log("Throttle direction: ", direction);
-  return sendCommand(`throttle${ direction }`);
+  return sendCommand(`throttle${direction}`);
 };
 export const controlYaw = (direction) => {
   console.log("Yaw direction: ", direction);
-  return sendCommand(`yaw${ direction }`);
+  return sendCommand(`yaw${direction}`);
 };
 export const controlHeight = (direction) => {
   console.log("Height direction: ", direction);
-  return sendCommand(`${ direction }`);
+  return sendCommand(`${direction}`);
 };
 export const controlRoll = (direction) => {
   console.log("Roll direction: ", direction);
-  return sendCommand(`roll${ direction }`);
+  return sendCommand(`roll${direction}`);
 };
 export const controlPitch = (direction) => {
   console.log("Pitch direction: ", direction);
-  return sendCommand(`pitch${ direction }`);
+  return sendCommand(`pitch${direction}`);
 };
 export const controlLand = (land) => {
   console.log("Landing drone");
@@ -90,7 +83,7 @@ export const controlLand = (land) => {
 };
 export const controlSetAlt = (altitude) => {
   console.log("Altitude: ", altitude);
-  return sendCommand(`${ altitude }`);
+  return sendCommand(`${altitude}`);
 };
 // ✅ Flight Modes
 export const getFlightMode = () => {
@@ -101,20 +94,31 @@ export const setFlightMode = (mode) => {
   console.log("Setting flight mode: ", mode);
   return sendCommand("setFlightMode", { mode });
 };
-export const monitoring= async()=>{
+export const monitoring = async () => {
   const response = await sendCommand("monitoring");
   console.log("monotring response: ", response);
   return response.message;
-}
+};
 
-
-export const  chnageFlightMode = async (mode)=>{
-  console.log("Changing flight mode to: ", mode);
-  socket.emit("mode_switch", { mode }, (response) => {
-    console.log("Change flight mode response: ", response);
-    return response.message;
-  });
-}
+export const chnageFlightMode = async (mode) => {
+  try {
+    // console.log("Changing flight mode to: ", mode);
+    const response = await sendCommandWithPayload("mode_switch", { mode });
+    // console.log("Flight mode changed successfully: ", response);
+    if (response && response.message) {
+      console.log("Flight mode changed successfully!");
+      // notify(`Flight mode changed to ${mode}`, "success");
+      return true;
+    } else {
+      console.error("Failed to change flight mode.");
+      // notify(`Failed to change flight mode to ${mode}`, "error");
+      return false;
+    }
+  } catch (error) {
+    // console.error("Error changing flight mode: ", error);
+    return false;
+  }
+};
 export const sendAltitude = async (altitude) => {
   try {
     console.log("Sending altitude: ", altitude);
@@ -128,8 +132,8 @@ export const sendAltitude = async (altitude) => {
 };
 export const sendAutoTakeoff = async (altitude) => {
   try {
-    altitude=Number(altitude);
-    console.log("Sending altitude: ", typeof( altitude));
+    altitude = Number(altitude);
+    console.log("Sending altitude: ", typeof altitude);
     await sendCommandWithPayload("setalt", { height: altitude });
     console.log("Altitude sent successfully");
     return true;
