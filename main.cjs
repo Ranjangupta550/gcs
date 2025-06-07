@@ -7,6 +7,12 @@ const path = require('path');
 let mainWindow;
 let videoWindow;
 
+
+
+
+
+
+
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     fullscreen: false,

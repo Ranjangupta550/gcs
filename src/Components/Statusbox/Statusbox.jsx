@@ -6,7 +6,7 @@ const StatusBox = () => {
     const messages = useMavmessageStore((state) => state.mavmessages);
 
     return (
-        <div className="status-box relative flex flex-col h-52 z-10 bottom-0 w-full border-2 border-borderColor text-white bg-opacity-100 rounded-lg p-1 overflow-y-auto bg-backgroundSecondary">
+        <div className="status-box relative h-48 flex flex-col z-10 w-full border-2 border-borderColor text-white bg-opacity-100 rounded-lg overflow-y-auto  bg-backgroundSecondary">
             <h5 className='text-lg text-center relative top-0   text-white text-opacity-85 mb-2'>Status Messages</h5>
             {messages.map((msg, index) => (
                 <div className='flex items-center justify-evenly my-1 border-b border-white border-opacity-20' key={index}>

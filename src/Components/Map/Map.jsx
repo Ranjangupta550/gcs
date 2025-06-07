@@ -11,6 +11,7 @@ import { sendCommandWithPayload } from "../../services/api";
 import notify from "../UI/notify";
 import connectionStatus from "../../Store/connectionStatus";
 import { sendWaypoints ,icons, Button} from "../../index";
+import Drone from "../../assets/Svg/Drone.png"
 function MapboxDrawControl(props) {
   useControl(
     () => new MapboxDraw(props),
@@ -54,8 +55,8 @@ const MapComponent = ({toggleSideBar}) => {
     zoom: 15,
     pitch: 0,
     bearing: 0,
-    mapStyle: "mapbox://styles/mapbox/satellite-v9",
-  
+    mapStyle: "mapbox://styles/mapbox/satellite-streets-v11",
+
   });
   // Track drone position
   useEffect(() => {
@@ -265,9 +266,9 @@ useEffect(() => {
         >
           <div className="relative">
             <img
-              src={droneSvg}
+              src={Drone}
               alt="Drone"
-              className="w-12 h-12 drop-shadow-lg transition-transform duration-500"
+              className="w-14 h-14 drop-shadow-lg transition-transform duration-500"
               style={{
                 transform: `rotate(${telemetry?.attitude?.yaw || 0}deg)`,
               }}
