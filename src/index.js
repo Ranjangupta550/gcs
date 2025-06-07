@@ -1,7 +1,6 @@
 import FlightControlPannel from "./Components/FlightControlPannel/FlightControlPannel";
 import { sendWaypoints } from "./services/emitHandler";
 import connectionStatus from "./Store/connectionStatus";
-
 export {default as Navigation} from "./Components/Navigation/Navigation";
 export {default as Home} from "./Pages/Home";
 export {default as VideoStream} from "./Components/videoStream/VideoStream";
@@ -28,3 +27,4 @@ export {AutoTakeoffModal} from "./Components/UI/AutoTakeoffModal";
 export {sendWaypoints} from "./services/emitHandler";
 export { default as icons} from "./assets/icons"
 export { default as useMavmessageStore } from "./Store/useMavmessage";
+export {default as Compass} from  "./Components/UI/compass"

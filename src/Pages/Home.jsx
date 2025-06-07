@@ -6,10 +6,10 @@ import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import FlightControlPannel from "../Components/FlightControlPannel/FlightControlPannel";
 import Map from "../Components/Map/Map";
 import StatusBox from "../Components/Statusbox/Statusbox";
-import Compass from "../Components/Map/compass";
+
 import useTelemetry from "../Store/centralTelemetry";
 import icons from "../assets/icons";
-import { SidebarTogglePanel, SideBarComponents } from "../index";
+import { SidebarTogglePanel, SideBarComponents,Compass } from "../index";
 
 function Home() {
   const [count, setCount] = useState(0);

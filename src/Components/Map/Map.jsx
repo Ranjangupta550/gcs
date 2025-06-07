@@ -6,8 +6,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import droneSvg from "../../assets/Svg/DroneSvg.svg";
 import useTelemetry from "../../Store/centralTelemetry";
-import MapControls from "./MapControls";
-import Compass from "./compass";
+import MapControls from "./MapControls";3.
 import { sendCommandWithPayload } from "../../services/api";
 import notify from "../UI/notify";
 import connectionStatus from "../../Store/connectionStatus";

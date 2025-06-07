@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from "react";
 
-const ReactCompass = ({ direction = 0 }) => {
+const Compass = ({ direction = 0 }) => {
   const [heading, setHeading] = useState(0);
 
   const directionNames = ["N", "E", "S", "W"];
@@ -89,4 +90,4 @@ const ReactCompass = ({ direction = 0 }) => {
   );
 };
 
-export default ReactCompass;
+export default Compass;
