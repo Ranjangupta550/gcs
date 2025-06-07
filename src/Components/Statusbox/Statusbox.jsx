@@ -1,5 +1,5 @@
 import React from 'react';
-import './StatusBox.css';
+import './statusbox.css';
 import {useMavmessageStore} from '../../index'; // Make sure this path is correct
 
 const StatusBox = () => {
