@@ -51,8 +51,8 @@ function createMainWindow() {
 //     ? 'http://localhost:5173'
 //     : `file://${path.join(__dirname, 'dist', 'index.html')}#/`
 // );
-
 mainWindow.loadURL(`file://${path.join(__dirname, 'dist', 'index.html')}#/`);
+
   mainWindow.menuBarVisible = true;
 if (!app.isPackaged) {
   mainWindow.webContents.openDevTools(); // Only opens in development
@@ -115,6 +115,7 @@ ipcMain.on('open-video-stream', () => {
 //     : `file://${path.join(__dirname, 'dist', 'index.html')}#/CameraFeed`
 // );
 videoWindow.loadURL(`file://${path.join(__dirname, 'dist', 'index.html')}#/CameraFeed`);
+
 
     videoWindow.menuBarVisible = false;
  if (!app.isPackaged) {
