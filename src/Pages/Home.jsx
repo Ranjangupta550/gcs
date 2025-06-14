@@ -9,7 +9,7 @@ import StatusBox from "../Components/Statusbox/Statusbox";
 
 import useTelemetry from "../Store/centralTelemetry";
 import icons from "../assets/icons";
-import { SidebarTogglePanel, SideBarComponents,Compass } from "../index";
+import { SidebarTogglePanel, SideBarComponents,Compass,LandTakeoffControl } from "../index";
 
 function Home() {
   const [count, setCount] = useState(0);
@@ -45,6 +45,7 @@ function Home() {
               } border-2 border-borderColor flex items-center relative rounded-lg overflow-hidden m-1 `}
             >
               <Map toggleSideBar={toggleSideBar} />
+              <LandTakeoffControl />
             </div>
           </div>
 

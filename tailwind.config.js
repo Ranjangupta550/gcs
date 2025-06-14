@@ -18,7 +18,6 @@ export default {
       },
       colors: {
         backgroundPrimary: "#0a0a0c", // Primary background
-        
         backgroundSecondary: "#1E1E1E", // Secondary background
         backgroundTertiary: "#18181b", // Tertiary background
         backgroundQuaternary: "#1d1718", // Quaternary background

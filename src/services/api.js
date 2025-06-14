@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import {useServerStatus} from "../index";
 import {connectionStatus,useTelemetryStore} from "../index"
 import useTelemetry from "../Store/centralTelemetry";
-const socket = io("http://192.168.29.13:5000");
+const socket = io("http://192.168.29.14:5000");
  export const ServerConnection = () => {
   // ✅ Handle connection
   socket.on("connect", () => {

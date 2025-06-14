@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {FlightControlPannel,} from '../../index'  
-import {Button } from '../../index'
+import {Button,CameraFeed } from '../../index'
+import CameraMiniPreview from '../../Pages/CameraMiniPreview';
 
 
 
@@ -38,7 +39,7 @@ function SidebarComponents() {
             Flight Log
           </Button>
         </div>
-        <div className="flex flex-row gap-x-5 justify-evenly">
+        {/* <div className="flex flex-row gap-x-5 justify-evenly">
           <Button
             onClick={() => {
               handleShow(<div>Flight Plan</div>);
@@ -57,6 +58,11 @@ function SidebarComponents() {
           >
             Telemetry
           </Button>
+        </div> */}
+        <div className='flex border h-full'>
+          <CameraMiniPreview />
+
+
         </div>
       </div>
       <div className='h-3/5 rounded-md overflow-auto w-full  relative'>

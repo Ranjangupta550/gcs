@@ -8,6 +8,10 @@ import serverDisconnected from "./animation/Cross.json";
 import arrowToggle from "./icons/ArrowToggle.svg";
 import arrowLeft from "./icons/ArrowLeft.svg";
 import followLocation from  "./Svg/FollowLocation.svg"
+import fullcam from "./Svg/fullcam.svg"
+import land from "./Svg/land.png";
+import takeoff from "./Svg/takeoff.png";
+
 
 
 const icons = {
@@ -19,7 +23,10 @@ const icons = {
     serverConnected,
     serverDisconnected,
     arrowToggle,
+    fullcam,
     followLocation,
+    takeoff,
+    land,
 
 };
 export default icons;

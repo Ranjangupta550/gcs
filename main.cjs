@@ -1,16 +1,21 @@
+
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const { app, BrowserWindow, ipcMain, Menu, screen } = require('electron');
 const path = require('path');
 // Disable Electron security warnings in development
 
+if (process.platform === 'linux') {
+  app.disableHardwareAcceleration();
+  app.commandLine.appendSwitch('ignore-gpu-blacklist');
+  app.commandLine.appendSwitch('enable-webgl');
+  app.commandLine.appendSwitch('enable-gpu-rasterization');
+  app.commandLine.appendSwitch('use-gl', 'desktop'); // try 'desktop' if 'egl' causes issues
+  app.commandLine.appendSwitch('enable-unsafe-webgl');
+  app.commandLine.appendSwitch('enable-unsafe-swiftshader');
+}
 
 let mainWindow;
 let videoWindow;
-
-
-
-
-
 
 
 function createMainWindow() {
@@ -62,9 +67,11 @@ ipcMain.on('open-video-stream', () => {
     videoWindow = new BrowserWindow({
       frame: true,
       resizable: true,
+
       webPreferences: {
         preload: path.join(__dirname, 'preload.cjs'),
         contextIsolation: true,
+        nodeIntegration: false,
       },
     });
 
@@ -79,7 +86,7 @@ ipcMain.on('open-video-stream', () => {
       videoWindow.maximize();
     }
 
-    videoWindow.loadURL('http://localhost:5173/#/video');
+    videoWindow.loadURL('http://localhost:5173/#/CameraFeed');
     videoWindow.menuBarVisible = false;
     videoWindow.webContents.openDevTools();
 
@@ -87,18 +94,32 @@ ipcMain.on('open-video-stream', () => {
     videoWindow.on('unmaximize', () => videoWindow.webContents.send('window-state-change', 'restored'));
 
     videoWindow.on('closed', () => {
+       mainWindow?.webContents.send('camera-window-status', false); // ✅ Notify React that window closed
       videoWindow = null;
     });
+    mainWindow?.webContents.send('camera-window-status', true);
   } else {
     videoWindow.focus();
   }
 });
 
 // IPC Handlers for Video Window
-ipcMain.on('minimize-video', () => videoWindow?.minimize());
-ipcMain.on('maximize-video', () => videoWindow?.maximize());
-ipcMain.on('restore-video', () => videoWindow?.restore());
-ipcMain.on('close-video', () => videoWindow?.close());
+ipcMain.on('minimize-video', () => {
+  console.log('💡 Received minimize-video');
+  videoWindow?.minimize();
+});
+ipcMain.on('maximize-video', () => {
+  console.log('💡 Received maximize-video');
+  videoWindow?.maximize();
+});
+ipcMain.on('restore-video', () => {
+  console.log('💡 Received restore-video');
+  videoWindow?.restore();
+});
+ipcMain.on('close-video', () => {
+  console.log('💡 Received close-video');
+  videoWindow?.close();
+});
 
 // Function to set application menu
 function setApplicationMenu() {

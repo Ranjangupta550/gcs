@@ -3,7 +3,7 @@ import connectionStatus from "../../Store/connectionStatus";
 import ControlButton from "../UI/ControlButton.jsx";
 
 import Text from "./Text";
-import { Button, armStatus,AutoTakeoffModal } from "../../index.js";
+import { Button, armStatus, AutoTakeoffModal } from "../../index.js";
 
 import {
   controlThrottle,
@@ -23,20 +23,19 @@ function FlightControlPannel() {
   const isArmed = armStatus((state) => state.isArmed);
   const handleArm = armStatus((state) => state.arm);
   const handleDisarm = armStatus((state) => state.disArm);
-  
+
   4;
   const [Height, setAltHeight] = useState(true);
   // const [altitudeInput, setAltitudeInput] = useState("");
 
-
-   const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [autoTakeoffStarted, setAutoTakeoffStarted] = useState(false);
 
   const handleAutoTakeoff = async (altitude) => {
     try {
       await sendAutoTakeoff(altitude); // 👈 backend call
-      setAutoTakeoffStarted(true);     // ✅ 
-      setShowModal(false);             // Close modal
+      setAutoTakeoffStarted(true); // ✅
+      setShowModal(false); // Close modal
     } catch (err) {
       console.error("Takeoff failed:", err);
     }
@@ -153,11 +152,13 @@ function FlightControlPannel() {
           sendCommand={isArmed ? handleDisarm : handleArm}
           isEnabled={isConnected}
           shortcut="P"
-className={isConnected ? (
-    isArmed
-      ? "bg-red-600 hover:bg-red-700 active:bg-[#FF3333] text-white border-borderColor"
-      : "bg-green-500 hover:bg-green-600 active:bg-green-700 text-white border-borderColor"
-  ) : ""}
+          className={
+            isConnected
+              ? isArmed
+                ? "bg-red-600 hover:bg-red-700 active:bg-[#FF3333] text-white border-borderColor"
+                : "bg-green-500 hover:bg-green-600 active:bg-green-700 text-white border-borderColor"
+              : ""
+          }
         />
       </div>
 
@@ -188,9 +189,9 @@ className={isConnected ? (
       <div className="w-full h-14 flex items-center justify-center ">
         <ControlButton
           label="Yaw Right"
-          command="YAW_RIGHT" 
-          sendCommand={() => handleControl("yaw", "right")} 
-          isEnabled={isConnected && isArmed}  
+          command="YAW_RIGHT"
+          sendCommand={() => handleControl("yaw", "right")}
+          isEnabled={isConnected && isArmed}
           shortcut="D"
         />
         <div className="h-1 w-12  bg-borderColor"></div>
@@ -201,94 +202,49 @@ className={isConnected ? (
           isEnabled={isConnected && isArmed}
           shortcut="A"
         />
-
       </div>
 
       {/* Roll */}
 
-      
       <div className="w-full h-14 flex items-center justify-center ">
-        
-      <ControlButton
-        label="Roll Left"
-        command="ROLL_LEFT"
-        sendCommand={() => handleControl("roll", "left")}
-        isEnabled={isConnected && isArmed}
-        shortcut="←"
-      />
+        <ControlButton
+          label="Roll Left"
+          command="ROLL_LEFT"
+          sendCommand={() => handleControl("roll", "left")}
+          isEnabled={isConnected && isArmed}
+          shortcut="←"
+        />
 
-      <div className="h-1 w-12  bg-borderColor"></div>
+        <div className="h-1 w-12  bg-borderColor"></div>
 
-      <ControlButton
-        label="Roll Right"
-        command="ROLL_RIGHT"
-        sendCommand={() => handleControl("roll", "right")}
-        isEnabled={isConnected && isArmed}
-        shortcut="→"
-      />
-
-
+        <ControlButton
+          label="Roll Right"
+          command="ROLL_RIGHT"
+          sendCommand={() => handleControl("roll", "right")}
+          isEnabled={isConnected && isArmed}
+          shortcut="→"
+        />
       </div>
       {/* Pitch */}
 
-
-
-     <div className="w-full h-14 flex items-center justify-center ">
-        <ControlButton
-        label="Pitch Up"
-        command="PITCH_UP"
-        sendCommand={() => handleControl("pitch", "forward")}
-        isEnabled={isConnected && isArmed}
-        shortcut="↑"
-      />
-      <div className="h-1 w-12  bg-borderColor"></div>
-      <ControlButton
-        label="Pitch Down"
-        command="PITCH_DOWN"
-        sendCommand={() => handleControl("pitch", "backward")}
-        isEnabled={isConnected && isArmed}
-        shortcut="↓"
-      />
-
-     </div>
-
-      {/* Landing + Set Altitude */}
-
       <div className="w-full h-14 flex items-center justify-center ">
-            <ControlButton
-        label="Land"
-        command="LAND"
-        sendCommand={() => handleControl("land", "land")}
-        isEnabled={isConnected && isArmed}
-        shortcut="H"
-      />
-      {/* <ControlButton label="Auto Takeoff" command="SET_ALT" sendCommand={() => handleControl("setAlt", "setalt")} isEnabled={isConnected && isArmed} shortcut="L" /> */}
-
-      <div className="h-1 w-12  bg-borderColor"></div>
-
-     <ControlButton
-        label="Auto Takeoff"
-        command="SET_ALT"
-        sendCommand={() => setShowModal(true)}
-        isEnabled={isConnected && isArmed}
-        shortcut="L"
-        // className={
-        //   autoTakeoffStarted
-        //     ? "bg-green-600 hover:bg-green-700 active:bg-green-800"
-        //     : "bg-backgroundSecondary hover:bg-backgroundTertiary active:bg-backgroundQuaternary"
-        // }
-      />
-
-         </div>
-
-{showModal && (
-        <AutoTakeoffModal
-          onConfirm={handleAutoTakeoff}
-          onClose={() => setShowModal(false)}
+        <ControlButton
+          label="Pitch Up"
+          command="PITCH_UP"
+          sendCommand={() => handleControl("pitch", "forward")}
+          isEnabled={isConnected && isArmed}
+          shortcut="↑"
         />
-      )}
+        <div className="h-1 w-12  bg-borderColor"></div>
+        <ControlButton
+          label="Pitch Down"
+          command="PITCH_DOWN"
+          sendCommand={() => handleControl("pitch", "backward")}
+          isEnabled={isConnected && isArmed}
+          shortcut="↓"
+        />
+      </div>
 
-  
     </div>
   );
 }

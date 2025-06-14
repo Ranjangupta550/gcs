@@ -12,6 +12,7 @@ import notify from "../UI/notify";
 import connectionStatus from "../../Store/connectionStatus";
 import { sendWaypoints ,icons, Button} from "../../index";
 import Drone from "../../assets/Svg/Drone.png"
+import { FaRegIdBadge } from "react-icons/fa";
 function MapboxDrawControl(props) {
   useControl(
     () => new MapboxDraw(props),
@@ -264,12 +265,17 @@ useEffect(() => {
           longitude={userLocation.longitude}
           latitude={userLocation.latitude}
         >
-          <div className="relative">
+          <div className="relative w-auto rounded-full outline-slate-950 outline-4 shadow-lg"
+          style={{
+            backgroundColor:"rgba(45, 121, 244 ,0.4)",
+          }}
+          >
             <img
               src={Drone}
               alt="Drone"
-              className="w-14 h-14 drop-shadow-lg transition-transform duration-500"
+              className="w-14 h-14 transition-transform duration-500 "
               style={{
+                filter: "drop-shadow(0 0 0 white) drop-shadow(0 0 4px black) drop-shadow(0 0 4px black)",
                 transform: `rotate(${telemetry?.attitude?.yaw || 0}deg)`,
               }}
             />

@@ -7,7 +7,7 @@ import CurrentFlightMode from "./Status/CurrentFLightMode";
 import GpsStatus from "./Status/GpsStatus";
 import NetworkStatus from "./Status/NetworkStatus";
 import SatelliteCount from "./Status/SattelliteCount";
-import CameraWindow from "../../Pages/CameraWindow";
+
 import { ServerStatus } from "../../index.js";
 // import MissionUpload from "../utils/UploadFiles";
 // import text from "../../assets/text.json"; // ✅ Import text file
@@ -52,11 +52,7 @@ function Navbar() {
 
                    
                     {/* <MissionUpload /> ✅ No need to pass props */}
-                    <div className="flex item-center justify-center flex-col text-gray-500 font-bold text-[10px]">
-                    <CameraWindow /> {/* ✅ No need to pass props */}
-
                    
-                 </div>
                     <ServerStatus /> {/* ✅ No need to pass props */}
                     <ConnectDisconnectButton /> {/* ✅ No need to pass props */}
                 </div>

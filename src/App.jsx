@@ -5,7 +5,7 @@ import {
   Route,
   HashRouter,
 } from "react-router-dom";
-import { FlightControlPannel, Home, MainLayouts, Navigation, NotFound, VideoStream,MissionStats } from "./index";
+import { FlightControlPannel, Home, MainLayouts, Navigation, NotFound, VideoStream,MissionStats, CameraFeed } from "./index";
 import { ToastBar, Toaster } from "react-hot-toast";
 import { Children } from "react";
 import { initServices } from "./services/server";
@@ -36,7 +36,7 @@ function App() {
 
   {/* Outside the MainLayouts (no sidebar, no navbar, clean view) */}
   <Route path="/mission-stats" element={<MissionStats />} />
-  <Route path="/video" element={<VideoStream />} />
+  <Route path="/CameraFeed" element={<CameraFeed />} />
   <Route path="*" element={<NotFound />} />
 </Routes>
     </HashRouter>
