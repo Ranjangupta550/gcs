@@ -4,14 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "main": "main.cjs",
-  "scripts": {
-    "start": "vite",
-    "dev": "concurrently \"npm run start\" \"npm run electron\"",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "electron": "electron ."
-  },
+"scripts": {
+  "start": "vite",
+  "dev": "concurrently \"npm run start\" \"npm run electron\"",
+  "build": "vite build",
+  "lint": "eslint .",
+  "preview": "vite preview",
+  "electron": "electron .",
+  "dist": "electron-builder --win"
+
+},
+
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.13.5",
     "@mapbox/mapbox-gl-draw": "^1.5.0",
@@ -68,5 +71,25 @@
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.5"
+  },
+  "build": {
+    "appId": "com.example.gcs",
+    "productName": "Sidak GCS",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "main.cjs",
+      "package.json",
+      "assets/**/*"
+    ],
+    "linux": {
+      "icon": "assets/icon.png"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    }
   }
 }

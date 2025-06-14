@@ -1,10 +1,23 @@
 
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-const { app, BrowserWindow, ipcMain, Menu, screen } = require('electron');
 const path = require('path');
+const { app, BrowserWindow, ipcMain, Menu, screen } = require('electron');
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 // Disable Electron security warnings in development
+const isDev = !app.isPackaged; // Add this line
 
-if (process.platform === 'linux') {
+const isMac = process.platform === 'darwin';
+const isWin = process.platform === 'win32';
+const isLinux = process.platform === 'linux';
+
+const iconPath = isMac
+  ? path.join(__dirname, 'assets', 'icon.icns')
+  : isWin
+  ? path.join(__dirname, 'assets', 'icon.ico')
+  : path.join(__dirname, 'assets', 'icon.png');
+
+
+
+if (isLinux) {
   app.disableHardwareAcceleration();
   app.commandLine.appendSwitch('ignore-gpu-blacklist');
   app.commandLine.appendSwitch('enable-webgl');
@@ -24,6 +37,7 @@ function createMainWindow() {
     frame: true,
     resizable: true,
     backgroundColor: '#000000',
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
@@ -32,9 +46,17 @@ function createMainWindow() {
   });
 
   mainWindow.maximize();
-  mainWindow.loadURL('http://localhost:5173');
+//  mainWindow.loadURL(
+//   isDev
+//     ? 'http://localhost:5173'
+//     : `file://${path.join(__dirname, 'dist', 'index.html')}#/`
+// );
+
+mainWindow.loadURL(`file://${path.join(__dirname, 'dist', 'index.html')}#/`);
   mainWindow.menuBarVisible = true;
-  mainWindow.webContents.openDevTools();
+if (!app.isPackaged) {
+  mainWindow.webContents.openDevTools(); // Only opens in development
+}
 
   mainWindow.on('maximize', () => mainWindow.webContents.send('window-state-change', 'maximized'));
   mainWindow.on('unmaximize', () => mainWindow.webContents.send('window-state-change', 'restored'));
@@ -67,6 +89,7 @@ ipcMain.on('open-video-stream', () => {
     videoWindow = new BrowserWindow({
       frame: true,
       resizable: true,
+      icon: iconPath,
 
       webPreferences: {
         preload: path.join(__dirname, 'preload.cjs'),
@@ -86,9 +109,17 @@ ipcMain.on('open-video-stream', () => {
       videoWindow.maximize();
     }
 
-    videoWindow.loadURL('http://localhost:5173/#/CameraFeed');
+//     videoWindow.loadURL(
+//   isDev
+//     ? 'http://localhost:5173/#/CameraFeed'
+//     : `file://${path.join(__dirname, 'dist', 'index.html')}#/CameraFeed`
+// );
+videoWindow.loadURL(`file://${path.join(__dirname, 'dist', 'index.html')}#/CameraFeed`);
+
     videoWindow.menuBarVisible = false;
-    videoWindow.webContents.openDevTools();
+ if (!app.isPackaged) {
+  videoWindow.webContents.openDevTools(); // Only opens in development
+}
 
     videoWindow.on('maximize', () => videoWindow.webContents.send('window-state-change', 'maximized'));
     videoWindow.on('unmaximize', () => videoWindow.webContents.send('window-state-change', 'restored'));
