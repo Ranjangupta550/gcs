@@ -4,4 +4,4 @@ export function initServices() {
   ServerConnection();
   responseHandler();
 }
-initServices();
+

@@ -47,11 +47,14 @@ function createMainWindow() {
 
   mainWindow.maximize();
 //  mainWindow.loadURL(
-//   isDev
-//     ? 'http://localhost:5173'
-//     : `file://${path.join(__dirname, 'dist', 'index.html')}#/`
+ 
+//   'http://localhost:5173'
+    
 // );
 mainWindow.loadURL(`file://${path.join(__dirname, 'dist', 'index.html')}#/`);
+mainWindow.webContents.on('did-fail-load', (event, code, desc) => {
+  console.error('❌ Page failed to load:', desc);
+});
 
   mainWindow.menuBarVisible = true;
 if (!app.isPackaged) {
@@ -161,6 +164,20 @@ function setApplicationMenu() {
       click: () => {
         mainWindow.webContents.send('navigate', '/home');
       },
+    },
+    {
+      label:"Developer",
+      submenu:[
+        {
+          label:"toggle dev tool",
+            accelerator: 'CmdOrCtrl+Shift+I',
+          click: () => {
+          
+              mainWindow.webContents.toggleDevTools();
+            
+          }
+        }
+      ]
     },
     {
       label: 'Settings',

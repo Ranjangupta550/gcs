@@ -82,7 +82,8 @@
       "dist/**/*",
       "main.cjs",
       "package.json",
-      "assets/**/*"
+      "assets/**/*",
+      "preload.cjs"
     ],
     "linux": {
       "icon": "assets/icon.png"

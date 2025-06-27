@@ -32,3 +32,5 @@ export {default as useCameraStore} from "./store/useCameraStore"
 ;
 export {default as CameraFeed} from "./Pages/CameraFeed";
 export {default as LandTakeoffControl} from "./Components/FlightControlPannel/LandTakeoffControl";
+export {default as config} from "./services/config"
+export {default as SetIpAddress} from "./Components/UI/SetIpAddress";
