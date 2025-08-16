@@ -13,6 +13,7 @@ import connectionStatus from "../../Store/connectionStatus";
 import { sendWaypoints ,icons, Button} from "../../index";
 import Drone from "../../assets/Svg/Drone.png"
 import { FaRegIdBadge } from "react-icons/fa";
+
 function MapboxDrawControl(props) {
   useControl(
     () => new MapboxDraw(props),

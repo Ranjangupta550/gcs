@@ -1,27 +1,34 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import useCameraStore from '../store/useCameraStore';
-import icons from "../assets/icons"
+import icons from "../assets/icons";
+import useVideoStore from '../Store/useVideoStore';
+import { cameraTrigger } from '../services/emitHandler';
+import Button from '../Components/UI/Button';
+import cameraInit from "../services/webrtc"
 
 function CameraMiniPreview() {
-  const frame = useCameraStore((state) => state.cameraFrame);
   const iscameraOpen = useCameraStore((state) => state.iscameraOpen);
-  const setCameraFrame = useCameraStore((state) => state.setCameraFrame);
   const setIsCameraOpen = useCameraStore((state) => state.setIsCameraOpen);
+  const videoRef = useRef(null);
+  const stream = useVideoStore((state) => state.videoStream);
+  const handleCameraTrigger = cameraTrigger
+ const handleCameraInit =cameraInit;
+
+ handleCameraInit()
+
+
 
   useEffect(() => {
-    const updateFrame = () => {
-      const newFrame = window.getLatestFrame?.();
-      if (newFrame) setCameraFrame(newFrame);
-      requestAnimationFrame(updateFrame);
-    };
-    requestAnimationFrame(updateFrame);
-  }, []);
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream]);
 
   useEffect(() => {
     window.api?.receive('camera-window-status', (status) => {
       setIsCameraOpen(status);
     });
-  }, []);
+  }, [setIsCameraOpen]);
 
   const handleOpenVideoStream = () => {
     if (window.api?.send) {
@@ -31,6 +38,9 @@ function CameraMiniPreview() {
 
   return (
     <>
+
+  
+
       {iscameraOpen ? (
         <div className="w-full h-full bg-black text-white flex items-center justify-center rounded">
           📺 External camera window is active
@@ -41,19 +51,32 @@ function CameraMiniPreview() {
           <div className="absolute top-0 right-0 p-2 z-10">
             <button
               onClick={handleOpenVideoStream}
-              className="h-auto">
-                <img src={icons.fullcam} alt="" className='h-4' />
+              className="h-auto"
+            >
+              <img src={icons.fullcam} alt="" className="h-4" />
             </button>
           </div>
 
-          {frame ? (
-            <img
-              src={`data:image/jpeg;base64,${frame}`}
-              alt="Camera Stream"
+          {stream ? (
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
               className="w-full h-full object-cover"
             />
           ) : (
+            <>
+           
             <p className="text-white text-center mt-10">📡 No camera feed</p>
+
+            <Button onClick={handleCameraTrigger}
+            className=''>
+              start camera
+
+            </Button>
+             
+             </>
           )}
         </div>
       )}

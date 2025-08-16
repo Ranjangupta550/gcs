@@ -3,6 +3,22 @@ import { sendCommand, sendCommandWithPayload } from "./api"; // ✅ Import reusa
 import { socket } from "./api"; // ✅ Import reusable function
 import { connectionStatus, notify, startTimeout, armStatus } from "../index";
 
+
+const cameraSDP={
+  video: {
+    codec: "H264",
+    resolution: "1920x1080",
+    frameRate: 30
+  },
+  audio: {
+    codec: "AAC",
+    sampleRate: 48000,
+    channels: 2
+  },
+  
+
+}
+
 export const connectDrone = async () => {
   sendCommand("connection");
   startTimeout("connection", 20000, () => {
@@ -141,4 +157,34 @@ export const sendAutoTakeoff = async (altitude) => {
     console.error("Error sending altitude: ", error);
     return false;
   }
+
+  
 };
+
+
+export const cameraTrigger = async () => {
+const cameraConfig = {
+  sensor_type: 'camera',
+  model: 'picam3',
+  config: {
+    width: 1280,
+    height: 720,
+    framerate: 30
+  }
+}
+  try {
+    console.log("Camera connection initiated");
+    const response = await sendCommandWithPayload("camera",cameraConfig);
+    if (response && response.message === true) {
+      console.log("Camera stream established");
+      return true;
+    } else {
+      console.log("Camera stream not established");
+      return false;
+    }
+  } catch (error) {
+    console.error("Error in camera connection:", error);
+    return false;
+  }
+};
+

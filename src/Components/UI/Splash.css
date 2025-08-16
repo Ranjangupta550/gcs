@@ -1,0 +1,128 @@
+/* Splash.css */
+
+/* --- Main Containers --- */
+.splash-container {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+}
+
+.splash-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* --- Radar and Grid System --- */
+.radar-system {
+  position: absolute;
+  height: 24rem; /* 384px */
+  width: 24rem; /* 384px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Static grid lines */
+.radar-grid-line {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(4, 120, 87, 0.2);
+}
+
+/* Sweeping Line */
+.radar-sweep-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  animation: radarSweep 3s linear infinite;
+}
+
+.radar-sweep-line {
+  height: 50%;
+  width: 1px;
+  background-image: linear-gradient(to bottom, rgba(52, 211, 153, 0.9), transparent);
+  margin-left: 50%;
+}
+
+/* Scanning Blips */
+.blip {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #34d399; /* emerald-400 */
+  border-radius: 9999px;
+  box-shadow: 0 0 10px #34d399;
+  animation: scanningBlip 1.5s ease-out forwards;
+}
+
+/* Target Acquisition Marker */
+.target-marker {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #fde047; /* yellow-200 */
+  box-shadow: 0 0 15px #fde047;
+  opacity: 0;
+  animation: lockOnTarget 1s ease-out forwards;
+}
+
+.target-marker::before, .target-marker::after {
+  content: '';
+  position: absolute;
+  background-color: #fde047;
+}
+.target-marker::before { /* Horizontal line */
+  top: 50%;
+  left: -10px;
+  right: -10px;
+  height: 2px;
+  transform: translateY(-50%);
+}
+.target-marker::after { /* Vertical line */
+  left: 50%;
+  top: -10px;
+  bottom: -10px;
+  width: 2px;
+  transform: translateX(-50%);
+}
+
+/* --- Content (Logo and Text) --- */
+.content-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* Styles for .logo, .welcome-text, .tagline-hindi, .tagline-english remain the same */
+.logo { width: 18rem; opacity: 0; animation: fadeScaleIn 1s ease-out forwards; }
+.welcome-text { margin-top: 1rem; font-size: 1.875rem; font-weight: 700; color: #fefce8; opacity: 0; animation: slideUpFade 1s ease-out forwards; }
+.tagline-hindi { margin-top: 0.5rem; font-size: 1.25rem; font-weight: 600; color: #fde047; opacity: 0; animation: slideUpFade 1s ease-out forwards; }
+.tagline-english { margin-top: 0.25rem; font-size: 1.125rem; font-style: italic; color: #fefce8; opacity: 0; animation: slideUpFade 1s ease-out forwards; }
+
+
+/* --- Keyframe Animations --- */
+@keyframes radarSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes fadeScaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+@keyframes scanningBlip {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.5); }
+}
+@keyframes lockOnTarget {
+  from { opacity: 0; transform: scale(2); }
+  to { opacity: 1; transform: scale(1); }
+}

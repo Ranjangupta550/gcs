@@ -9,34 +9,34 @@ import {
   useCameraStore,
 } from "../index";
 // import { use } from "react";
- let latestFrame = "";
- // ✅ Only for local testing with webcam
-const video = document.createElement("video");
-video.autoplay = true;
-video.width = 320;
-video.height = 240;
+//  let latestFrame = "";
+//  // ✅ Only for local testing with webcam
+// const video = document.createElement("video");
+// video.autoplay = true;
+// video.width = 320;
+// video.height = 240;
 
-navigator.mediaDevices
-  .getUserMedia({ video: true })
-  .then((stream) => {
-    video.srcObject = stream;
-    const canvas = document.createElement("canvas");
-    canvas.width = video.width;
-    canvas.height = video.height;
-    const ctx = canvas.getContext("2d");
+// navigator.mediaDevices
+//   .getUserMedia({ video: true })
+//   .then((stream) => {
+//     video.srcObject = stream;
+//     const canvas = document.createElement("canvas");
+//     canvas.width = video.width;
+//     canvas.height = video.height;
+//     const ctx = canvas.getContext("2d");
 
-    setInterval(() => {
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      latestFrame = canvas.toDataURL("image/jpeg").split(",")[1]; // Base64 extract
-    //   console.log("🎥 Frame updated from webcam");
-    }, 100);
-  })
-  .catch((err) => {
-    console.error("❌ Cannot access webcam:", err);
-  });
+//     setInterval(() => {
+//       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+//       latestFrame = canvas.toDataURL("image/jpeg").split(",")[1]; // Base64 extract
+//     //   console.log("🎥 Frame updated from webcam");
+//     }, 100);
+//   })
+//   .catch((err) => {
+//     console.error("❌ Cannot access webcam:", err);
+//   });
 
  
-  window.getLatestFrame = () => latestFrame;
+//   window.getLatestFrame = () => latestFrame;
 
 function responseHandler() {
 
@@ -175,8 +175,8 @@ function responseHandler() {
   socket.on(`camera_response`, (data) => {
     console.log("📩 Server Response for camera:", data);
     try {
-      if (data?.message) {
-        latestFrame = data.message;
+      if (data) {
+        console.log("camera connected")
       } else {
         console.log("No camera data received.");
       }

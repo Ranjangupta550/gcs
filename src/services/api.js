@@ -26,7 +26,7 @@ export function ServerConnection() {
 
   // ❌ On error
   socket.on("connect_error", (err) => {
-    console.error("⚠️ WebSocket connection error:", err.message);
+    // console.error("⚠️ WebSocket connection error:", err.message);
     useServerStatus.getState().setServerStatus(false);
     connectionStatus.getState().setConnectionandLoading(false, false);
     useTelemetryStore.getState().setTelemetry(null);
