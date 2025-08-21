@@ -9,11 +9,14 @@ import { FlightControlPannel, Home, MainLayouts, Navigation, NotFound, VideoStre
 import { ToastBar, Toaster } from "react-hot-toast";
 import { Children, useEffect } from "react";
 import { initServices } from "./services/server";
+import { cameraTrigger } from "./services/emitHandler";
 function App() {
 
   useEffect(() => {
     // Initialize services when the app starts
     initServices();
+    cameraTrigger();
+
   }, []);
  
   return (

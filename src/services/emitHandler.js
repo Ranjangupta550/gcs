@@ -148,9 +148,9 @@ export const sendAltitude = async (altitude) => {
 };
 export const sendAutoTakeoff = async (altitude) => {
   try {
-    altitude = Number(altitude);
+    // altitude = Number(altitude);
     console.log("Sending altitude: ", typeof altitude);
-    await sendCommandWithPayload("setalt", { height: altitude });
+    await sendCommandWithPayload("setalt", altitude );
     console.log("Altitude sent successfully");
     return true;
   } catch (error) {

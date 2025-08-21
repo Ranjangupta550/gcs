@@ -1,23 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef,useMemo } from 'react';
 import useCameraStore from '../store/useCameraStore';
 import icons from "../assets/icons";
 import useVideoStore from '../Store/useVideoStore';
 import { cameraTrigger } from '../services/emitHandler';
 import Button from '../Components/UI/Button';
-import cameraInit from "../services/webrtc"
+// import cameraInit from "../services/webrtc"
 
 function CameraMiniPreview() {
   const iscameraOpen = useCameraStore((state) => state.iscameraOpen);
   const setIsCameraOpen = useCameraStore((state) => state.setIsCameraOpen);
   const videoRef = useRef(null);
   const stream = useVideoStore((state) => state.videoStream);
-  const handleCameraTrigger = cameraTrigger
- const handleCameraInit =cameraInit;
-
- handleCameraInit()
-
-
-
   useEffect(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
@@ -69,13 +62,6 @@ function CameraMiniPreview() {
             <>
            
             <p className="text-white text-center mt-10">📡 No camera feed</p>
-
-            <Button onClick={handleCameraTrigger}
-            className=''>
-              start camera
-
-            </Button>
-             
              </>
           )}
         </div>

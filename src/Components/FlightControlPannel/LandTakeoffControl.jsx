@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button } from "../../index.js";
-import { armStatus, connectionStatus, AutoTakeoffModal} from "../../index.js";
+import { Button, showMessageBox } from "../../index.js";
+import { armStatus, connectionStatus, AutoTakeoffModal } from "../../index.js";
 import icons from "../../assets/icons";
 import { controlLand, sendAutoTakeoff } from "../../services/emitHandler.js";
 
@@ -13,12 +13,18 @@ function LandTakeoffControl() {
 
   const handleControl = async (actionType, action) => {
     if (!isConnected) return;
-
     try {
       let response;
       if (actionType === "land") {
-        response = await controlLand(action);
+        const conformationMessage = await showMessageBox({
+          type: "warning",
+          message: "Are you sure you want to land?",
+        });
+        if (conformationMessage.response === 0) {
+          response = await controlLand(action);
+        }
       } else if (actionType === "autoTakeoff") {
+        console.log("from landautotakeof",action)
         response = await sendAutoTakeoff(action);
         setAutoTakeoffStarted(true);
       }
@@ -34,9 +40,16 @@ function LandTakeoffControl() {
     }
   };
 
-  const handleAutoTakeoff = async (altitude) => {
+  const handleAutoTakeoff = async (altitude, duration) => {
     try {
-      await handleControl("autoTakeoff", altitude);
+      const conformationMessage = await showMessageBox({
+        type: "warning",
+        message: "Are you sure you want to take-off?",
+        detail: `Drone will automaticaly airborn at given  ${altitude}altitude for ${duration?.hours} hour ${duration?.minutes} minute ${duration?.seconds} seconds `,
+      });
+      if (conformationMessage.response === 0) {
+        await handleControl("autoTakeoff", { altitude, duration });
+      }
       setShowModal(false);
     } catch (err) {
       console.error("Takeoff failed:", err);
@@ -49,33 +62,43 @@ function LandTakeoffControl() {
         <Button
           onClick={() => handleControl("land", "land")}
           disabled={!isConnected}
-          className={`w-8 h-8  shadow-sm shadow-black rounded-md border border-black ${isConnected
-            ? "bg-white opacity-100 hover:bg-gray-100 text-white"
-            : "bg-white opacity-50 cursor-not-allowed"
+          className={`w-8 h-8  shadow-sm shadow-black rounded-md border border-black ${
+            isConnected
+              ? "bg-white opacity-100 hover:bg-gray-100 text-white"
+              : "bg-white opacity-50 cursor-not-allowed"
           }`}
           useBaseStyles={false} // This disables the default base styles
-            title="Land (L)"
-            tooltipPlacement="right"
-
+          title="Land (L)"
+          tooltipPlacement="right"
         >
-            <img src={icons.land} alt="land" />
+          <img src={icons.land} alt="land" />
         </Button>
-        
+
         <Button
-          onClick={() => setShowModal(true)}
+          onClick={async () => {
+            const conformationMessage = await showMessageBox({
+              type: "warning",
+              message: "Are you sure you want to use Auto-takeoff?",
+              detail:
+                "You have to enter Altiitude and time then your drone will Auto-takeoff at given height for given time",
+            });
+            if (conformationMessage.response === 0) {
+              setShowModal(true);
+            }
+          }}
           disabled={!isConnected}
-          className={`w-8 h-8 shadow-sm shadow-black border-black  rounded-md border ${isConnected
-            ? autoTakeoffStarted
-              ? "bg-green-600 hover:bg-green-700 text-white"
-              : "bg-white hover:bg-gray-100 text-white opacity-100"
-            : "bg-white opacity-50 cursor-not-allowed"
+          className={`w-8 h-8 shadow-sm shadow-black border-black  rounded-md border ${
+            isConnected
+              ? autoTakeoffStarted
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-white hover:bg-gray-100 text-white opacity-100"
+              : "bg-white opacity-50 cursor-not-allowed"
           }`}
           useBaseStyles={false} // This disables the default base styles
           title="Auto Takeoff (A)"
-            tooltipPlacement="right"
+          tooltipPlacement="right"
         >
           <img src={icons.takeoff} alt="autotakeoff" />
-
         </Button>
       </div>
 

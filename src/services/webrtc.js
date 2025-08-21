@@ -1,11 +1,13 @@
 import { socket } from "./api";
 import useVideoStore from "../Store/useVideoStore";
 
+const setVideoStream = useVideoStore.getState().setVideoStream;
+
 const sdpOffer = async () => {
   return new Promise((resolve, reject) => {
     console.log("Listening for SDP offer from server");
     try {
-      socket.once("webrtc_offer", (data) => {
+      socket.on("webrtc_offer", (data) => {
         console.log("SDP offer received", data);
         resolve(data?.message);
       });
@@ -14,16 +16,19 @@ const sdpOffer = async () => {
     }
   });
 };
-
+// socket.emit("request_offer")
+socket.on("error",(data)=>{
+  console.log(data)
+})
 async function cameraInit() {
   console.log("Started camera init");
 
   const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
   let candidateBuffer = [];
-  let serverReady = false;
+  let serverReady = true;
 
   const peerConnection = new RTCPeerConnection(config);
-  const setVideoStream = useVideoStore((state) => state.setVideoStream);
+  // const setVideoStream = useVideoStore((state) => state.setVideoStream);
 
   // Handle ICE candidates (buffer until server ready)
   peerConnection.onicecandidate = (event) => {
@@ -53,7 +58,7 @@ async function cameraInit() {
   socket.emit("webrtc_answer", answer);
 
   // Wait for server confirmation before sending buffered candidates
-  socket.once("webrtc_answer_response", (data) => {
+  socket.on("webrtc_answer_response", (data) => {
     if (data.message === true) {
       serverReady = true;
       console.log(`Flushing ${candidateBuffer.length} buffered ICE candidates`);
@@ -72,5 +77,5 @@ async function cameraInit() {
     }
   });
 }
-
+cameraInit()
 export default cameraInit;

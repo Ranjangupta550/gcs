@@ -1,6 +1,6 @@
 
 const path = require('path');
-const { app, BrowserWindow, ipcMain, Menu, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, screen,dialog } = require('electron');
 const { fullLoad } = require('systeminformation');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 // Disable Electron security warnings in development
@@ -133,6 +133,11 @@ ipcMain.on('restore', () => mainWindow?.restore());
 ipcMain.on('close', () => {
   videoWindow?.close();
   mainWindow?.close();
+});
+ipcMain.handle("showMessageBox", async (event, options) => {
+  const win = event.sender.getOwnerBrowserWindow(); // get the current window
+  const result = await dialog.showMessageBox(win, options);
+  return result;
 });
 
 

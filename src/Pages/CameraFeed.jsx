@@ -9,10 +9,6 @@ import { cameraTrigger } from '../services/emitHandler';
 function CameraFeed() {
   const stream = useVideoStore((state) => state.videoStream);
   const videoRef = useRef(null);
-
-
-
-
   // Stream ko <video> me attach karo
   useEffect(() => {
     if (videoRef.current && stream) {

@@ -130,16 +130,16 @@ function FlightControlPannel() {
           console.log("Key not mapped:", event.key);
       }
     };
-    const keydownHandler = (event) => {
-      if (/^[a-z]$/i.test(event.key)) {
-        handleKeyPress(event);
-      }
-    };
+    // const keydownHandler = (event) => {
+    //   if (/^[a-z]$/i.test(event.key)) {
+    //     handleKeyPress(event);
+    //   }
+    // };
 
-    window.addEventListener("keydown", keydownHandler);
-    return () => {
-      window.removeEventListener("keydown", keydownHandler);
-    };
+    // window.addEventListener("keydown", keydownHandler);
+    // return () => {
+    //   window.removeEventListener("keydown", keydownHandler);
+    // };
   }, [isConnected, isArmed]);
 
   return (
@@ -172,7 +172,7 @@ function FlightControlPannel() {
           command="THROTTLE_UP"
           sendCommand={() => handleControl("throttle", "up")}
           isEnabled={isConnected && isArmed}
-          shortcut="W"
+          // shortcut="W"
         />
         <div className="h-1 w-12  bg-borderColor"></div>
         <ControlButton
@@ -180,7 +180,7 @@ function FlightControlPannel() {
           command="THROTTLE_DOWN"
           sendCommand={() => handleControl("throttle", "down")}
           isEnabled={isConnected && isArmed}
-          shortcut="S"
+          // shortcut="S"
         />
       </div>
 
@@ -192,7 +192,7 @@ function FlightControlPannel() {
           command="YAW_RIGHT"
           sendCommand={() => handleControl("yaw", "right")}
           isEnabled={isConnected && isArmed}
-          shortcut="D"
+          // shortcut="D"
         />
         <div className="h-1 w-12  bg-borderColor"></div>
         <ControlButton
@@ -200,7 +200,7 @@ function FlightControlPannel() {
           command="YAW_LEFT"
           sendCommand={() => handleControl("yaw", "left")}
           isEnabled={isConnected && isArmed}
-          shortcut="A"
+          // shortcut="A"
         />
       </div>
 
@@ -212,7 +212,7 @@ function FlightControlPannel() {
           command="ROLL_LEFT"
           sendCommand={() => handleControl("roll", "left")}
           isEnabled={isConnected && isArmed}
-          shortcut="←"
+          // shortcut="←"
         />
 
         <div className="h-1 w-12  bg-borderColor"></div>
@@ -222,7 +222,7 @@ function FlightControlPannel() {
           command="ROLL_RIGHT"
           sendCommand={() => handleControl("roll", "right")}
           isEnabled={isConnected && isArmed}
-          shortcut="→"
+          // shortcut="→"
         />
       </div>
       {/* Pitch */}
@@ -233,7 +233,7 @@ function FlightControlPannel() {
           command="PITCH_UP"
           sendCommand={() => handleControl("pitch", "forward")}
           isEnabled={isConnected && isArmed}
-          shortcut="↑"
+          // shortcut="↑"
         />
         <div className="h-1 w-12  bg-borderColor"></div>
         <ControlButton
@@ -241,7 +241,7 @@ function FlightControlPannel() {
           command="PITCH_DOWN"
           sendCommand={() => handleControl("pitch", "backward")}
           isEnabled={isConnected && isArmed}
-          shortcut="↓"
+          // shortcut="↓"
         />
       </div>
 

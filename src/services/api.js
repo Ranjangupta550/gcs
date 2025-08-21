@@ -82,8 +82,6 @@ export async function sendCommandWithPayload(eventName, payload) {
     });
   });
 }
-
-// ✅ Initial connection
 reconnectSocket();
 
 export { socket };

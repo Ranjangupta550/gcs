@@ -36,3 +36,4 @@ export {default as config} from "./services/config"
 export {default as SetIpAddress} from "./Components/UI/SetIpAddress";
 export {default as Splash} from "./Components/UI/Splash";
 export {default as LoginForm} from "./Components/LoginForm/LoginForm";
+export {default as showMessageBox} from  "./Components/utils/showMessageBox"

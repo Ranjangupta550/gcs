@@ -41,5 +41,8 @@ contextBridge.exposeInMainWorld('api', {
   selectMissionFile: () => {
     console.log("🗂️ Preload: sending selectMissionFile request");
     return ipcRenderer.invoke("selectMissionFile");
-  }
+  },
+showMessageBox: (options) => ipcRenderer.invoke("showMessageBox", options),
+
+
 });
