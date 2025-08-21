@@ -6,10 +6,10 @@ import DroneParameter from "../Components/DroneParameter/DroneParameter";
 import FlightControlPannel from "../Components/FlightControlPannel/FlightControlPannel";
 import Map from "../Components/Map/Map";
 import StatusBox from "../Components/Statusbox/Statusbox";
-import Compass from "../Components/Map/compass";
+
 import useTelemetry from "../Store/centralTelemetry";
 import icons from "../assets/icons";
-import { SidebarTogglePanel,SideBarComponents } from "../index";
+import { SidebarTogglePanel, SideBarComponents,Compass,LandTakeoffControl } from "../index";
 
 function Home() {
   const [count, setCount] = useState(0);
@@ -18,7 +18,6 @@ function Home() {
   const [toggleSideBar, setToggleSidebar] = useState(false);
 
   const handleToggleBar = () => {
-  
     setToggleSidebar(!toggleSideBar);
   };
 
@@ -31,46 +30,43 @@ function Home() {
         <Navbar />
       </div>
       <div id="main-content" className="flex relative h-full w-full">
-
-      <div className="h-[99%] w-[100%] relative border-borderColor border-2   ml-2 mr-2 rounded-md flex justify-between overflow-hidden pr-1  ">
-        <div className=" w-[95%] h-full flex ">
-          <SidebarTogglePanel
-            isOpen={toggleSideBar}
-            onToggle={handleToggleBar}
-            children={<SideBarComponents/>}
-            
+        <div className="h-[99%] w-[100%] relative border-borderColor border-2   ml-2 mr-2 rounded-md flex justify-between overflow-hidden pr-1  ">
+          <div className=" w-[95%] h-full flex ">
+            <SidebarTogglePanel
+              isOpen={toggleSideBar}
+              onToggle={handleToggleBar}
+              children={<SideBarComponents />}
             />
 
-          <div
-            id="map-win"
-            className={`${toggleSideBar? "w-[80%]":"w-full"} border-2 border-borderColor flex items-center relative rounded-lg overflow-hidden m-1 `}
-          >
-            <Map toggleSideBar={toggleSideBar} />
+            <div
+              id="map-win"
+              className={`${
+                toggleSideBar ? "w-[80%]" : "w-full"
+              } border-2 border-borderColor flex items-center relative rounded-lg overflow-hidden m-1 `}
+            >
+              <Map toggleSideBar={toggleSideBar} />
+              <LandTakeoffControl />
+            </div>
           </div>
-        </div>
 
-        <div
-          id="rightside"
-          className=" w-[20%]  h-[99%] border-2 border-borderColor  items-center flex-col gap-y-1 flex   rounded-md  right-0 mt-1 mb-1"
+          <div
+            id="rightside"
+            className=" w-[20%]  h-[99%] border-borderColor  items-center justify-between flex-col  flex   rounded-md  right-0 mt-1 mb-1 border"
           >
-          <div className="w-full ">
-            <DroneParameter />
+            <div className="w-full h-auto  flex-col flex items-center justify-center ">
+              <DroneParameter />
+            </div>
+            <div className="w-full h-autoflex-col flex items-center justify-center">
+              <StatusBox />
+            </div>
+            <div className=" bottom-1 w-full   rounded-md  ">
+              <Compass direction={telemetry?.attitude?.yaw} />
+            </div>
           </div>
-          <div className="w-full  flex items-center justify-center">
-            <StatusBox />
-          </div>
-          <div className="relative bottom-1 w-full border-borderColor  rounded-md ">
-            <Compass direction={telemetry?.attitude?.yaw} />
-          </div>
-        </div>
         </div>
       </div>
     </div>
+    //
   );
 }
 export default Home;
-
-/* 
-  console.log("telemetry", telemetry);
-  const isConnected = connectionStatus((state) => state.isConnected);  ✅ Global Drone
- */

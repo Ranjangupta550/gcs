@@ -1,130 +1,87 @@
+// socket.js
 import { io } from "socket.io-client";
-import useServerStatus from "../Store/serverStatus";
-import {connectionStatus,useTelemetryStore} from "../index"
-import useTelemetry from "../Store/centralTelemetry";
-const socket = io("http://192.168.29.14:5000");
- export const ServerConnection = () => {
-  // ✅ Handle connection
+import config from "./config"; // Your config file
+import { useServerStatus } from "../index";
+import { connectionStatus, useTelemetryStore } from "../index";
+
+let socket = null;
+
+// ✅ Create socket and attach event listeners
+export function ServerConnection() {
+  if (!socket) return;
+
+  // 🔌 On connect
   socket.on("connect", () => {
     console.log("✅ Connected to WebSocket server");
     useServerStatus.getState().setServerStatus(true);
   });
 
-  // ❌ Handle disconnection
+  // 🔌 On disconnect
   socket.on("disconnect", () => {
-    console.log("❌ Disconnected from WebSocket server");
+    console.warn("🔌 Disconnected from server");
     useServerStatus.getState().setServerStatus(false);
-    connectionStatus.getState().setConnectionandLoading(false,false);
+    connectionStatus.getState().setConnectionandLoading(false, false);
     useTelemetryStore.getState().setTelemetry(null);
-
   });
-};
-socket.on("heartbeat", (data) => {
-  // console.log("📩 Server Response for heartbeat", data);
-});
-export const sendCommand = async (eventName) => {
-  return new Promise((resolve, reject) => {
-    console.log(`🚀 Sending event: ${eventName}`);
+
+  // ❌ On error
+  socket.on("connect_error", (err) => {
+    // console.error("⚠️ WebSocket connection error:", err.message);
+    useServerStatus.getState().setServerStatus(false);
+    connectionStatus.getState().setConnectionandLoading(false, false);
+    useTelemetryStore.getState().setTelemetry(null);
+  });
+}
+
+// ✅ Reconnect with updated IP & Port
+export function reconnectSocket() {
+  const api = config.apiEndpoint();
+  console.log("🔁 Reconnecting to:", api);
+
+  try {
+    socket = io(api, {
+      transports: ["websocket"],
+      timeout: 5000,
+    });
+    ServerConnection(); // reattach listeners
+  } catch (err) {
+    console.error("❌ Socket reconnect failed:", err.message);
+  }
+}
+
+// ✅ Emit event without payload
+export async function sendCommand(eventName) {
+  if (!socket?.connected) {
+    console.warn("⚠️ Socket not connected");
+    return;
+  }
+
+  return new Promise((resolve) => {
+    console.log(`🚀 Sending command: ${eventName}`);
     socket.emit(eventName);
     socket.once(`${eventName}_response`, (data) => {
-      console.log(`📩 Server Response for ${eventName}:`, data);
+      console.log(`📩 Response for ${eventName}:`, data);
       resolve(data);
     });
   });
-};
-export const sendCommandWithPayload = async (eventName, payload) => {
-  return new Promise((resolve, reject) => {
+}
 
-    console.log(`🚀 Sending event: ${eventName} with payload:`, payload);
+// ✅ Emit event with payload
+export async function sendCommandWithPayload(eventName, payload) {
+  if (!socket?.connected) {
+    console.warn("⚠️ Socket not connected");
+    return;
+  }
+
+  return new Promise((resolve) => {
+    console.log(`🚀 Sending ${eventName} with payload:`, payload);
     socket.emit(eventName, payload);
-
     socket.once(`${eventName}_response`, (data) => {
-      console.log(`📩 Server Response for ${eventName}:`, data);
+      console.log(`📩 Response for ${eventName}:`, data);
       resolve(data);
     });
   });
-};
-ServerConnection();
+}
+reconnectSocket();
+
 export { socket };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//? heartbeat ko sirf tabhi listen karo jab connection ban jaye
-
-// import { io } from "socket.io-client";
-
-// const socket = io("http://192.168.29.14:5000");
-// // const socket = io("http://192.168.29.5:5001");
-
-// const ServerConnection = () => {
-//   socket.on("connect", () => {
-//     console.log("✅ Connected to WebSocket server");
-
-//     // 🔹 Heartbeat ko sirf tabhi listen karo jab connection ban jaye
-//     listenToHeartbeat();
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log("❌ Disconnected from WebSocket server");
-//   });
-// };
-
-// // 🔹 Heartbeat listener jab WebSocket connected ho
-// const listenToHeartbeat = () => {
-//   console.log("Listening to heartbeat...");
-//   socket.on("heartbeat", (heartbeatRes) => {
-//     console.log("📩 Server Response for heartbeat:", heartbeatRes.message);
-
-//     // console.log("📩 Server Response for heartbeat:", heartbeatRes.message.ack_timestamp);
-//     // console.log("📩 Server Response for heartbeat:", heartbeatRes.message.ack);
-//     heartbeatRes.message.ack=true;
-//     heartbeatRes.message.ack_timestamp=new Date()/1000;
-//     heartbeatRes.message.source="groundUnit"
-//     // console.log("time stamp",heartbeatRes.ack_timestamp);
-//     socket.emit("ack",heartbeatRes);
-
-//   });
-// };
-// // // const emitHeartbeat = () => {
-// // //   socket.emit("ack_");
-// // // };  
-
-// // // 🔹 Generic command sender
-// export const sendCommand = async (eventName) => {
-//   return new Promise((resolve, reject) => {
-//     if (!socket.connected) {
-//       console.error("⚠️ WebSocket is not connected!");
-//       return reject("WebSocket is not connected!");
-//     }
-
-//     console.log(`🚀 Sending event: ${eventName}`);
-//     socket.emit(eventName);
-
-//     socket.once(`${eventName}_response`, (data) => {
-//       console.log(`📩 Server Response for ${eventName}:`, data);
-//       resolve(data);
-//     });
-//   });
-// };
-
-// ServerConnection();
-// export { socket };

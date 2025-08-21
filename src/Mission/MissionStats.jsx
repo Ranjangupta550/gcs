@@ -46,12 +46,12 @@ const dummyMissions = [
   {
     id: "mission_001",
     name: "Survey Field A",
-    telemetry: generateTelemetry(3600),
+    telemetry: generateTelemetry(200),
   },
   {
     id: "mission_002",
     name: "Disaster Scan Area B",
-    telemetry: generateTelemetry(300),
+    telemetry: generateTelemetry(200),
   },
 ];
 

@@ -4,7 +4,9 @@ import {
   disconnectDrone,
   monitoring,
 } from "../services/emitHandler.js";
-import notify from "../Components/utils/Notification/notify.jsx";
+import { startTimeout } from "../index.js";
+
+import notify from "../Components/UI/notify.jsx";
 
 const connectionStatus = create((set) => ({
   isConnected: false,
@@ -20,6 +22,7 @@ const connectionStatus = create((set) => ({
   connect: async () => {
     set({ isLoading: true });
     await connectDrone();
+
   },
   disconnect: async () => {
     set({ isLoading: true });

@@ -1,4 +1,4 @@
-
+// import { useEffect } from "react";
 import React, { useState, useEffect } from "react";
 
 function VideoStream() {
@@ -8,26 +8,9 @@ function VideoStream() {
 
   useEffect(() => {
     console.log("🔄 Connecting to WebSocket...");
-    const ws = new WebSocket("ws://localhost:3000"); // Instead of 0.0.0.0
-    // Match Python WebSocket port
+   
 
-    ws.onopen = () => {
-      console.log("✅ WebSocket Connected");
-      setStatus("Connected");
-      ws.send(JSON.stringify({ message: "Hello from React!" })); // Test message to Python
-    };
-
-    ws.onmessage = (event) => {
-      console.log("📩 Message received from WebSocket:", event.data);
-      const data = JSON.parse(event.data);
-
-      if (data.type === "frame") {
-        setFrame(data.data); // Set video frame
-        if (data.qr_data) {
-          setQrData(data.qr_data); // Extracted QR code data
-        }
-      }
-    };
+    
 
     ws.onerror = (error) => {
       console.error("❌ WebSocket Error:", error);

@@ -10,9 +10,14 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "electron": "electron ."
+    "electron": "electron .",
+    "dist": "npm run build && electron-builder --win"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
+    "@chakra-ui/react": "^3.24.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@lottiefiles/dotlottie-react": "^0.13.5",
     "@mapbox/mapbox-gl-draw": "^1.5.0",
     "@react-md/progress": "^5.1.6",
@@ -20,11 +25,14 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.16",
+    "@tippyjs/react": "^4.2.6",
     "@turf/turf": "^7.2.0",
     "chart.js": "^4.4.9",
     "chartjs-plugin-zoom": "^2.2.0",
+    "classnames": "^2.5.1",
     "electron-notify": "^0.1.0",
     "express": "^4.21.2",
+    "framer-motion": "^12.23.12",
     "lottie-react": "^2.4.1",
     "mapbox-gl": "^3.9.4",
     "mdb-react-ui-kit": "^9.0.0",
@@ -32,6 +40,7 @@
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.61.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-loader-spinner": "^6.1.6",
@@ -44,6 +53,7 @@
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "systeminformation": "^5.25.11",
+    "tippy.js": "^6.3.7",
     "ws": "^8.18.0",
     "zustand": "^5.0.3"
   },
@@ -65,5 +75,26 @@
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.5"
+  },
+  "build": {
+    "appId": "com.example.gcs",
+    "productName": "Sidak GCS",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "main.cjs",
+      "package.json",
+      "assets/**/*",
+      "preload.cjs"
+    ],
+    "linux": {
+      "icon": "assets/icon.png"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    }
   }
 }

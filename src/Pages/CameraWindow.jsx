@@ -1,6 +1,9 @@
 import React from "react";
 import camerasvg from "../assets/Svg/Camera.svg";
 // import ToggleBar from "../Components/ToggleBar/ToggleBar";
+import HeadingIndicator from "../Components/DroneParameter/HeadingIndicaror";
+import { useState } from "react";
+import { useEffect } from "react";
 
 
 function CameraWindow() {
@@ -14,7 +17,8 @@ function CameraWindow() {
         }
       };
     return (
-        <div className="flex items-center flex-col justify-center w-full h-full">
+        <div className="flex items-center flex-col justify-center w-full h-full relative">
+      
        <button  onClick={openVideoWindow} className="w-9 h-7 hover:scale-110 duration-150"><img src={camerasvg} alt="" />
        </button>
        <span>Live Stream</span>

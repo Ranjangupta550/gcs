@@ -5,11 +5,19 @@ import {
   Route,
   HashRouter,
 } from "react-router-dom";
-import { FlightControlPannel, Home, MainLayouts, Navigation, NotFound, VideoStream,MissionStats } from "./index";
+import { FlightControlPannel, Home, MainLayouts, Navigation, NotFound, VideoStream,MissionStats, CameraFeed,Splash,LoginForm } from "./index";
 import { ToastBar, Toaster } from "react-hot-toast";
-import { Children } from "react";
+import { Children, useEffect } from "react";
 import { initServices } from "./services/server";
+import { cameraTrigger } from "./services/emitHandler";
 function App() {
+
+  useEffect(() => {
+    // Initialize services when the app starts
+    initServices();
+    cameraTrigger();
+
+  }, []);
  
   return (
     <HashRouter>
@@ -36,8 +44,11 @@ function App() {
 
   {/* Outside the MainLayouts (no sidebar, no navbar, clean view) */}
   <Route path="/mission-stats" element={<MissionStats />} />
-  <Route path="/video" element={<VideoStream />} />
+  <Route path="/CameraFeed" element={<CameraFeed />} />
+  <Route path="/Splash" element={<Splash />} />
+  <Route path ="/Login" element={<LoginForm />} />
   <Route path="*" element={<NotFound />} />
+
 </Routes>
     </HashRouter>
   );

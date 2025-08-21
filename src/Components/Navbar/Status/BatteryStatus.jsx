@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import ParameterStatusIcon from "../../utils/StatusIconsSwitcher";
+import ParameterStatusIcon from "../../UI/StatusIconsSwitcher";
 
 function BatteryStatus({ level }) {
     const [batteryLevel, setBatteryLevel] =useState(0);

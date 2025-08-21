@@ -6,11 +6,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import droneSvg from "../../assets/Svg/DroneSvg.svg";
 import useTelemetry from "../../Store/centralTelemetry";
-import MapControls from "./MapControls";
-import Compass from "./compass";
+import MapControls from "./MapControls";3.
 import { sendCommandWithPayload } from "../../services/api";
-import notify from "../utils/Notification/notify";
+import notify from "../UI/notify";
 import connectionStatus from "../../Store/connectionStatus";
+import { sendWaypoints ,icons, Button} from "../../index";
+import Drone from "../../assets/Svg/Drone.png"
+import { FaRegIdBadge } from "react-icons/fa";
 
 function MapboxDrawControl(props) {
   useControl(
@@ -55,8 +57,8 @@ const MapComponent = ({toggleSideBar}) => {
     zoom: 15,
     pitch: 0,
     bearing: 0,
-    mapStyle: "mapbox://styles/mapbox/satellite-v9",
-  
+    mapStyle: "mapbox://styles/mapbox/satellite-streets-v11",
+
   });
   // Track drone position
   useEffect(() => {
@@ -228,16 +230,18 @@ useEffect(() => {
     try {
       setShowMissionControls(false); // Hide mission controls after sending
       notify("Scanning started", "info");
-      const response = await sendCommandWithPayload("start_scan", payload);
-      alert(response ? "Mission sent successfully!" : "Failed to send mission");
-      if (response.message) {
+      // const response = await sendCommandWithPayload("start_scan", payload);\
+      const response = await sendWaypoints(payload);
+      console.log("Response from backend:", response);
+      // alert(response ? "Mission sent successfully!" : "Failed to send mission");
+      if (response?.message) {
         // setGeofenceData(null); // Clear geofence data after sending
         // setWaypoints([]); // Clear waypoints after sending
         notify("Scanning successful", "success");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Failed to send mission");
+      // alert("Failed to send mission");
     }
   };
   return (
@@ -262,12 +266,17 @@ useEffect(() => {
           longitude={userLocation.longitude}
           latitude={userLocation.latitude}
         >
-          <div className="relative">
+          <div className="relative w-auto rounded-full outline-slate-950 outline-4 shadow-lg"
+          style={{
+            backgroundColor:"rgba(45, 121, 244 ,0.4)",
+          }}
+          >
             <img
-              src={droneSvg}
+              src={Drone}
               alt="Drone"
-              className="w-12 h-12 drop-shadow-lg transition-transform duration-500"
+              className="w-14 h-14 transition-transform duration-500 "
               style={{
+                filter: "drop-shadow(0 0 0 white) drop-shadow(0 0 4px black) drop-shadow(0 0 4px black)",
                 transform: `rotate(${telemetry?.attitude?.yaw || 0}deg)`,
               }}
             />
@@ -330,12 +339,17 @@ useEffect(() => {
           </>
         )}
       </Map>
-      <button
-        onClick={() => setFollowDrone(true)}
-        className="absolute top-5 right-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md"
-      >
-        Follow Drone
-      </button>
+      <div className="absolute right-8 top-4  z-10">
+        <Button
+          onClick={() => setFollowDrone(true)}
+          className="z-50 bg-black bg-opacity-60 h-10 w-10 flex items-center justify-center  text-white rounded-full shadow-md"
+          title="Follow Drone"
+          useBaseStyles={false}
+          tooltipPlacement="left"
+        >
+          <img src={icons.followLocation} width={29} alt="" />
+      </Button>
+        </div>
 
       {/* Controls Panel */}
       {showMissionControls && (
