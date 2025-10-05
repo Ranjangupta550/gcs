@@ -10,6 +10,7 @@ import StatusBox from "../Components/Statusbox/Statusbox";
 import useTelemetry from "../Store/centralTelemetry";
 import icons from "../assets/icons";
 import { SidebarTogglePanel, SideBarComponents,Compass,LandTakeoffControl } from "../index";
+import FollowMe from "../Components/DroneParameter/FollowMe";
 
 function Home() {
   const [count, setCount] = useState(0);
@@ -46,6 +47,7 @@ function Home() {
             >
               <Map toggleSideBar={toggleSideBar} />
               <LandTakeoffControl />
+              <FollowMe/>
             </div>
           </div>
 

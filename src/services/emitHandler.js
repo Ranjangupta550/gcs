@@ -150,11 +150,19 @@ export const sendAutoTakeoff = async (altitude) => {
   try {
     // altitude = Number(altitude);
     console.log("Sending altitude: ", typeof altitude);
-    await sendCommandWithPayload("setalt", altitude );
+    const res=await sendCommandWithPayload("setalt", altitude );
+    if(res.message==true){
+
+      notify("mission completed" ,"success")
+    }
+    else if (res.message==false){
+      notify("mission abort" , "error")
+    }
     console.log("Altitude sent successfully");
-    return true;
+    return res.message;
   } catch (error) {
     console.error("Error sending altitude: ", error);
+    notify("auto take off failed" ,"warning")
     return false;
   }
 
@@ -186,5 +194,138 @@ const cameraConfig = {
     console.error("Error in camera connection:", error);
     return false;
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 🚀 Start Follow Me
+export const sendFollowMeStart = async (altitude) => {
+  try {
+    console.log("📤 Sending Follow Me Start with altitude:", altitude);
+
+    // Send command via your websocket emitter utility
+    const res = await sendCommandWithPayload("follow_me", { altitude });
+
+    if (res?.message === true) {
+      notify("Follow Me started successfully", "success");
+    } else if (res?.message === false) {
+      notify("Follow Me start failed", "error");
+    }
+
+    console.log("✅ Follow Me Start command sent");
+    return res?.message;
+  } catch (error) {
+    console.error("❌ Error starting Follow Me:", error);
+    notify("Error starting Follow Me", "warning");
+    return false;
+  }
 };
 
+// 🛑 Stop Follow Me
+export const sendFollowMeStop = async () => {
+  try {
+    console.log("📤 Sending Follow Me Stop command...");
+
+    const res = await sendCommandWithPayload("follow_me_stop");
+
+    if (res?.message === true) {
+      notify("Follow Me stopped successfully", "success");
+    } else if (res?.message === false) {
+      notify("Follow Me stop failed", "error");
+    }
+
+    console.log("✅ Follow Me Stop command sent");
+    return res?.message;
+  } catch (error) {
+    console.error("❌ Error stopping Follow Me:", error);
+    notify("Error stopping Follow Me", "warning");
+    return false;
+  }
+};
+
+
+
+
+// 🚁 Land during Follow Me
+export const sendFollowMeLand = async () => {
+  try {
+    console.log("📤 Sending Land command...");
+
+    const res = await sendCommand("land");
+
+    if (res?.message === true) {
+      notify("Landing initiated successfully", "success");
+    } else if (res?.message === false) {
+      notify("Landing failed", "error");
+    }
+
+    console.log("✅ Land command sent");
+    return res?.message;
+  } catch (error) {
+    console.error("❌ Error landing drone:", error);
+    notify("Error landing drone", "warning");
+    return false;
+  }
+};
+
+// 🚁 RTL (Return to Launch)
+export const sendRTL = async () => {
+  try {
+    console.log("📤 Sending RTL command...");
+
+    const res = await sendCommand("rtl");
+
+    if (res?.message === true) {
+      notify("RTL initiated successfully", "success");
+    } else if (res?.message === false) {
+      notify("RTL initiation failed", "error");
+    }
+
+    console.log("✅ RTL command sent");
+    return res?.message;
+  } catch (error) {
+    console.error("❌ Error initiating RTL:", error);
+    notify("Error initiating RTL", "warning");
+    return false;
+  }
+};
+
+
+
+// 🛰️ Send GPS Data for Follow Me
+export const sendGpsData = async (gpsData) => {
+  try {
+    // We don't log here to avoid flooding the console, as this is sent frequently.
+    const res = await sendCommandWithPayload("gps_data", gpsData);
+
+    // Optional: handle response if needed, but typically for a stream of data, we might not.
+    if (res?.message !== true) {
+      console.warn("GPS data packet not acknowledged by drone.");
+    }
+
+    return res?.message;
+  } catch (error) {
+    console.error("❌ Error sending GPS data:", error);
+    // Avoid notifying on every single packet failure to prevent spamming the user.
+    return false;
+  }
+};

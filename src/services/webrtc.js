@@ -77,5 +77,4 @@ async function cameraInit() {
     }
   });
 }
-cameraInit()
 export default cameraInit;

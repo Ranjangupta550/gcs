@@ -34,6 +34,7 @@
     "express": "^4.21.2",
     "framer-motion": "^12.23.12",
     "lottie-react": "^2.4.1",
+    "lucide-react": "^0.544.0",
     "mapbox-gl": "^3.9.4",
     "mdb-react-ui-kit": "^9.0.0",
     "opencv.js": "^1.2.1",

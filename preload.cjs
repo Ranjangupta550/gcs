@@ -45,4 +45,16 @@ contextBridge.exposeInMainWorld('api', {
 showMessageBox: (options) => ipcRenderer.invoke("showMessageBox", options),
 
 
+
+
+
+
+
+// -------------------------------------------------------------------------
+
+
+
+
+
+
 });
