@@ -1,21 +1,33 @@
-import { useEffect, useRef,useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import useCameraStore from '../store/useCameraStore';
-import icons from "../assets/icons";
-import useVideoStore from '../Store/useVideoStore';
-import { cameraTrigger } from '../services/emitHandler';
-import Button from '../Components/UI/Button';
-// import cameraInit from "../services/webrtc"
+import JSMpeg from 'jsmpeg-player';
 
 function CameraMiniPreview() {
   const iscameraOpen = useCameraStore((state) => state.iscameraOpen);
   const setIsCameraOpen = useCameraStore((state) => state.setIsCameraOpen);
-  const videoRef = useRef(null);
-  const stream = useVideoStore((state) => state.videoStream);
+  const canvasRef = useRef(null);
+  const playerRef = useRef(null);
+
   useEffect(() => {
-    if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
+    if (iscameraOpen) {
+      if (playerRef.current) {
+        playerRef.current.destroy();
+        playerRef.current = null;
+      }
+    } 
+    else if (!playerRef.current && canvasRef.current) {
+      playerRef.current = new JSMpeg.Player('ws://localhost:9999', {
+        canvas: canvasRef.current,
+        autoplay: true,
+      });
     }
-  }, [stream]);
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.destroy();
+        playerRef.current = null;
+      }
+    };
+  }, [iscameraOpen]);
 
   useEffect(() => {
     window.api?.receive('camera-window-status', (status) => {
@@ -31,39 +43,26 @@ function CameraMiniPreview() {
 
   return (
     <>
-
-  
-
       {iscameraOpen ? (
         <div className="w-full h-full bg-black text-white flex items-center justify-center rounded">
           📺 External camera window is active
         </div>
       ) : (
-        <div className="w-full h-full bg-black overflow-hidden relative rounded">
-          {/* Optional open button */}
+        // Parent div is the relative container
+        <div className="relative w-full h-full bg-black rounded">
           <div className="absolute top-0 right-0 p-2 z-10">
             <button
               onClick={handleOpenVideoStream}
-              className="h-auto"
+              className="h-auto p-1 bg-gray-700 rounded text-white text-xs"
             >
-              <img src={icons.fullcam} alt="" className="h-4" />
+              FS
             </button>
           </div>
-
-          {stream ? (
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <>
-           
-            <p className="text-white text-center mt-10">📡 No camera feed</p>
-             </>
-          )}
+          {/* Canvas is positioned absolutely inside */}
+          <canvas
+            ref={canvasRef}
+            className="absolute top-0 left-0 w-full h-full"
+          />
         </div>
       )}
     </>
