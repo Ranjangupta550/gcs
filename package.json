@@ -32,6 +32,7 @@
     "classnames": "^2.5.1",
     "electron-notify": "^0.1.0",
     "express": "^4.21.2",
+    "ffmpeg-static": "^5.2.0",
     "framer-motion": "^12.23.12",
     "jsmpeg-player": "^3.0.3",
     "lottie-react": "^2.4.1",
@@ -85,12 +86,19 @@
     "directories": {
       "buildResources": "assets"
     },
+
+    "asarUnpack": [
+      "**/node_modules/ffmpeg-static/**"
+    ],
+
     "files": [
+      "**/*",
       "dist/**/*",
       "main.cjs",
       "package.json",
       "assets/**/*",
-      "preload.cjs"
+      "preload.cjs",
+      "rtspStreamer.cjs"
     ],
     "linux": {
       "icon": "assets/icon.png"

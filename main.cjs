@@ -91,7 +91,11 @@ function createMainWindow() {
   });
 
   mainWindow.maximize();
-  mainWindow.loadURL('http://localhost:5173');
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:5173');  
+  } else {
+    mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
+  } 
 
   mainWindow.webContents.on('did-fail-load', (event, code, desc) => {
     console.error('❌ Page failed to load:', desc);
@@ -109,8 +113,11 @@ function createMainWindow() {
 app.whenReady().then(() => {
   rtspStreamer.start(); // <-- 2. START the stream when the app is ready
   createAuthWindow();
-  authWindow.loadURL('http://localhost:5173/#/Login');
-});
+  if (isDev) {
+    authWindow.loadURL('http://localhost:5173/#/Login');
+  } else {
+    authWindow.loadFile(path.join(__dirname, 'dist', 'index.html'), { hash: 'Login' });
+  }
 
 ipcMain.on("login-success", () => {
   authWindow.close();
@@ -201,8 +208,11 @@ ipcMain.on('open-video-stream', () => {
     } else {
       videoWindow.maximize();
     }
-
-    videoWindow.loadURL('http://localhost:5173/#/CameraFeed');
+    if (isDev) {
+      videoWindow.loadURL('http://localhost:5173/#/CameraFeed');  
+    } else {
+      videoWindow.loadFile(path.join(__dirname, 'dist', 'index.html'), { hash: 'CameraFeed' });
+    }
     videoWindow.menuBarVisible = false;
 
     if (!app.isPackaged) {
@@ -254,10 +264,7 @@ function setApplicationMenu() {
   ];
   const appMenu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(appMenu);
+
 }
-
-
-
-
-
-
+});
+// -------------------------------------------------------

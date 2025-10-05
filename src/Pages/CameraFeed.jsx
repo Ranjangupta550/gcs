@@ -29,8 +29,8 @@ function CameraFeed() {
     if (window.api) {
       try {
         const result = await window.api.activateApp({
-          targetTitle: 'Notepad', // The title of the window to search for
-          exePath: 'notepad.exe'  // The program to launch if not found
+          targetTitle: 'HIDL DRI SYSTEMS', // The title of the window to search for
+          exePath: 'Hilddri.exe'  // The program to launch if not found
         });
         console.log('PowerShell script result:', result);
       } catch (error) {
