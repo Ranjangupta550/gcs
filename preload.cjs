@@ -43,6 +43,7 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke("selectMissionFile");
   },
 showMessageBox: (options) => ipcRenderer.invoke("showMessageBox", options),
+activateApp: (options) => ipcRenderer.invoke('activate-app', options),
 
 
 

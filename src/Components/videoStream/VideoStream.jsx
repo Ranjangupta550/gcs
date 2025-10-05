@@ -28,6 +28,8 @@ function VideoStream() {
     };
   }, []);
 
+  
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <h2 className="text-xl mb-4">Live Video Stream ({status})</h2>

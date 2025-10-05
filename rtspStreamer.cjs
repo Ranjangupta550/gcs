@@ -18,7 +18,7 @@ function start() {
   console.log('🚀 Starting RTSP to WebSocket stream...');
   stream = new Stream({
     name: 'GCS Video Feed',
-    streamUrl: 'rtsp://192.168.144.25:8554/main.264', // Your RTSP URL
+    streamUrl: 'rtsp://192.168.29.212:8554/live.stream', // Your RTSP URL
     wsPort: 9999, // The WebSocket port for React to connect to
     ffmpegOptions: {
       '-stats': '',

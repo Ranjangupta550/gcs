@@ -2,6 +2,7 @@
 
 const path = require('path');
 const { app, BrowserWindow, ipcMain, Menu, screen, dialog } = require('electron');
+const { exec } = require('child_process');
 const { fullLoad } = require('systeminformation');
 const rtspStreamer = require('./rtspStreamer.cjs'); // <-- 1. IMPORT the streamer module
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
@@ -138,6 +139,37 @@ ipcMain.handle("showMessageBox", async (event, options) => {
   return result;
 });
 
+
+
+
+// -------------------------------------------------------
+// IPC handler to activate or launch an app using PowerShell
+// openpowersell
+// IPC handler to activate or launch an app using PowerShell
+ipcMain.handle('activate-app', async (event, { targetTitle, exePath }) => {
+  const psFile = path.join(__dirname, 'activatewindows.ps1');
+  console.log(`Attempting to activate or launch app: "${targetTitle}"`);
+
+  return new Promise((resolve, reject) => {
+    exec(
+      `powershell -NoProfile -ExecutionPolicy Bypass -File "${psFile}" -targetTitle "${targetTitle}" -exePath "${exePath}"`,
+      (error, stdout, stderr) => {
+        if (error) {
+          console.error('⚠ Error executing PowerShell:', error);
+          reject(error);
+          return;
+        }
+        if (stderr) console.error('⚠ PowerShell stderr:', stderr);
+        console.log('📝 PowerShell output:\n', stdout.trim());
+        resolve(stdout.trim());
+      }
+    );
+  });
+});
+
+// ------------------------------------------------------
+
+
 // Open Video Stream Window
 ipcMain.on('open-video-stream', () => {
   if (!videoWindow) {
@@ -223,3 +255,9 @@ function setApplicationMenu() {
   const appMenu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(appMenu);
 }
+
+
+
+
+
+
