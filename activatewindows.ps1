@@ -1,37 +1,42 @@
 param(
     [string]$targetTitle,
-    [string]$exePath = "notepad.exe"  # default to Notepad
+    [string]$exePath = "notepad.exe"
 )
 
-# Find running process
-$processes = Get-Process | Where-Object { $_.MainWindowTitle -like "*$targetTitle*" -and $_.MainWindowHandle -ne 0 }
+# App ko uske window title se dhoondho
+$process = Get-Process | Where-Object { $_.MainWindowTitle -like "*$targetTitle*" -and $_.MainWindowHandle -ne 0 } | Select-Object -First 1
 
-# Launch app if not running
-if (-not $processes) {
-    Write-Output "App '$targetTitle' not running, launching..."
+# Agar app nahi chal raha hai, to use start karo
+if (-not $process) {
+    Write-Output "App '$targetTitle' nahi chal raha hai, launch kiya ja raha hai..."
     Start-Process $exePath
-    Start-Sleep -Seconds 1
-    $processes = Get-Process | Where-Object { $_.MainWindowTitle -like "*$targetTitle*" -and $_.MainWindowHandle -ne 0 }
+    Write-Output "✅ App '$targetTitle' start ho gaya hai"
 }
+# Agar app chal raha hai, to use saamne lao
+else {
+    $hwnd = $process.MainWindowHandle
 
-# Activate window if found
-if ($processes) {
-    foreach ($p in $processes) {
-        $hwnd = $p.MainWindowHandle
-        # Add Windows API functions
-        Add-Type @"
+    # Windows API functions ko add karo
+    Add-Type @"
 using System;
 using System.Runtime.InteropServices;
 public class WinAPI {
-    [DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+    [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
 }
 "@
-        # Restore if minimized (2 = SW_RESTORE) and bring to front
-        [WinAPI]::ShowWindowAsync($hwnd, 2) | Out-Null
-        [WinAPI]::SetForegroundWindow($hwnd) | Out-Null
+
+    # Pehle window ko restore karo (agar minimize hai to)
+    # 9 ka matlab hai SW_RESTORE (window ko normal size mein lao)
+    [WinAPI]::ShowWindow($hwnd, 9) | Out-Null
+
+    # Ab WScript.Shell ka istemaal karke window ko zabardasti saamne lao
+    # Yeh SetForegroundWindow se zyada reliable hai
+    try {
+        $wshell = New-Object -ComObject WScript.Shell
+        $wshell.AppActivate($process.MainWindowTitle)
+        Write-Output "✅ Window '$targetTitle' ab active hai"
+    } catch {
+        Write-Output "❌ Window '$targetTitle' ko activate nahi kar paaye"
     }
-    Write-Output "✅ Window '$targetTitle' is now active"
-} else {
-    Write-Output "❌ Could not activate or start '$targetTitle'"
 }
